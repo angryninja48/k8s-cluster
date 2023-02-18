@@ -49,12 +49,18 @@ spec:
       [global]
       bdev_enable_discard = true
       bdev_async_discard = true
+      osd_pool_default_size = 1
+      mon_warn_on_pool_no_redundancy = false
     cephClusterSpec:
       network:
         provider: host
         connections:
           compression:
             enabled: false
+      #TODO: Remove when multi-node
+      mon:
+        count: 1
+        allowMultiplePerNode: true
       crashCollector:
         disable: false
       dashboard:
