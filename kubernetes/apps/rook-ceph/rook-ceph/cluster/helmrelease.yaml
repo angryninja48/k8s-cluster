@@ -60,7 +60,9 @@ spec:
       #TODO: Remove when multi-node
       mon:
         count: 1
-        allowMultiplePerNode: true
+      mgr:
+        count: 1
+      #
       crashCollector:
         disable: false
       dashboard:
