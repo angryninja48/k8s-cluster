@@ -47,10 +47,12 @@ spec:
       enabled: true
     configOverride: |
       [global]
-      bdev_enable_discard = true
-      bdev_async_discard = true
       osd_pool_default_size = 1
       mon_warn_on_pool_no_redundancy = false
+      mon_data_avail_warn = 10
+      mon_clock_drift_allowed = 0.1
+      bdev_enable_discard = true
+      bdev_async_discard = true
     cephClusterSpec:
       network:
         provider: host
@@ -83,7 +85,8 @@ spec:
         spec:
           failureDomain: host
           replicated:
-            size: 3
+            size: 1
+            requireSafeReplicaSize: false
         storageClass:
           enabled: true
           name: ceph-block
