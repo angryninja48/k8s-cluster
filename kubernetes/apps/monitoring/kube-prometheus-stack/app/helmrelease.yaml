@@ -191,7 +191,7 @@ spec:
         enabled: true
 
       prometheusSpec:
-        replicas: 3
+        replicas: 1
         replicaExternalLabelName: __replica__ # must match with thanos value `.query.replicaLabel[0]`
         # Breaks any metric that has an existing "cluster" label on a metric
         # externalLabels:
