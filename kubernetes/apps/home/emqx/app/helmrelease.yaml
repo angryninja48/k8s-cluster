@@ -41,7 +41,7 @@ spec:
       type: LoadBalancer
       annotations:
         coredns.io/hostname: mqtt.${SECRET_DOMAIN}
-      externalIPs: ["${SVC_EMQX_ADDR}"]
+      loadBalancerIP: ${SVC_EMQX_ADDR}
       externalTrafficPolicy: Local
     ingress:
       dashboard:
