@@ -42,7 +42,9 @@ spec:
         default: true
         config:
           region: ${SECRET_VELERO_BUCKET_REGION}
+          s3ForcePathStyle: true
           s3Url: ${SECRET_S3_URL}
+          publicUrl: ${SECRET_S3_URL}
     credentials:
       existingSecret: minio-credentials
     schedules:
