@@ -5,7 +5,7 @@ kind: Kustomization
 namespace: home
 resources:
   - ./secret.sops.yaml
-  # - ./helmrelease.yaml
+  - ./helmrelease.yaml
 labels:
   - pairs:
       app.kubernetes.io/name: emqx
