@@ -5,11 +5,11 @@ metadata:
   name: postgres-lb
   namespace: databases
   annotations:
-    coredns.io/hostname: postgres.devbu.io
+    coredns.io/hostname: postgres.${SECRET_DOMAIN}
 spec:
   type: LoadBalancer
   externalTrafficPolicy: Local
-  externalIPs: ["${SVC_POSTGRES_ADDR}"]
+  externalIPs: ${SVC_POSTGRES_ADDR}
   ports:
     - name: postgres
       port: 5432
