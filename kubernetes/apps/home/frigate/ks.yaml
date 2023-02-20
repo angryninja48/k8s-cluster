@@ -9,7 +9,7 @@ spec:
     - name: cluster-apps-emqx
     - name: cluster-apps-rook-ceph
     - name: cluster-apps-intel-device-plugin-gpu
-  path: ./cluster/apps/home/frigate/app
+  path: ./kubernetes/apps/home/frigate/app
   prune: true
   sourceRef:
     kind: GitRepository
