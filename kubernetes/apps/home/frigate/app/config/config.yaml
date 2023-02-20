@@ -1,0 +1,73 @@
+---
+# yaml-language-server: $schema=https://frigate.devbu.io/api/config/schema
+logger:
+  default: info
+  # logs:
+  #   frigate.record: debug
+
+mqtt:
+  host: emqx.home.svc.cluster.local
+  topic_prefix: frigate
+  user: mqtt
+  password: "{SECRET_MQTT_PASSWORD}"
+
+database:
+  path: /data/frigate.db
+
+detectors:
+  coral_pci:
+    type: edgetpu
+    device: pci
+
+ffmpeg:
+  global_args: ["-hide_banner", "-loglevel", "warning"]
+  hwaccel_args: ["-hwaccel", "vaapi", "-hwaccel_device", "/dev/dri/renderD128", "-hwaccel_output_format", "yuv420p"]
+  # https://github.com/blakeblackshear/frigate/issues/3296
+  output_args:
+    record: -f segment -segment_time 10 -segment_format mp4 -reset_timestamps 1 -strftime 1 -map 0:v:0 -map 0:a:0 -c copy
+
+snapshots:
+  enabled: true
+  timestamp: false
+  bounding_box: true
+  retain:
+    default: 7
+
+record:
+  enabled: true
+  retain:
+    days: 3
+    mode: all
+  events:
+    retain:
+      default: 7
+      mode: active_objects
+
+objects:
+  track: ["person"]
+  filters:
+    person:
+      min_area: 5000
+      max_area: 100000
+      threshold: 0.7
+
+cameras:
+  zara_room:
+    ffmpeg:
+      inputs:
+        - path: rtsp://${SECRET_FRIGATE_RSTP_USERNAME}:${SECRET_FRIGATE_RTSP_PASSWORD}@${SECRET_ZARA_CAMERA}/stream2
+          roles: ["detect"]
+        - path: rtsp://${SECRET_FRIGATE_RSTP_USERNAME}:${SECRET_FRIGATE_RTSP_PASSWORD}@${SECRET_ZARA_CAMERA}/stream1
+          roles: ["record", "rtmp"]
+    detect:
+      width: 640
+      height: 360
+      fps: 5
+
+    objects:
+      filters:
+        person:
+          min_area: 1500
+          max_area: 100000
+          threshold: 0.75
+          min_score: 0.60
