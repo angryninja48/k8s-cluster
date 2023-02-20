@@ -25,4 +25,5 @@ resources:
   - ./redis-operator.yaml
   - ./rook-ceph.yaml
   - ./stakater.yaml
+  - ./vmware-tanzu.yaml
   - ./weave-gitops.yaml
