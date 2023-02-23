@@ -48,6 +48,11 @@ spec:
     credentials:
       existingSecret: minio-credentials
     schedules:
+      hourly-backup:
+        # Every hour - Valid for 24 hours
+        schedule: 0 * * * *
+        template:
+          ttl: 24h
       daily-backup:
         # At 6:00am in the morning every day
         schedule: "0 6 * * *"
