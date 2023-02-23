@@ -23,59 +23,78 @@ spec:
     remediation:
       retries: 3
   values:
+    image:
+      repository: velero/velero
+      tag: v1.9.3
+    configuration:
+      extraEnvVars:
+        TZ: ${TIMEZONE}
+
+      provider: aws
+
+      backupStorageLocation:
+        name: default
+        bucket: velero
+        default: true
+        config:
+          region: ap-southeast-2
+          s3ForcePathStyle: true
+          s3Url: ${SECRET_S3_URL}
+          publicUrl: ${SECRET_S3_URL}
+      resticTimeout: 4h
+
     initContainers:
       - name: velero-plugin-for-aws
-        image: velero/velero-plugin-for-aws:v1.6.0
+        image: velero/velero-plugin-for-aws:v1.5.2
         imagePullPolicy: IfNotPresent
         volumeMounts:
           - mountPath: /target
             name: plugins
-    annotations:
-      secret.reloader.stakater.com/reload: minio-credentials
-    configuration:
-      extraEnvVars:
-        TZ: ${TIMEZONE}
-      provider: aws
-      backupStorageLocation:
-        name: default
-        bucket: ${SECRET_VELERO_BUCKET_NAME}
-        default: true
-        config:
-          region: ${SECRET_VELERO_BUCKET_REGION}
-          s3ForcePathStyle: true
-          s3Url: ${SECRET_S3_URL}
-          publicUrl: ${SECRET_S3_URL}
+
     credentials:
       existingSecret: minio-credentials
+
     schedules:
+      daily-backup:
+        schedule: 0 4 * * *
+        template:
+          ttl: 168h
       hourly-backup:
-        # Every hour - Valid for 24 hours
         schedule: 0 * * * *
         template:
           ttl: 24h
-      daily-backup:
-        # At 6:00am in the morning every day
-        schedule: "0 6 * * *"
-        template:
-          ttl: "168h"
-      weekly-backup:
-        # At the end of the week on a Sunday morning, at 6:00am
-        schedule: "0 6 * * 0"
-        template:
-          ttl: "672h"
+
     metrics:
       enabled: true
       serviceMonitor:
         enabled: true
+
     backupsEnabled: true
     snapshotsEnabled: false
-    upgradeCRDs: false
-    cleanUpCRDs: false
+
+    upgradeCRDs: true
+    cleanUpCRDs: true
+
     kubectl:
       image:
         repository: docker.io/bitnami/kubectl
-        tag: 1.25.5
-    deployNodeAgent: false
+        tag: 1.25.4
+
+    deployRestic: true
+
+    restic:
+      podVolumePath: /var/lib/kubelet/pods
+      privileged: false
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+      resources:
+        requests:
+          memory: 200Mi
+          cpu: 15m
+        limits:
+          memory: 3000Mi
+
     resources:
       requests:
         memory: 300Mi
