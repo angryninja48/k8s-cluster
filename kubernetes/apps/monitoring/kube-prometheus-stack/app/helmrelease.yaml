@@ -228,9 +228,8 @@ spec:
           - job_name: home-assistant
             scrape_interval: 60s
             metrics_path: /api/prometheus
-            # Long-Lived Access Token
-            authorization:
-              credentials: ${SECRET_HASS_PROM_TOKEN}
-            scheme: http
+          # https://developers.home-assistant.io/docs/auth_api/#long-lived-access-token
+            bearer_token: ${SECRET_HASS_PROM_TOKEN}
+          # scheme: http
             static_configs:
-              - targets: ['home-assistant.home.svc:8123']
+              - targets: [home-assistant.home.svc:8123]
