@@ -6,7 +6,8 @@ namespace: databases
 resources:
   - ./cluster.yaml
   - ./scheduledbackup.yaml
-  # - ./prometheusrule.yaml
+  - ./prometheusrule.yaml
+  - ./secret.sops.yaml
   - ./service.yaml
 labels:
   - pairs:
