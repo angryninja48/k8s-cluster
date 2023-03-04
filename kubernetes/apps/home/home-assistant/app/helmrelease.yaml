@@ -24,21 +24,21 @@ spec:
       tag: 2023.3.1
 
     initContainers:
-      # init-db:
-      #   image: ghcr.io/onedr0p/postgres-initdb:14.7
-      #   env:
-      #     - name: POSTGRES_HOST
-      #       value: "postgres-rw.databases.svc.cluster.local."
-      #     - name: POSTGRES_DB
-      #       value: "${SECRET_HOME_ASSISTANT_DBNAME}"
-      #     - name: POSTGRES_USER
-      #       value: "${SECRET_HOME_ASSISTANT_DB_USERNAME}"
-      #     - name: POSTGRES_PASS
-      #       value: "${SECRET_HOME_ASSISTANT_DB_PASSWORD}"
-      #     - name: POSTGRES_SUPER_USER
-      #       value: "${SECRET_POSTGRES_SUPER_USERNAME}"
-      #     - name: POSTGRES_SUPER_PASS
-      #       value: "${SECRET_POSTGRES_SUPER_PASSWORD}"
+      init-db:
+        image: ghcr.io/onedr0p/postgres-initdb:14.7
+        env:
+          - name: POSTGRES_HOST
+            value: "postgres-rw.databases.svc.cluster.local."
+          - name: POSTGRES_DB
+            value: "${SECRET_HOME_ASSISTANT_DBNAME}"
+          - name: POSTGRES_USER
+            value: "${SECRET_HOME_ASSISTANT_DB_USERNAME}"
+          - name: POSTGRES_PASS
+            value: "${SECRET_HOME_ASSISTANT_DB_PASSWORD}"
+          - name: POSTGRES_SUPER_USER
+            value: "${SECRET_POSTGRES_SUPER_USERNAME}"
+          - name: POSTGRES_SUPER_PASS
+            value: "${SECRET_POSTGRES_SUPER_PASSWORD}"
 
     podAnnotations:
       backup.velero.io/backup-volumes: config
