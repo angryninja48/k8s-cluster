@@ -117,13 +117,13 @@ spec:
             enabled: true
             ingressClassName: nginx
             hosts:
-              - host: &host "hass-config.${SECRET_DOMAIN}"
+              - host: &host-config "hass-config.${SECRET_DOMAIN}"
                 paths:
                   - path: /
                     pathType: Prefix
             tls:
               - hosts:
-                  - *host
+                  - *host-config
           annotations:
             hajimari.io/enable: 'true'
             hajimari.io/icon: microsoft-visual-studio-code
