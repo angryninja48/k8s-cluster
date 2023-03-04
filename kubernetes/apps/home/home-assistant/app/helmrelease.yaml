@@ -96,8 +96,6 @@ spec:
           repository: codercom/code-server
           tag: 4.9.1
         env:
-          # GIT_EMAIL: ${SECRET_EMAIL}
-          # GIT_AUTHOR_NAME: ${SECRET_NAME}
           GIT_AUTHOR_NAME: ${SECRET_NAME}
           GIT_COMMITTER_NAME: ${SECRET_NAME}
           GIT_AUTHOR_EMAIL: ${SECRET_EMAIL}
@@ -113,20 +111,20 @@ spec:
           - --extensions-dir
           - /config/.vscode
         ingress:
-          main:
-            enabled: true
-            ingressClassName: nginx
-            hosts:
-              - host: &host-config "hass-config.${SECRET_DOMAIN}"
-                paths:
-                  - path: /
-                    pathType: Prefix
-            tls:
-              - hosts:
-                  - *host-config
+          enabled: true
+          ingressClassName: nginx
           annotations:
             hajimari.io/enable: 'true'
             hajimari.io/icon: microsoft-visual-studio-code
+          hosts:
+            - host: &host-config "hass-config.${SECRET_DOMAIN}"
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls:
+            - hosts:
+                - *host-config
+
         volumeMounts:
           - name: config
             mountPath: /config
