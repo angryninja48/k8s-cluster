@@ -42,28 +42,30 @@ spec:
 
     initContainers:
       init-db:
-        - name: POSTGRES_HOST
-          value: "postgres-rw.databases.svc.cluster.local."
-        - name: POSTGRES_DB
-          valueFrom:
-            secretKeyRef:
-              name: postgres-secrets
-              key: POSTGRES_DB_NAME
-        - name: POSTGRES_SUPER_PASS
-          valueFrom:
-            secretKeyRef:
-              name: postgres-superuser
-              key: password
-        - name: POSTGRES_USER
-          valueFrom:
-            secretKeyRef:
-              name: postgres-secrets
-              key: POSTGRES_USERNAME
-        - name: POSTGRES_PASS
-          valueFrom:
-            secretKeyRef:
-              name: postgres-secrets
-              key: POSTGRES_PASSWORD
+        image: ghcr.io/onedr0p/postgres-initdb:14.7
+        env:
+          - name: POSTGRES_HOST
+            value: "postgres-rw.databases.svc.cluster.local."
+          - name: POSTGRES_DB
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secrets
+                key: POSTGRES_DB_NAME
+          - name: POSTGRES_SUPER_PASS
+            valueFrom:
+              secretKeyRef:
+                name: postgres-superuser
+                key: password
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secrets
+                key: POSTGRES_USERNAME
+          - name: POSTGRES_PASS
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secrets
+                key: POSTGRES_PASSWORD
 
     podAnnotations:
       backup.velero.io/backup-volumes: config
