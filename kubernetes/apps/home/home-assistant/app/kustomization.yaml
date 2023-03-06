@@ -6,6 +6,7 @@ namespace: home
 resources:
   - ./config-pvc.yaml
   - ./helmrelease.yaml
+  - ./secret.sops.yaml
   - ./secret-codeserver.sops.yaml
 labels:
   - pairs:

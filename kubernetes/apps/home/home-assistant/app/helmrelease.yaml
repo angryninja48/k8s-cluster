@@ -40,6 +40,31 @@ spec:
     #       - name: POSTGRES_SUPER_PASS
     #         value: "${SECRET_POSTGRES_SUPER_PASSWORD}"
 
+    initContainers:
+      init-db:
+        - name: POSTGRES_HOST
+          value: "postgres-rw.databases.svc.cluster.local."
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secrets
+              key: POSTGRES_DB_NAME
+        - name: POSTGRES_SUPER_PASS
+          valueFrom:
+            secretKeyRef:
+              name: postgres-superuser
+              key: password
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secrets
+              key: POSTGRES_USERNAME
+        - name: POSTGRES_PASS
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secrets
+              key: POSTGRES_PASSWORD
+
     podAnnotations:
       backup.velero.io/backup-volumes: config
       pre.hook.backup.velero.io/container: fsfreeze
