@@ -36,6 +36,7 @@ spec:
               secretKeyRef:
                 name: postgres-super-user
                 key: password
+                namespace: databases
           - name: POSTGRES_USER
             valueFrom:
               secretKeyRef:
