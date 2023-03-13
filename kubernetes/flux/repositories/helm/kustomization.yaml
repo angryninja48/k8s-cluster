@@ -19,6 +19,7 @@ resources:
   - ./k8s-at-home.yaml
   - ./k8s-gateway.yaml
   - ./kubernetes-dashboard.yaml
+  - ./kyverno.yaml
   - ./metallb.yaml
   - ./metrics-server.yaml
   - ./node-feature-discovery.yaml
