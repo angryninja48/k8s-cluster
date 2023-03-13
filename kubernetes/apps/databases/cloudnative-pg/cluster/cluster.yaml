@@ -15,7 +15,7 @@ spec:
     size: 20Gi
     storageClass: ceph-block
   superuserSecret:
-    name: postgres-super-user
+    name: postgres-superuser
   monitoring:
     enablePodMonitor: false
   backup:
