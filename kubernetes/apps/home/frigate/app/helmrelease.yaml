@@ -40,7 +40,7 @@ spec:
     env:
       TZ: "${TIMEZONE}"
       LIBVA_DRIVER_NAME: i965
-      FRIGATE_MQTT_PASSWORD: ${SECRET_MQTT_USER_PASSWORD}
+      # FRIGATE_MQTT_PASSWORD: ${SECRET_MQTT_USER_PASSWORD}
 
     service:
       main:
