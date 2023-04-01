@@ -35,7 +35,7 @@ spec:
           s3ForcePathStyle: true
           s3Url: ${SECRET_S3_URL}
           publicUrl: ${SECRET_S3_URL}
-      resticTimeout: 4h
+      # resticTimeout: 4h
 
     initContainers:
       - name: velero-plugin-for-aws
