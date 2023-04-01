@@ -55,9 +55,9 @@ cameras:
   zara_room:
     ffmpeg:
       inputs:
-        - path: "rtsp://{SECRET_FRIGATE_RSTP_USERNAME}:{SECRET_FRIGATE_RTSP_PASSWORD}@{SECRET_ZARA_CAMERA}/stream2"
+        - path: "rtsp://{FRIGATE_RTSP_USERNAME}:{RIGATE_RTSP_PASSWORD}@{ZARA_CAMERA_HOST}/stream2"
           roles: ["detect"]
-        - path: "rtsp://{SECRET_FRIGATE_RSTP_USERNAME}:{SECRET_FRIGATE_RTSP_PASSWORD}@{SECRET_ZARA_CAMERA}/stream1"
+        - path: "rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{ZARA_CAMERA_HOST}/stream1"
           roles: ["record", "rtmp"]
     detect:
       width: 640
