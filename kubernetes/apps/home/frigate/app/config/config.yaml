@@ -9,7 +9,7 @@ mqtt:
   host: emqx.home.svc.cluster.local
   topic_prefix: frigate
   user: mqtt
-  password: "{SECRET_MQTT_PASSWORD}"
+  password: "{SECRET_MQTT_USER_PASSWORD}"
 
 database:
   path: /data/frigate.db
