@@ -6,10 +6,10 @@ logger:
   #   frigate.record: debug
 
 mqtt:
-  host: emqx.home.svc.cluster.local
+  host: mosquitto.home.svc.cluster.local
   topic_prefix: frigate
-  user: mqtt
-  password: "{SECRET_MQTT_USER_PASSWORD}"
+  # user: mqtt
+  # password: "{SECRET_MQTT_USER_PASSWORD}"
 
 database:
   path: /data/frigate.db
