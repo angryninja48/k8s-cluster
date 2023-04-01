@@ -54,8 +54,12 @@ spec:
                 - pciId:
                     class: ['0300']
                     vendor: ['8086']
-            - name: coral-tpu
+            # - name: coral-tpu
+            #   matchOn:
+            #     - pciId:
+            #         device: [089a]
+            #         vendor: [1ac1]
+            - name: "coral-tpu"
               matchOn:
-                - pciId:
-                    device: [089a]
-                    vendor: [1ac1]
+                - usbId:
+                    vendor: ["1a6e", "18d1"]
