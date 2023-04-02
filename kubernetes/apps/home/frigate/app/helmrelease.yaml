@@ -117,6 +117,12 @@ spec:
         medium: Memory
         sizeLimit: 4Gi
         mountPath: /dev/shm
+      usb:
+        enabled: true
+        type: hostPath
+        hostPath: /dev/bus/usb
+        hostPathType: Directory
+        mountPath: /dev/bus/usb
 
     nodeSelector:
       google.feature.node.kubernetes.io/coral: "true"
