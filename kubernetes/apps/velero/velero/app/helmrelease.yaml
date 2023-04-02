@@ -87,7 +87,7 @@ spec:
     kubectl:
       image:
         repository: docker.io/bitnami/kubectl
-        tag: 1.25.4
+        tag: 1.26.3
 
     resources:
       requests:
