@@ -50,13 +50,9 @@ spec:
 
     schedules:
       daily-backup:
-        schedule: 0 4 * * *
+        schedule: 0 6 * * *
         template:
           ttl: 168h
-      hourly-backup:
-        schedule: 0 * * * *
-        template:
-          ttl: 24h
 
     metrics:
       enabled: true
