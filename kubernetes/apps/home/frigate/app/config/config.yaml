@@ -49,6 +49,8 @@ record:
 objects:
   track:
     - person
+    - car
+    - dog
   filters:
     person:
       min_area: 5000
