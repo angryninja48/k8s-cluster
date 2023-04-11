@@ -6,7 +6,7 @@ metadata:
   name: cluster-apps-photoprism
   namespace: flux-system
 spec:
-  path: ./kubernetes/apps/monitoring/photoprism/app
+  path: ./kubernetes/apps/media/photoprism/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -15,7 +15,7 @@ spec:
     - apiVersion: helm.toolkit.fluxcd.io/v2beta1
       kind: HelmRelease
       name: photoprism
-      namespace: monitoring
+      namespace: media
   interval: 30m
   retryInterval: 1m
   timeout: 3m
