@@ -1,0 +1,82 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helmrelease_v2beta1.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: photoprism
+  namespace: media
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.3.2
+      interval: 30m
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 3
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+
+  values:
+
+    image:
+      repository: photoprism/photoprism
+      tag: '20220121'
+
+    env:
+      TZ:
+      PHOTOPRISM_SITE_URL: https://photos.${SECRET_DOMAIN}/
+      PHOTOPRISM_SITE_TITLE: Home Photos
+      PHOTOPRISM_SITE_AUTHOR: Jon
+      PHOTOPRISM_ADMIN_PASSWORD: ${SECRET_PHOTOPRISM_PASSWORD}
+      PHOTOPRISM_ORIGINALS_PATH: /photoprism/media/
+      PHOTOPRISM_STORAGE_PATH: /photoprism/storage/
+      PHOTOPRISM_IMPORT_PATH: /photoprism/unsorted/
+      # PHOTOPRISM_DATABASE_SERVER:
+      # PHOTOPRISM_DATABASE_NAME: photoprism
+      # PHOTOPRISM_DATABASE_USER: photoprism
+      # PHOTOPRISM_DATABASE_PASSWORD:
+
+    service:
+      main:
+        ports:
+          http:
+            port: 2342
+
+    ingress:
+      main:
+        enabled: true
+        ingressClassName: nginx
+        hosts:
+          - host: &host "photos.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
+
+    persistence:
+      config:
+        enabled: true
+        mountPath: /photoprism/storage
+        existingClaim: photoprism-config
+      media:
+        enabled: true
+        mountPath: /photoprism/media
+        existingClaim: media-nfs-photos
+      unsorted:
+        enabled: true
+        mountPath: /photoprism/unsorted
+        existingClaim: media-nfs-photos-unsorted
