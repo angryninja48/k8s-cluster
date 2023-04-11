@@ -39,7 +39,6 @@ spec:
       PHOTOPRISM_SITE_URL: https://photos.${SECRET_DOMAIN}/
       PHOTOPRISM_SITE_TITLE: Home Photos
       PHOTOPRISM_SITE_AUTHOR: Jon
-      PHOTOPRISM_ADMIN_PASSWORD: ${SECRET_PHOTOPRISM_PASSWORD}
       PHOTOPRISM_ORIGINALS_PATH: /photoprism/media/
       PHOTOPRISM_STORAGE_PATH: /photoprism/storage/
       PHOTOPRISM_IMPORT_PATH: /photoprism/unsorted/
@@ -47,6 +46,9 @@ spec:
       # PHOTOPRISM_DATABASE_NAME: photoprism
       # PHOTOPRISM_DATABASE_USER: photoprism
       # PHOTOPRISM_DATABASE_PASSWORD:
+    envFrom:
+      - secretRef:
+          name: photoprism-secrets
 
     service:
       main:
