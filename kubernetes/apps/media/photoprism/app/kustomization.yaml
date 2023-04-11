@@ -8,6 +8,7 @@ resources:
   - ./nfs-config.yaml
   - ./nfs-photos-unsorted.yaml
   - ./nfs-photos.yaml
+  - ./secrets.sops.yaml
 labels:
   - pairs:
       app.kubernetes.io/name: photoprism
