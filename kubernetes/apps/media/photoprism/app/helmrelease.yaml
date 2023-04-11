@@ -35,7 +35,7 @@ spec:
       tag: '20220121'
 
     env:
-      TZ:
+      TZ: "${TIMEZONE}"
       PHOTOPRISM_SITE_URL: https://photos.${SECRET_DOMAIN}/
       PHOTOPRISM_SITE_TITLE: Home Photos
       PHOTOPRISM_SITE_AUTHOR: Jon
