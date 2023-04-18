@@ -64,6 +64,14 @@ go2rtc:
       - rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_ZARA_CAMERA_HOST}:554/stream1
     zara_substream:
       - rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_ZARA_CAMERA_HOST}:554/stream2
+    max_main:
+      - rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_MAX_CAMERA_HOST}:554/stream1
+    max_substream:
+      - rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_MAX_CAMERA_HOST}:554/stream2
+    playroom_main:
+      - rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_PLAYROOM_CAMERA_HOST}:554/stream1
+    playroom_substream:
+      - rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_PLAYROOM_CAMERA_HOST}:554/stream2
     garage_door_main:
       - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_GARAGE_DOOR_CAMERA_HOST}:554/h264Preview_01_main
     garage_door_substream:
@@ -85,6 +93,42 @@ cameras:
           roles:
             - record
         - path: rtsp://127.0.0.1:8554/zara_substream?video=copy
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    detect:
+      width: 640
+      height: 360
+      fps: 5
+
+  max_room:
+    ffmpeg:
+      output_args:
+        record: preset-record-generic-audio-copy
+      inputs:
+        - path: rtsp://127.0.0.1:8554/max_main?video=copy&audio=aac
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/max_substream?video=copy
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    detect:
+      width: 640
+      height: 360
+      fps: 5
+
+  playroom:
+    ffmpeg:
+      output_args:
+        record: preset-record-generic-audio-copy
+      inputs:
+        - path: rtsp://127.0.0.1:8554/playroom_main?video=copy&audio=aac
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/playroom_substream?video=copy
           input_args: preset-rtsp-restream
           roles:
             - detect
