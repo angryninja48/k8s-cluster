@@ -49,7 +49,6 @@ record:
 objects:
   track:
     - person
-    - car
     - dog
   filters:
     person:
@@ -154,7 +153,11 @@ cameras:
       width: 640
       height: 480
       fps: 5
-
+    objects:
+      track:
+        - person
+        - dog
+        - car
   garage:
     ffmpeg:
       output_args:
@@ -172,3 +175,8 @@ cameras:
       width: 640
       height: 480
       fps: 5
+    objects:
+      track:
+        - person
+        - dog
+        - car
