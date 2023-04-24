@@ -117,3 +117,9 @@
         path: "{{ k3s_server_manifests_dir }}/{{ item.filename }}"
         state: absent
       loop: "{{ k3s_server_manifests_urls | default([]) }}"
+
+    - name: Include etcd tasks
+      ansible.builtin.include_tasks: etcd-defrag.yml
+      when:
+        - k3s_control_node is defined
+        - k3s_control_node

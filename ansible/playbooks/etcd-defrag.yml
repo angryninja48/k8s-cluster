@@ -1,0 +1,57 @@
+---
+- hosts:
+    - master
+    - worker
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+  pre_tasks:
+    - name: Pausing for 5 seconds...
+      ansible.builtin.pause:
+        seconds: 5
+  tasks:
+    - set_fact:
+        host_arch: "amd64"
+      when: "'x86_64' in ansible_architecture"
+
+    - set_fact:
+        etcd_name: "etcd-{{ etcd_version }}-linux-{{ host_arch }}"
+
+    - name: Install etcdctl
+      ansible.builtin.shell:
+        cmd: "curl -sSfL https://github.com/etcd-io/etcd/releases/download/{{ etcd_version }}/{{ etcd_name }}.tar.gz | tar xzvf - -C /usr/local/bin --strip-components=1 {{ etcd_name }}/etcdctl"
+
+    - name: Create etcd-defrag service
+      ansible.builtin.template:
+        dest: /etc/systemd/system/etcd-defrag.service
+        group: root
+        mode: 0644
+        owner: root
+        src: etcd-defrag.service.j2
+      notify: enable etcd-defrag service
+
+    - name: Create etcd-defrag service timer
+      ansible.builtin.template:
+        dest: /etc/systemd/system/etcd-defrag.timer
+        group: root
+        mode: 0644
+        owner: root
+        src: etcd-defrag.timer.j2
+      notify: enable etcd-defrag timer
+
+  handlers:
+    - name: Enable etcd-defrag service
+      ansible.builtin.systemd:
+        name: etcd-defrag.service
+        daemon-reload: true
+        enabled: true
+        state: restarted
+      listen: enable etcd-defrag service
+
+    - name: Enable etcd-defrag timer
+      ansible.builtin.systemd:
+        name: etcd-defrag.timer
+        daemon-reload: true
+        enabled: true
+        state: restarted
+      listen: enable etcd-defrag timer
