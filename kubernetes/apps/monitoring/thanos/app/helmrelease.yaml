@@ -69,6 +69,8 @@ spec:
         extraTls:
           - hosts:
               - *host
+      extraFlags:
+        - --query.auto-downsampling
     bucketweb:
       enabled: true
       replicaCount: 1
