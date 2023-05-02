@@ -233,3 +233,9 @@ spec:
           # scheme: http
             static_configs:
               - targets: [home-assistant.home.svc:8123]
+          - job_name: minio-job
+            bearer_token: ${SECRET_MINIO_PROM_TOKEN}
+            metrics_path: /minio/v2/metrics/cluster
+            scheme: http
+            static_configs:
+              - targets: ['${SECRET_NAS_IP}:9000']
