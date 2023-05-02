@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.3.2
+      version: 1.4.0
       interval: 30m
       sourceRef:
         kind: HelmRepository
@@ -60,20 +60,25 @@ spec:
         loadBalancerIP: ${SVC_UNIFI_ADDR}
         externalTrafficPolicy: Local
         ports:
-          stun:
+          http:
+            port: 8443
+            protocol: HTTPS
+          controller:
+            enabled: true
+            port: 8080
+            protocol: TCP
+          portal-http:
             enabled: false
-          syslog:
+            port: 8880
+            protocol: HTTP
+          portal-https:
             enabled: false
-          discovery:
-            enabled: false
-      udp:
-        enabled: true
-        type: LoadBalancer
-        annotations:
-          metallb.universe.tf/allow-shared-ip: unifi
-        loadBalancerIP: ${SVC_UNIFI_ADDR}
-        externalTrafficPolicy: Local
-        ports:
+            port: 8843
+            protocol: HTTPS
+          speedtest:
+            enabled: true
+            port: 6789
+            protocol: TCP
           stun:
             enabled: true
             port: 3478
@@ -86,46 +91,6 @@ spec:
             enabled: true
             port: 10001
             protocol: UDP
-
-    # service:
-    #   main:
-    #     type: LoadBalancer
-    #     annotations:
-    #       coredns.io/hostname: mqtt.${SECRET_DOMAIN}
-    #     loadBalancerIP: ${SVC_UNIFI_ADDR}
-    #     externalTrafficPolicy: Local
-    #     ports:
-    #       http:
-    #         port: 8443
-    #         protocol: HTTPS
-    #       controller:
-    #         enabled: true
-    #         port: 8080
-    #         protocol: TCP
-    #       portal-http:
-    #         enabled: false
-    #         port: 8880
-    #         protocol: HTTP
-    #       portal-https:
-    #         enabled: false
-    #         port: 8843
-    #         protocol: HTTPS
-    #       speedtest:
-    #         enabled: true
-    #         port: 6789
-    #         protocol: TCP
-    #       stun:
-    #         enabled: true
-    #         port: 3478
-    #         protocol: UDP
-    #       syslog:
-    #         enabled: true
-    #         port: 5514
-    #         protocol: UDP
-    #       discovery:
-    #         enabled: true
-    #         port: 10001
-    #         protocol: UDP
 
     ingress:
       main:
