@@ -16,6 +16,13 @@ spec:
     storageClass: ceph-block
   superuserSecret:
     name: postgres-superuser
+  bootstrap:
+    recovery:
+      source: &previous-cluster postgres-v2
+  postgresql:
+    parameters:
+      max_connections: "600"
+      shared_buffers: 512MB
   monitoring:
     enablePodMonitor: true
   backup:
@@ -35,18 +42,18 @@ spec:
           name: cloudnative-pg
           key: MINIO_SECRET_KEY
   # Note: externalClusters is needed when recovering from an existing cnpg cluster
-  # externalClusters:
-  #   - name: *previous-cluster
-  #     barmanObjectStore:
-  #       wal:
-  #         compression: bzip2
-  #         maxParallel: 8
-  #       destinationPath: s3://postgresql/
-  #       endpointURL: http://s3.turbo.ac
-  #       s3Credentials:
-  #         accessKeyId:
-  #           name: cloudnative-pg-secret
-  #           key: aws-access-key-id
-  #         secretAccessKey:
-  #           name: cloudnative-pg-secret
-  #           key: aws-secret-access-key
+  externalClusters:
+    - name: *previous-cluster
+      barmanObjectStore:
+        wal:
+          compression: bzip2
+          maxParallel: 8
+        destinationPath: s3://postgresql/
+        endpointURL: ${SECRET_S3_URL}
+        s3Credentials:
+          accessKeyId:
+            name: cloudnative-pg
+            key: MINIO_ACCESS_KEY
+          secretAccessKey:
+            name: cloudnative-pg
+            key: MINIO_SECRET_KEY
