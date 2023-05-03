@@ -18,9 +18,9 @@ spec:
       kind: HelmRelease
       name: cloudnative-pg
       namespace: databases
-  interval: 30m
+  interval: 15m
   retryInterval: 1m
-  timeout: 3m
+  timeout: 5m
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/kustomization_v1beta2.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -39,6 +39,6 @@ spec:
     kind: GitRepository
     name: home-kubernetes
   wait: true
-  interval: 30m
+  interval: 15m
   retryInterval: 1m
-  timeout: 3m
+  timeout: 5m
