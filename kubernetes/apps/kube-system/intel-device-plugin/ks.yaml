@@ -17,9 +17,9 @@ spec:
       kind: HelmRelease
       name: intel-device-plugin-operator
       namespace: kube-system
-  interval: 30m
+  interval: 15m
   retryInterval: 1m
-  timeout: 3m
+  timeout: 5m
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -39,6 +39,6 @@ spec:
       kind: HelmRelease
       name: intel-device-plugin-gpu
       namespace: kube-system
-  interval: 30m
+  interval: 15m
   retryInterval: 1m
-  timeout: 3m
+  timeout: 5m
