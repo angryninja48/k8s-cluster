@@ -130,6 +130,22 @@ spec:
           gnetId: 2842
           revision: 16
           datasource: Prometheus
+        unifi-client-insights:
+          gnetId: 11315
+          revision: 9
+          datasource: Prometheus
+        unifi-network-sites:
+          gnetId: 11311
+          revision: 5
+          datasource: Prometheus
+        unifi-uap-insights:
+          gnetId: 11314
+          revision: 10
+          datasource: Prometheus
+        unifi-usw-insights:
+          gnetId: 11312
+          revision: 9
+          datasource: Prometheus
         cert-manager:
           url: https://raw.githubusercontent.com/monitoring-mixins/website/master/assets/cert-manager/dashboards/cert-manager.json
           datasource: Prometheus
@@ -160,28 +176,22 @@ spec:
         kubernetes-pods:
           url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-pods.json
           datasource: Prometheus
-        unpoller:
-          # Ref: https://grafana.com/grafana/dashboards/11315
-          clients:
-            gnetId: 11315
-            revision: 9
-            datasource:
-              - name: "DS_PROMETHEUS"
-                value: Prometheus
-          # Ref: https://grafana.com/grafana/dashboards/11312
-          usw:
-            gnetId: 11312
-            revision: 9
-            datasource:
-              - name: "DS_PROMETHEUS"
-                value: Prometheus
-          # Ref: https://grafana.com/grafana/dashboards/11314
-          uap:
-            gnetId: 11314
-            revision: 10
-            datasource:
-              - name: "DS_PROMETHEUS"
-                value: Prometheus
+        power-usage:
+          url: https://raw.githubusercontent.com/angryninja48/grafana-dashboards/main/power-usage.json
+          datasource: Prometheus
+        temp-humidity:
+          url: https://raw.githubusercontent.com/angryninja48/grafana-dashboards/main/temperature.json
+          datasource: Prometheus
+        speedtest:
+          url: https://raw.githubusercontent.com/angryninja48/grafana-dashboards/main/speedtest.json
+          datasource: Prometheus
+        powerv2:
+          url: https://raw.githubusercontent.com/angryninja48/grafana-dashboards/main/powerv2.json
+          datasource: Prometheus
+        hotwater:
+          url: https://raw.githubusercontent.com/angryninja48/grafana-dashboards/main/hotwater.json
+          datasource: Prometheus
+
     sidecar:
       dashboards:
         enabled: true
