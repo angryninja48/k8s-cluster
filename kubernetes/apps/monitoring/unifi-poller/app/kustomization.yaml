@@ -5,3 +5,26 @@ kind: Kustomization
 namespace: monitoring
 resources:
   - helmrelease.yaml
+configMapGenerator:
+  - name: unifi-poller-client-insights-dashboard
+    files:
+      - unifi-poller-client-insights-dashboard.json=https://raw.githubusercontent.com/unpoller/dashboards/master/v2.0.0/UniFi-Poller_%20Client%20Insights%20-%20Prometheus.json
+  - name: unifi-poller-network-sites-dashboard
+    files:
+      - unifi-poller-network-sites-dashboard-dashboard.json=https://raw.githubusercontent.com/unpoller/dashboards/master/v2.0.0/UniFi-Poller_%20Network%20Sites%20-%20Prometheus.json
+  - name: unifi-poller-uap-insights-dashboard
+    files:
+      - unifi-poller-uap-insights-dashboard-dashboard.json=https://raw.githubusercontent.com/unpoller/dashboards/master/v2.0.0/UniFi-Poller_%20UAP%20Insights%20-%20Prometheus.json
+  - name: unifi-poller-usw-insights-dashboard
+    files:
+      - unifi-poller-usw-insights-dashboard-dashboard.json=https://raw.githubusercontent.com/unpoller/dashboards/master/v2.0.0/UniFi-Poller_%20USW%20Insights%20-%20Prometheus.json
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+  labels:
+    grafana_dashboard: "true"
+labels:
+  - pairs:
+      app.kubernetes.io/name: unifi-poller
+      app.kubernetes.io/instance: unifi-poller
