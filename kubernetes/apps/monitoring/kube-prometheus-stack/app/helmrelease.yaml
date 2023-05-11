@@ -225,14 +225,14 @@ spec:
           limits:
             memory: 7000Mi
         additionalScrapeConfigs:
-          - job_name: home-assistant
-            scrape_interval: 60s
-            metrics_path: /api/prometheus
-          # https://developers.home-assistant.io/docs/auth_api/#long-lived-access-token
-            bearer_token: ${SECRET_HASS_PROM_TOKEN}
-          # scheme: http
-            static_configs:
-              - targets: [home-assistant.home.svc:8123]
+          # - job_name: home-assistant
+          #   scrape_interval: 60s
+          #   metrics_path: /api/prometheus
+          # # https://developers.home-assistant.io/docs/auth_api/#long-lived-access-token
+          #   bearer_token: ${SECRET_HASS_PROM_TOKEN}
+          # # scheme: http
+          #   static_configs:
+          #     - targets: [home-assistant.home.svc:8123]
           - job_name: minio-job
             bearer_token: ${SECRET_MINIO_PROM_TOKEN}
             metrics_path: /minio/v2/metrics/cluster
