@@ -64,7 +64,7 @@ go2rtc:
     zara_substream:
       - rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_ZARA_CAMERA_HOST}:554/stream2
     max_main:
-      - "ffmpeg:rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}:554/stream1#video=copy#audio=copy#audio=opus"
+      - "ffmpeg:rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_MAX_CAMERA_HOST}:554/stream1#video=copy#audio=copy#audio=opus"
     max_substream:
       - rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_MAX_CAMERA_HOST}:554/stream2
     playroom_main:
