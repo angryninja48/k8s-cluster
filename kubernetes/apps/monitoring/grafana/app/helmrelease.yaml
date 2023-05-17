@@ -26,6 +26,19 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    extraInitContainers:
+      - name: postgres-init-db
+        image: ghcr.io/onedr0p/postgres-init:14.8
+        imagePullPolicy: IfNotPresent
+        envFrom:
+          - secretRef:
+              name: grafana-secrets
+        env:
+          - name: POSTGRES_SUPER_PASS
+            valueFrom:
+              secretKeyRef:
+                name: postgres-superuser
+                key: password
     replicas: 1
     rbac:
       pspEnabled: false
@@ -51,9 +64,9 @@ spec:
       GF_SECURITY_ALLOW_EMBEDDING: true
       GF_SECURITY_COOKIE_SAMESITE: grafana
       GF_SERVER_ROOT_URL: https://grafana.${SECRET_DOMAIN}
-    # envFrom:
-    #   - secretRef:
-    #       name: grafana-secrets
+    envFrom:
+      - secretRef:
+          name: grafana-secrets
     grafana.ini:
       auth.anonymous:
         enabled: true
