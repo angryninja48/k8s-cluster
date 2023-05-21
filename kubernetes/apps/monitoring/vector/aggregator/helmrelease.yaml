@@ -51,6 +51,10 @@ spec:
           kubernetes:
             enabled: true
             port: 6010
+          opnsense-logs:
+            enabled: true
+            port: 5140
+            protocol: UDP
     persistence:
       config:
         enabled: true
