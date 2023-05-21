@@ -25,7 +25,7 @@ spec:
         type: LoadBalancer
         annotations:
           metallb.universe.tf/allow-shared-ip: mosquitto
-        loadBalancerIP: 10.20.0.54
+        loadBalancerIP: ${SVC_MOSQUITTO_ADDR}
         externalTrafficPolicy: Local
     auth:
       # -- By enabling this, `allow_anonymous` gets set to `false` in the mosquitto config.
