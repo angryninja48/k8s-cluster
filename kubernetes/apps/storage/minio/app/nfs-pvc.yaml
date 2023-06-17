@@ -6,7 +6,7 @@ metadata:
 spec:
   storageClassName: minio
   capacity:
-    storage: 1Mi
+    storage: 500Gi
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
@@ -28,4 +28,4 @@ spec:
   storageClassName: minio
   resources:
     requests:
-      storage: 1Mi
+      storage: 500Gi
