@@ -28,6 +28,12 @@ spec:
     keepHistory: false
   values:
     loki:
+      readinessProbe:
+        httpGet:
+          path: /ready
+          port: http-metrics
+        initialDelaySeconds: 300
+        timeoutSeconds: 5
       structuredConfig:
         auth_enabled: false
         server:
