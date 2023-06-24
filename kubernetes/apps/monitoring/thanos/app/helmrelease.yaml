@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: thanos
-      version: 12.6.2
+      version: 12.8.3
       sourceRef:
         kind: HelmRepository
         name: bitnami
@@ -95,9 +95,9 @@ spec:
     compactor:
       enabled: true
       extraFlags: ["--compact.concurrency", "4"]
-      retentionResolutionRaw: 180d  # How long to retain raw samples
-      retentionResolution5m: 2y  # How long to retain 5 min samples
-      # retentionResolution1h: 5y  # How long to retain 1 hour samples
+      retentionResolutionRaw: 90d  # How long to retain raw samples
+      retentionResolution5m: 180d  # How long to retain 5 min samples
+      # retentionResolution1h: 3y  # How long to retain 1 hour samples
       ingress:
         enabled: true
         ingressClassName: nginx
