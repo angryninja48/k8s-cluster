@@ -45,6 +45,18 @@ spec:
           api:
             enabled: true
             port: &port-api 9000
+    serviceMonitor:
+      main:
+        enabled: true
+        endpoints:
+          - port: api
+            scheme: http
+            path: /minio/v2/metrics/cluster
+            interval: 1m
+            scrapeTimeout: 10s
+            bearerTokenSecret:
+              name: minio-secret
+              key: MINIO_PROMETHEUS_TOKEN
     ingress:
       main:
         enabled: true
@@ -79,7 +91,7 @@ spec:
               - *host-api
             secretName: minio-tls
     podSecurityContext:
-      runAsUser: 1024
+      runAsUser: 1024 #match nfs user
       runAsGroup: 100
       fsGroup: 100
       fsGroupChangePolicy: "OnRootMismatch"
