@@ -6,6 +6,8 @@ metadata:
   name: cluster-apps-minio
   namespace: flux-system
 spec:
+  dependsOn:
+    - name: cluster-apps-kube-prometheus-stack
   path: ./kubernetes/apps/storage/minio/app
   prune: true
   sourceRef:
