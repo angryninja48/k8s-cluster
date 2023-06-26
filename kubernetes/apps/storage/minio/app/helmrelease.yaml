@@ -55,7 +55,7 @@ spec:
             interval: 1m
             scrapeTimeout: 10s
             bearerTokenSecret:
-              name: minio-secret
+              name: minio-secrets
               key: MINIO_PROMETHEUS_TOKEN
     ingress:
       main:
