@@ -59,9 +59,9 @@ spec:
           mqtt:
             enabled: true
             port: 1883
-          mqtts:
-            enabled: true
-            port: 8883
+          # mqtts:
+          #   enabled: true
+          #   port: 8883
     podSecurityContext:
       runAsUser: 568
       runAsGroup: 568
