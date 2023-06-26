@@ -1,0 +1,32 @@
+# yamllint disable
+# mosquitto_pwd: username:password
+kind: Secret
+apiVersion: v1
+type: Opaque
+metadata:
+    name: mosquitto-secret
+    namespace: home
+stringData:
+    username: ENC[AES256_GCM,data:kNlg+A==,iv:2N6Y4ebbLZvabVBU05xizr3GVjtmEIud0972BlFmD2Y=,tag:m0SV4CBjf/fmyYmZuq7Wlw==,type:str]
+    password: ENC[AES256_GCM,data:3ADtNPSnuxCk,iv:Xx8TKMwR8cg/9/OJrDSUjvSXtqKUHdNUGYNOH12AcqQ=,tag:qUh4LvanGwOZtumkSKBjdg==,type:str]
+    mosquitto_pwd: ENC[AES256_GCM,data:KrG9tk+tEU5rGs+YUbM=,iv:BjzodMwLL9baQyEGbLGJtHB70ivxiKn9KrIJ/aUueKY=,tag:QF6TD9mRAFyzHf5y3wDnbA==,type:str]
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age1wvlv68u3uadfpjvluuydng2xj726pa4j5lzfzrp5z4333c2tv5fsftppun
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBCN0ZuTkZFQ2E2SlgxWlFS
+            TXRxTkluejRwampBaWlRWlZGbGxGTHJDL200ClhUQVBQYVh2UnU1N092MXg2di9N
+            dnlNUnFTbHNyZExJMytJcHRPcENQbG8KLS0tIFRsVlpkZE16NEZXREQrb0Q0U0ow
+            TjBBWXFINEJwcG5yNmdNTjNXNk5qZU0Knv9icpQdRk9M6ZKZWhl8ditpLZaPV2Tc
+            SPTrGTutZwP8qj1TDyVCxicihlQialReJmkTqIyECwql4/xl6X8YTg==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2023-06-26T01:42:21Z"
+    mac: ENC[AES256_GCM,data:NdHOxVYmLjqE79pAl2873g06/UrVtT50OiBbuSgYg5Rc+/xsAgV0GaeU2FDH2UN19UB+m2raIslq2uUOJfn3wXEDPAKvhfDd3874EE3oiz4P770vJGxZ+qbF0WloTHYbVWy8QMs3gUHpJMI0+i/ZH788+cKCvHwKyzVBsw7qgpo=,iv:AgHVEWwKAhyHyyEVMkcXDouFpeWY4pCATvVX3M3dTUE=,tag:bb+9w9D4DJV3qUftkWfVCA==,type:str]
+    pgp: []
+    encrypted_regex: ^(data|stringData)$
+    version: 3.7.3
