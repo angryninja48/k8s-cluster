@@ -121,11 +121,12 @@ spec:
           - hosts:
               - *api-host
     podSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      fsGroup: 568
-      fsGroupChangePolicy: OnRootMismatch
-      supplementalGroups: [100]
+      runAsUser: 1024 #match nfs user
+      runAsGroup: 100
+      fsGroup: 100
+      fsGroupChangePolicy: "OnRootMismatch"
+      supplementalGroups:
+        - 100
     persistence:
       config:
         enabled: true
