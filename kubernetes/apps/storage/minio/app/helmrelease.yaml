@@ -64,14 +64,6 @@ spec:
         annotations:
           hajimari.io/icon: mdi:pail
           hajimari.io/enable: "true"
-          external-dns.home.arpa/enabled: "false"
-          nginx.ingress.kubernetes.io/proxy-ssl-verify: "off"
-          nginx.ingress.kubernetes.io/rewrite-target: /
-          nginx.ingress.kubernetes.io/proxy-body-size: "0"
-          nginx.ingress.kubernetes.io/server-snippet: |
-            client_max_body_size 0;
-          nginx.ingress.kubernetes.io/configuration-snippet: |
-            chunked_transfer_encoding off;
         hosts:
           - host: &host-console "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
