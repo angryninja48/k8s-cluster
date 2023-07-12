@@ -33,7 +33,7 @@ spec:
 
     image:
       repository: jacobalberty/unifi
-      tag: v7.3.83
+      tag: v7.4.162
 
     podAnnotations:
       backup.velero.io/backup-volumes: data
