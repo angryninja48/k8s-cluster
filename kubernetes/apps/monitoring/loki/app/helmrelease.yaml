@@ -108,8 +108,15 @@ spec:
           reporting_enabled: false
     gateway:
       replicas: 3
+      # image:
+      #   registry: ghcr.io
       image:
-        registry: ghcr.io
+        # -- The Docker registry for the gateway image
+        registry: docker.io
+        # -- The gateway image repository
+        repository: nginxinc/nginx-unprivileged
+        # -- The gateway image tag
+        tag: 1.19-alpine
       ingress:
         enabled: true
         ingressClassName: nginx
