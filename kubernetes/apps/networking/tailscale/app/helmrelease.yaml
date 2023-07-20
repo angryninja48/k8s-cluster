@@ -42,18 +42,9 @@ spec:
 
     service:
       main:
-        enabled: false
-      # tailnet:
-      #   enabled: true
-      #   type: LoadBalancer
-      #   loadBalancerIP: ${SVC_TAILSCALE_ADDR}
-      #   externalTrafficPolicy: Local
-      #   ports:
-      #     tailnet:
-      #       enabled: true
-      #       port: *port
-      #       protocol: UDP
-      #       targetPort: *port
+        ports:
+          http:
+            port: &port 45387
 
     podSecurityContext:
       runAsUser: 1000
