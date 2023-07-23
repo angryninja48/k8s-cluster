@@ -60,15 +60,18 @@ objects:
 go2rtc:
   streams:
     zara_main:
-      - "rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_ZARA_CAMERA_HOST}:554/stream1#video=copy#audio=copy#audio=opus"
+      - "rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_ZARA_CAMERA_HOST}:554/stream1"
+      - "ffmpeg:zara_main#audio=opus"
     zara_substream:
       - rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_ZARA_CAMERA_HOST}:554/stream2
     max_main:
-      - "rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_MAX_CAMERA_HOST}:554/stream1#video=copy#audio=copy#audio=opus"
+      - "rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_MAX_CAMERA_HOST}:554/stream1"
+      - "ffmpeg:max_main#audio=opus"
     max_substream:
       - rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_MAX_CAMERA_HOST}:554/stream2
     playroom_main:
-      - "rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_PLAYROOM_CAMERA_HOST}:554/stream1#video=copy#audio=copy#audio=opus"
+      - "rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_PLAYROOM_CAMERA_HOST}:554/stream1"
+      - "ffmpeg:playroom_main#audio=opus"
     playroom_substream:
       - rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_PLAYROOM_CAMERA_HOST}:554/stream2
     garage_door_main:
