@@ -101,9 +101,9 @@ spec:
     compactor:
       enabled: true
       extraFlags: ["--compact.concurrency", "4"]
-      retentionResolutionRaw: 90d  # How long to retain raw samples
-      retentionResolution5m: 180d  # How long to retain 5 min samples
-      # retentionResolution1h: 3y  # How long to retain 1 hour samples
+      retentionResolutionRaw: 30d  # How long to retain raw samples
+      retentionResolution5m: 90d  # How long to retain 5 min samples
+      retentionResolution1h: 2y  # How long to retain 1 hour samples
       ingress:
         enabled: true
         ingressClassName: nginx
