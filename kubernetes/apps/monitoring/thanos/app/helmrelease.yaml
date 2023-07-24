@@ -37,7 +37,7 @@ spec:
       type: s3
       config:
         endpoint: minio.storage.svc.cluster.local:9000
-        bucket: thanos
+        bucket: thanos-v1
         insecure: true
 
     queryFrontend:
