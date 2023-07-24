@@ -179,9 +179,9 @@ spec:
   valuesFrom:
     - targetPath: objstoreConfig.config.access_key
       kind: Secret
-      name: thanos-secret
+      name: thanos-secret-v1
       valuesKey: MINIO_ACCESS_KEY_ID
     - targetPath: objstoreConfig.config.secret_key
       kind: Secret
-      name: thanos-secret
+      name: thanos-secret-v1
       valuesKey: MINIO_SECRET_ACCESS_KEY
