@@ -121,7 +121,7 @@ spec:
         enabled: true
         image:
           repository: codercom/code-server
-          tag: 4.14.0
+          tag: 4.16.1
         env:
           GIT_AUTHOR_NAME: ${SECRET_NAME}
           GIT_COMMITTER_NAME: ${SECRET_NAME}
