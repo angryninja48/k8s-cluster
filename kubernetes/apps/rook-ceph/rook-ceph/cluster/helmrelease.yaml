@@ -72,7 +72,7 @@ spec:
               - name: "/dev/disk/by-id/ata-WDC_WDS240G2G0B-00EPW0_191959804062"
           - name: k3s-1
             devices:
-              - name: "/dev/disk/by-id/nvme-eui.6479a7506020089d"
+              - name: "/dev/disk/by-id/ata-CT500MX500SSD1_2324E6E218EA"
           - name: k3s-2
             devices:
               - name: "/dev/disk/by-id/ata-WDC_WDS240G2G0B-00EPW0_191838801396"
