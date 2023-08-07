@@ -10,7 +10,7 @@ spec:
     spec:
       # renovate: registryUrl=https://vmware-tanzu.github.io/helm-charts
       chart: velero
-      version: 4.1.3
+      version: 4.0.2
       sourceRef:
         kind: HelmRepository
         name: vmware-tanzu
@@ -21,17 +21,17 @@ spec:
       extraEnvVars:
         TZ: ${TIMEZONE}
 
-      # provider: aws
+      provider: aws
 
       backupStorageLocation:
-        - name: default
-          bucket: velero
-          default: true
-          config:
-            region: ap-southeast-2
-            s3ForcePathStyle: true
-            s3Url: ${SECRET_S3_URL}
-            publicUrl: ${SECRET_S3_URL}
+        name: default
+        bucket: velero
+        default: true
+        config:
+          region: ap-southeast-2
+          s3ForcePathStyle: true
+          s3Url: ${SECRET_S3_URL}
+          publicUrl: ${SECRET_S3_URL}
 
     initContainers:
       - name: velero-plugin-for-aws
