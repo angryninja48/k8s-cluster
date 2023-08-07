@@ -6,7 +6,6 @@ metadata:
   namespace: flux-system
 data:
   TIMEZONE: "Australia/Sydney"
-  KUBE_VIP_ADDR: "10.20.0.254"
   METALLB_LB_RANGE: "10.20.0.50-10.20.0.59"
   METALLB_K8S_GATEWAY_ADDR: "10.20.0.50"
   METALLB_INGRESS_ADDR: "10.20.0.51"
