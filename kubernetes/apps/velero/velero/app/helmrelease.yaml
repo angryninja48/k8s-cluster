@@ -24,14 +24,14 @@ spec:
       # provider: aws
 
       backupStorageLocation:
-        name: default
-        bucket: velero
-        default: true
-        config:
-          region: ap-southeast-2
-          s3ForcePathStyle: true
-          s3Url: ${SECRET_S3_URL}
-          publicUrl: ${SECRET_S3_URL}
+        - name: default
+          bucket: velero
+          default: true
+          config:
+            region: ap-southeast-2
+            s3ForcePathStyle: true
+            s3Url: ${SECRET_S3_URL}
+            publicUrl: ${SECRET_S3_URL}
 
     initContainers:
       - name: velero-plugin-for-aws
