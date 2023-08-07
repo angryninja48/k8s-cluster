@@ -34,7 +34,7 @@ spec:
       TS_KUBE_SECRET: "tailscale-auth"
       SA_NAME: tailscale
       TS_USERSPACE: "true"
-      TS_ROUTES: ["${SECRET_IOT_CIDR}", "${SECRET_LAN_CIDR}"]
+      TS_ROUTES: ${SECRET_IOT_CIDR}
       TS_ACCEPT_DNS: "false"
       TS_EXTRA_ARGS: "--advertise-exit-node"
     envFrom:
