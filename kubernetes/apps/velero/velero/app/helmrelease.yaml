@@ -21,8 +21,6 @@ spec:
       extraEnvVars:
         TZ: ${TIMEZONE}
 
-      provider: aws
-
       backupStorageLocation:
         - name: default
           bucket: velero
