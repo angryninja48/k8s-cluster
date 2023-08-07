@@ -6,6 +6,8 @@ metadata:
   name: cluster-apps-speedtest
   namespace: flux-system
 spec:
+  dependsOn:
+    - name: cluster-apps-kube-prometheus-stack
   path: ./kubernetes/apps/monitoring/speedtest/app
   prune: true
   sourceRef:
