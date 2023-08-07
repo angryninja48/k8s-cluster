@@ -21,7 +21,7 @@ spec:
       extraEnvVars:
         TZ: ${TIMEZONE}
 
-      provider: aws
+      # provider: aws
 
       backupStorageLocation:
         name: default
