@@ -35,6 +35,12 @@ spec:
             s3Url: ${SECRET_S3_URL}
             publicUrl: ${SECRET_S3_URL}
 
+      volumeSnapshotLocation:
+        - name: aws
+          provider: aws
+          config:
+            region: "ap-southeast-2"
+
     initContainers:
       - name: velero-plugin-for-aws
         image: velero/velero-plugin-for-aws:v1.7.1@sha256:d3fa2219c030533dc2da0cb82c003d947ee6ef33277a71d3184a1e7a2fe6dea3
