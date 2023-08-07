@@ -11,11 +11,8 @@ kubeconfig
 *.key
 # Ansible
 xanmanning.k3s*
-<<<<<<< HEAD
 # Terraform
 .terraform
 .terraform.tfstate*
 terraform.tfstate*
 *.sql
-=======
->>>>>>> v4.3.0
