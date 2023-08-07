@@ -53,7 +53,6 @@ spec:
           maxParallel: 8
         destinationPath: s3://postgresql/
         endpointURL: ${SECRET_S3_URL}
-        serverName: &currentCluster postgres-v2
         s3Credentials:
           accessKeyId:
             name: cloudnative-pg
