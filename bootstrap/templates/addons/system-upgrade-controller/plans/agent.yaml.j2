@@ -1,0 +1,23 @@
+---
+apiVersion: upgrade.cattle.io/v1
+kind: Plan
+metadata:
+  name: agent
+  namespace: system-upgrade
+spec:
+  # renovate: datasource=github-releases depName=k3s-io/k3s
+<<<<<<< HEAD:kubernetes/apps/system-upgrade/system-upgrade-controller/plans/agent.yaml
+  version: "v1.27.3+k3s1"
+=======
+  version: "v1.27.4+k3s1"
+>>>>>>> template/main:bootstrap/templates/addons/system-upgrade-controller/plans/agent.yaml.j2
+  serviceAccountName: system-upgrade
+  concurrency: 1
+  nodeSelector:
+    matchExpressions:
+      - {key: node-role.kubernetes.io/control-plane, operator: DoesNotExist}
+  prepare:
+    image: rancher/k3s-upgrade
+    args: ["prepare", "server"]
+  upgrade:
+    image: rancher/k3s-upgrade

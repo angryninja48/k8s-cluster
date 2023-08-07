@@ -3,16 +3,19 @@
 Thumbs.db
 # k8s
 kubeconfig
-# vscode-sops
 .decrypted~*.yaml
 .config.env
 *.agekey
 *.pub
 *.key
 # Ansible
+<<<<<<< HEAD
 xanmanning.k3s*
 # Terraform
 .terraform
 .terraform.tfstate*
 terraform.tfstate*
 *.sql
+=======
+.venv*
+>>>>>>> template/main

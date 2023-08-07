@@ -1,0 +1,14 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: coredns
+  namespace: flux-system
+spec:
+<<<<<<< HEAD:kubernetes/flux/repositories/helm/bitnami.yaml
+  interval: 2h
+  url: https://charts.bitnami.com/bitnami
+=======
+  interval: 1h
+  url: https://coredns.github.io/helm
+>>>>>>> template/main:bootstrap/templates/kubernetes/flux/repositories/helm/coredns.yaml.j2

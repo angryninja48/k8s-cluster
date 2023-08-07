@@ -1,0 +1,32 @@
+---
+collections:
+<<<<<<< HEAD:ansible/requirements.yml
+  - name: community.general
+    version: 7.1.0
+  - name: community.sops
+    version: 1.6.4
+=======
+>>>>>>> template/main:requirements.yaml
+  - name: ansible.posix
+    version: 1.5.4
+  - name: ansible.utils
+    version: 2.10.3
+<<<<<<< HEAD:ansible/requirements.yml
+=======
+  - name: community.general
+    version: 7.2.1
+  - name: community.sops
+    version: 1.6.4
+>>>>>>> template/main:requirements.yaml
+  - name: kubernetes.core
+    version: 2.4.0
+roles:
+  - name: xanmanning.k3s
+<<<<<<< HEAD:ansible/requirements.yml
+    src: https://github.com/PyratLabs/ansible-role-k3s.git
+    version: v3.4.2
+  - name: juju4.ipv6
+    version: 1.7.0
+=======
+    version: v3.4.2
+>>>>>>> template/main:requirements.yaml

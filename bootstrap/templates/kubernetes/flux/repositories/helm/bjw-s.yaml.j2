@@ -1,0 +1,15 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: bjw-s
+  namespace: flux-system
+spec:
+<<<<<<< HEAD:kubernetes/flux/repositories/helm/bjw-s.yaml
+  interval: 2h
+  url: https://bjw-s.github.io/helm-charts/
+=======
+  type: oci
+  interval: 5m
+  url: oci://ghcr.io/bjw-s/helm
+>>>>>>> template/main:bootstrap/templates/kubernetes/flux/repositories/helm/bjw-s.yaml.j2

@@ -1,0 +1,14 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: grafana
+  namespace: flux-system
+spec:
+<<<<<<< HEAD:kubernetes/flux/repositories/helm/weave-gitops.yaml
+  interval: 2h
+  url: https://helm.gitops.weave.works
+=======
+  interval: 1h
+  url: https://grafana.github.io/helm-charts
+>>>>>>> template/main:bootstrap/templates/kubernetes/flux/repositories/helm/grafana.yaml.j2
