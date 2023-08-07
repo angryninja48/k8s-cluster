@@ -9,5 +9,5 @@ resources:
   - ./ingress-nginx/ks.yaml
   - ./k8s-gateway/ks.yaml
   - ./metallb/ks.yaml
-  - ./tailscale/ks.yaml
+  # - ./tailscale/ks.yaml
   - ./unifi/ks.yaml
