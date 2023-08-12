@@ -1,16 +1,6 @@
-# Template for deploying Kubernetes (k3s) backed by Flux
+# Template for deploying a Kubernetes cluster backed by Flux
 
-This is a highly opinionated template for deploying a single Kubernetes ([k3s](https://k3s.io)) cluster with [Ansible](https://www.ansible.com) and managing applications with [Flux](https://toolkit.fluxcd.io/). Upon completion you will be able to expose web applications you choose to the internet with [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/).
-
-There are some limitations or nuances to bring up before you would want to take a dive in trying this out:
-
-1. This was designed to run in your home network on bare metal machines or VMs **NOT** in the cloud.
-2. You **MUST** have a domain you can manage on Cloudflare.
-3. Secrets will be commited to your Git repository **AND** they will be encrypted by SOPS.
-4. By default your domain name will **NOT** be visible to the public.
-5. To reach internal-only apps you **MUST** have a DNS server that supports split DNS (Pi-Hole, Blocky, Dnsmasq, Unbound, etc...) deployed somewhere outside the cluster **ON** your home network.
-
-With that out of the way please continue on if you are still interested...
+Welcome to my highly opinionated template for deploying a single Kubernetes ([k3s](https://k3s.io)) cluster with [Ansible](https://www.ansible.com) and managing applications with [Flux](https://toolkit.fluxcd.io/). Upon completion you will be able to expose web applications you choose to the internet with [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/).
 
 ## Overview
 
@@ -41,9 +31,16 @@ _Additional applications include [hajimari](https://github.com/toboshii/hajimari
 
 ## 📝 Prerequisites
 
-**Note:** _This template has not been tested on cloud providers like AWS EC2, Hetzner, Scaleway etc... Those cloud offerings probably have a better way of provsioning a Kubernetes cluster and it's advisable to use those instead of the Ansible playbooks included here. This repository can still be tweaked for the GitOps/Flux portion if there's a cluster working in one those environments._
+1. Please bring a **positive attitude** and be ready to learn and fail a lot. The more you fail, the more you can learn from.
+2. This was designed to run in your home network on bare metal machines or VMs **NOT** in the cloud.
+3. You **MUST** have a domain you can manage on Cloudflare.
+4. Secrets will be commited to your Git repository **AND** they will be encrypted by SOPS.
+5. By default your domain name will **NOT** be visible to the public.
+6. To reach internal-only apps you **MUST** have a DNS server that supports split DNS (Pi-Hole, Blocky, Dnsmasq, Unbound, etc...) deployed somewhere outside your cluster **ON** your home network.
+7. In order for this all to work you have to use nodes that have access to the internet. This is not going to work in air-gapped environments.
+8. Only **amd64** and/or **arm64** nodes are supported.
 
-First and foremost some experience in debugging/troubleshooting problems **and a positive attitude is required** :)
+With that out of the way please continue on if you are still interested...
 
 ### 📚 Reading material
 
@@ -83,7 +80,7 @@ Clone **your new repo** to you local workstation and `cd` into it.
 
 1. Install the following CLI tools on your workstation, if you are **NOT** using [Homebrew](https://brew.sh/) on MacOS or Linux **ignore** steps 4 and 5.
 
-   - Required: [age](https://github.com/FiloSottile/age), [ansible](https://www.ansible.com), [flux](https://toolkit.fluxcd.io/), [weave-gitops](https://docs.gitops.weave.works/docs/installation/weave-gitops/), [go-task](https://github.com/go-task/task), [direnv](https://github.com/direnv/direnv), [ipcalc](http://jodies.de/ipcalc), [jq](https://stedolan.github.io/jq/), [kubectl](https://kubernetes.io/docs/tasks/tools/), [python-pip3](https://pypi.org/project/pip/), [pre-commit](https://github.com/pre-commit/pre-commit), [sops v3](https://github.com/mozilla/sops), [yq v4](https://github.com/mikefarah/yq)
+   - Required: [age](https://github.com/FiloSottile/age), [ansible](https://www.ansible.com), [flux](https://toolkit.fluxcd.io/), [weave-gitops](https://docs.gitops.weave.works/docs/installation/weave-gitops/), [cloudflared](https://github.com/cloudflare/cloudflared), [cilium-cli](https://github.com/cilium/cilium-cli), [go-task](https://github.com/go-task/task), [direnv](https://github.com/direnv/direnv), [ipcalc](http://jodies.de/ipcalc), [jq](https://stedolan.github.io/jq/), [kubectl](https://kubernetes.io/docs/tasks/tools/), [python-pip3](https://pypi.org/project/pip/), [pre-commit](https://github.com/pre-commit/pre-commit), [sops v3](https://github.com/mozilla/sops), [yq v4](https://github.com/mikefarah/yq)
 
    - Recommended: [helm](https://helm.sh/), [kustomize](https://github.com/kubernetes-sigs/kustomize), [stern](https://github.com/stern/stern), [yamllint](https://github.com/adrienverge/yamllint)
 
@@ -536,8 +533,10 @@ You should be able to access the dashboard at `https://kubernetes.${SECRET_DOMAI
 
 Below is a general guide on trying to debug an issue with an resource or application. For example, if a workload/resource is not showing up or a pod has started but in a `CrashLoopBackOff` or `Pending` state.
 
-1. Start by checking all Flux Kustomizations and verify they are healthy.
+1. Start by checking all Flux Kustomizations & Git Repository & OCI Repository and verify they are healthy.
 
+- `flux get sources oci -A`
+- `flux get sources git -A`
 - `flux get ks -A`
 
 2. Then check all the Flux Helm Releases and verify they are healthy.
