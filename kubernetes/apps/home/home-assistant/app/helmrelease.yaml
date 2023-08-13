@@ -31,7 +31,10 @@ spec:
           - name: POSTGRES_HOST
             value: postgres-rw.databases.svc.cluster.local
           - name: POSTGRES_DB
-            value: home-assistant-v2
+            valueFrom:
+              secretKeyRef:
+                name: home-assistant-secrets
+                key: POSTGRES_DB
           - name: POSTGRES_SUPER_PASS
             valueFrom:
               secretKeyRef:
@@ -40,13 +43,13 @@ spec:
           - name: POSTGRES_USER
             valueFrom:
               secretKeyRef:
-                name: hass-secrets
-                key: hass-postgres-user
+                name: home-assistant-secrets
+                key: POSTGRES_USER
           - name: POSTGRES_PASS
             valueFrom:
               secretKeyRef:
-                name: hass-secrets
-                key: hass-postgres-password
+                name: home-assistant-secrets
+                key: POSTGRES_PASSWORD
 
     podAnnotations:
       backup.velero.io/backup-volumes: config
@@ -54,10 +57,10 @@ spec:
       pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/config"]'
       post.hook.backup.velero.io/container: fsfreeze
       post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/config"]'
-      secret.reloader.stakater.com/reload: hass-secrets
+      secret.reloader.stakater.com/reload: home-assistant-secrets
     envFrom:
       - secretRef:
-          name: hass-secrets
+          name: home-assistant-secrets
 
     hostNetwork: true
     dnsPolicy: ClusterFirstWithHostNet
@@ -81,7 +84,7 @@ spec:
             interval: 60s
             scrapeTimeout: 10s
             bearerTokenSecret:
-              name: hass-secrets
+              name: home-assistant-secrets
               key: SECRET_PROM_TOKEN
 
     ingress:
