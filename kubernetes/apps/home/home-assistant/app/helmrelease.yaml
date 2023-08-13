@@ -125,6 +125,27 @@ spec:
         image:
           repository: codercom/code-server
           tag: 4.16.1
+        env:
+          - name: GIT_AUTHOR_NAME
+            valueFrom:
+              secretKeyRef:
+                name: code-server-secrets
+                key: GIT_AUTHOR_NAME
+          - name: GIT_COMMITTER_NAME
+            valueFrom:
+              secretKeyRef:
+                name: code-server-secrets
+                key: GIT_COMMITTER_NAME
+          - name: GIT_AUTHOR_EMAIL
+            valueFrom:
+              secretKeyRef:
+                name: code-server-secrets
+                key: GIT_AUTHOR_EMAIL
+          - name: GIT_COMMITTER_EMAIL
+            valueFrom:
+              secretKeyRef:
+                name: code-server-secrets
+                key: GIT_COMMITTER_EMAIL
         git:
           deployKeySecret: code-server-secrets
         workingDir: /config
