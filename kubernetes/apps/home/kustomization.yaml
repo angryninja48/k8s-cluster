@@ -5,7 +5,7 @@ resources:
   - ./namespace.yaml
   - ./mosquitto/ks.yaml
   - ./frigate/ks.yaml
-  - ./home-assistant/ks.yaml
+  # - ./home-assistant/ks.yaml
 commonLabels:
   app.kubernetes.io/name: mosquitto
   app.kubernetes.io/instance: mosquitto
