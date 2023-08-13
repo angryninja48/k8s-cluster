@@ -123,15 +123,10 @@ spec:
       codeserver:
         enabled: true
         image:
-          repository: codercom/code-server
+          repository: codercom/code-server-secrets
           tag: 4.16.1
-        env:
-          GIT_AUTHOR_NAME: ${SECRET_NAME}
-          GIT_COMMITTER_NAME: ${SECRET_NAME}
-          GIT_AUTHOR_EMAIL: ${SECRET_EMAIL}
-          GIT_COMMITTER_EMAIL: ${SECRET_EMAIL}
         git:
-          deployKeySecret: code-server
+          deployKeySecret: code-server-secrets
         workingDir: /config
         args:
           - --auth
