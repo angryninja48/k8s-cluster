@@ -8,6 +8,8 @@ metadata:
 spec:
   dependsOn:
     - name: cluster-apps-rook-ceph-cluster
+    - name: cluster-apps-external-secrets
+    - name: cluster-apps-external-secrets-stores
   path: ./kubernetes/apps/databases/cloudnative-pg/app
   prune: true
   sourceRef:
@@ -33,6 +35,8 @@ spec:
     - name: cluster-apps-cloudnative-pg
     - name: cluster-apps-kyverno
     - name: cluster-apps-rook-ceph-cluster
+    - name: cluster-apps-external-secrets
+    - name: cluster-apps-external-secrets-stores
   path: ./kubernetes/apps/databases/cloudnative-pg/cluster
   prune: true
   sourceRef:
