@@ -50,6 +50,13 @@ spec:
               secretKeyRef:
                 name: home-assistant-secrets
                 key: POSTGRES_PASSWORD
+      # 01-init-db:
+      #   image: ghcr.io/onedr0p/postgres-init:14.8
+      #   imagePullPolicy: IfNotPresent
+      #   envFrom: &envFrom
+      #     - secretRef:
+      #         name: home-assistant-secret
+
 
     podAnnotations:
       backup.velero.io/backup-volumes: config
