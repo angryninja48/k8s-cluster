@@ -43,7 +43,7 @@ spec:
       type: statefulset
       annotations:
         reloader.stakater.com/auto: "true"
-    command: ["/bin/bash", "-c", "--"]
+    command: ["/bin/sh", "-c", "--"]
     args: ["while true; do sleep 30; done;"]
     image:
       repository: public.ecr.aws/docker/library/eclipse-mosquitto
