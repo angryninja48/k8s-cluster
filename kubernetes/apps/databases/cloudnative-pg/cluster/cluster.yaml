@@ -39,10 +39,10 @@ spec:
       serverName: &currentCluster postgres-v3
       s3Credentials:
         accessKeyId:
-          name: cloudnative-pg
+          name: cloudnative-pg-secrets
           key: MINIO_ACCESS_KEY
         secretAccessKey:
-          name: cloudnative-pg
+          name: cloudnative-pg-secrets
           key: MINIO_SECRET_KEY
   # Note: externalClusters is needed when recovering from an existing cnpg cluster
   externalClusters:
@@ -55,8 +55,8 @@ spec:
         endpointURL: ${SECRET_S3_URL}
         s3Credentials:
           accessKeyId:
-            name: cloudnative-pg
+            name: cloudnative-pg-secrets
             key: MINIO_ACCESS_KEY
           secretAccessKey:
-            name: cloudnative-pg
+            name: cloudnative-pg-secrets
             key: MINIO_SECRET_KEY
