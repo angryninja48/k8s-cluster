@@ -21,3 +21,10 @@ pg_dump --data-only -t $TABLE "postgresql://$DB_USER:$DB_PASSWORD@$DB_ADDRESS/$D
 ```
 psql -h $DB_ADDRESS -U postgres -d $NEW_DATABASE-f $TABLE.sql
 ```
+
+
+# Grafana DB permissions
+```
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO user;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public to user;
+```
