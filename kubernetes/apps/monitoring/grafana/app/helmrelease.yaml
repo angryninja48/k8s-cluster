@@ -27,24 +27,18 @@ spec:
     keepHistory: false
   values:
     extraInitContainers:
-      - name: postgres-init-db
+      - name: 01-init-db
         image: ghcr.io/onedr0p/postgres-init:14.8
         imagePullPolicy: IfNotPresent
         envFrom:
           - secretRef:
-              name: grafana-secrets
-        env:
-          - name: INIT_POSTGRES_SUPER_PASS
-            valueFrom:
-              secretKeyRef:
-                name: postgres-superuser
-                key: password
+              name: &secret grafana-secret
     replicas: 1
     rbac:
       pspEnabled: false
 
     admin:
-      existingSecret: grafana-secrets
+      existingSecret: *secret
       userKey: adminUser
       passwordKey: adminPassword
 
@@ -55,7 +49,8 @@ spec:
       GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: natel-discrete-panel,pr0ps-trackmap-panel,panodata-map-panel
       GF_SECURITY_COOKIE_SAMESITE: grafana
       GF_SERVER_ROOT_URL: https://grafana.${SECRET_DOMAIN}
-    envFromSecret: grafana-secrets
+
+    envFromSecret: *secret
 
     grafana.ini:
       analytics:
