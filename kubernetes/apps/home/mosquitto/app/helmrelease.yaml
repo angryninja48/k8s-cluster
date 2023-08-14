@@ -83,28 +83,28 @@ spec:
       secret-file:
         enabled: true
         type: secret
-        name: mosquitto-secret
+        name: mosquitto-secrets
         subPath: mosquitto_pwd
         mountPath: /data/mosquitto_secret/mosquitto_pwd
         readOnly: true
       ca-file:
         enabled: true
         type: secret
-        name: mosquitto-secret
+        name: mosquitto-secrets
         subPath: ca_crt
         mountPath: /data/mosquitto_secret/ca.crt
         readOnly: true
       server-cert:
         enabled: true
         type: secret
-        name: mosquitto-secret
+        name: mosquitto-secrets
         subPath: server_crt
         mountPath: /data/mosquitto_secret/server.crt
         readOnly: true
       server-key:
         enabled: true
         type: secret
-        name: mosquitto-secret
+        name: mosquitto-secrets
         subPath: server_key
         mountPath: /data/mosquitto_secret/server.key
         readOnly: true
