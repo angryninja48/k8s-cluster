@@ -25,38 +25,12 @@ spec:
       pullPolicy: Always
 
     initContainers:
-      init-db:
-        image: ghcr.io/onedr0p/postgres-initdb:14.8
-        env:
-          - name: POSTGRES_HOST
-            value: postgres-rw.databases.svc.cluster.local
-          - name: POSTGRES_DB
-            valueFrom:
-              secretKeyRef:
-                name: home-assistant-secrets
-                key: POSTGRES_DB
-          - name: POSTGRES_SUPER_PASS
-            valueFrom:
-              secretKeyRef:
-                name: postgres-superuser
-                key: password
-          - name: POSTGRES_USER
-            valueFrom:
-              secretKeyRef:
-                name: home-assistant-secrets
-                key: POSTGRES_USER
-          - name: POSTGRES_PASS
-            valueFrom:
-              secretKeyRef:
-                name: home-assistant-secrets
-                key: POSTGRES_PASSWORD
-      # 01-init-db:
-      #   image: ghcr.io/onedr0p/postgres-init:14.8
-      #   imagePullPolicy: IfNotPresent
-      #   envFrom: &envFrom
-      #     - secretRef:
-      #         name: home-assistant-secret
-
+      01-init-db:
+        image: ghcr.io/onedr0p/postgres-init:14.8
+        imagePullPolicy: IfNotPresent
+        envFrom: &envFrom
+          - secretRef:
+              name: home-assistant-secrets
 
     podAnnotations:
       backup.velero.io/backup-volumes: config
@@ -65,9 +39,8 @@ spec:
       post.hook.backup.velero.io/container: fsfreeze
       post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/config"]'
       secret.reloader.stakater.com/reload: home-assistant-secrets
-    envFrom:
-      - secretRef:
-          name: home-assistant-secrets
+
+    envFrom: *envFrom
 
     hostNetwork: true
     dnsPolicy: ClusterFirstWithHostNet
