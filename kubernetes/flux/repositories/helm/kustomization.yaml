@@ -15,6 +15,7 @@ resources:
   - ./fairwinds.yaml
   - ./grafana.yaml
   - ./hajimari.yaml
+  - ./influxdata.yaml
   - ./ingress-nginx.yaml
   - ./intel.yaml
   - ./jetstack.yaml
