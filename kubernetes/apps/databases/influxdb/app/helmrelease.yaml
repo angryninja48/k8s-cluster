@@ -38,13 +38,13 @@ spec:
       limits:
         memory: 4000Mi
 
-    ingress:
-      enabled: true
-      tls: true
-      secretName: influxdb-tls
-      hostname: &host "influxdb.${SECRET_DOMAIN}"
-      annotations:
-        cert-manager.io/cluster-issuer: letsencrypt-production
+    # ingress:
+    #   enabled: true
+    #   tls: true
+    #   secretName: influxdb-tls
+    #   hostname: &host "influxdb.${SECRET_DOMAIN}"
+    #   annotations:
+    #     cert-manager.io/cluster-issuer: letsencrypt-production
 
     livenessProbe:
       timeoutSeconds: 10
