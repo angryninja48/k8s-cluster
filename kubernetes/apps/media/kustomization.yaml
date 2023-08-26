@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./photoprism/ks.yaml
+  - ./miniflux/ks.yaml
