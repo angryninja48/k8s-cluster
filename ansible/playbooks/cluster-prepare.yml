@@ -1,7 +1,6 @@
 ---
-- hosts:
-    - master
-    - worker
+- name: Prepare System
+  hosts: all
   become: true
   gather_facts: true
   any_errors_fatal: true
@@ -17,6 +16,7 @@
             name: "{{ timezone | default('Etc/UTC') }}"
 
     - name: Networking
+      notify: Restart systemd-networkd
       block:
         - name: Networking | Set hostname to inventory hostname
           ansible.builtin.hostname:
@@ -26,6 +26,17 @@
             path: /etc/hosts
             block: |
               127.0.1.1   {{ inventory_hostname }}
+        # https://github.com/cilium/cilium/issues/18706
+        - name: Networking | Cilium (1)
+          ansible.builtin.lineinfile:
+            dest: /etc/systemd/networkd.conf
+            regexp: ManageForeignRoutingPolicyRules
+            line: ManageForeignRoutingPolicyRules=no
+        - name: Networking | Cilium (2)
+          ansible.builtin.lineinfile:
+            dest: /etc/systemd/networkd.conf
+            regexp: ManageForeignRoutes
+            line: ManageForeignRoutes=no
 
     - name: Disable IPv6
       ansible.builtin.include_role:
@@ -47,37 +58,16 @@
       block:
         - name: Packages | Install required packages
           ansible.builtin.apt:
-            name: "{{ ubuntu.packages | default([]) }}"
+            name: hdparm,htop,ipvsadm,lm-sensors,nano,nfs-common,nvme-cli,
+              socat,python3-kubernetes,python3-yaml
             state: present
             update_cache: true
-        - name: Packages | Remove leaf packages
-          ansible.builtin.apt:
-            autoremove: true
         - name: Packages | RasPi packages
           ansible.builtin.apt:
             name: ["linux-modules-extra-raspi"]
             install_recommends: false
           notify: Reboot
           when: "'raspi' in ansible_kernel"
-
-    - name: Packages | Cilium CLI
-      ansible.builtin.include_role:
-        name: githubixx.cilium_cli
-        public: true
-      vars:
-        cilium_cli_arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else 'arm64' }}"
-        cilium_cli_tmp_directory: /tmp
-      when:
-        - k3s_control_node is defined
-        - k3s_control_node
-
-    - name: User Configuration
-      block:
-        - name: User Configuration | Add additional SSH public keys
-          ansible.posix.authorized_key:
-            user: "{{ ansible_user }}"
-            key: "{{ item }}"
-          loop: "{{ public_ssh_keys | default([]) }}"
 
     - name: System Configuration (1)
       block:
@@ -87,6 +77,10 @@
             enabled: false
             masked: true
             state: stopped
+          register: stop_service
+          failed_when:
+            - stop_service.failed == true
+            - '"Could not find the requested service" not in stop_service.msg'
         - name: System Configuration (1) | Enable fstrim
           ansible.builtin.systemd:
             service: fstrim.timer
@@ -98,13 +92,13 @@
           community.general.modprobe:
             name: "{{ item }}"
             state: present
-          loop: [br_netfilter, ip_vs, ip_vs_rr, overlay, rbd]
+          loop: ["br_netfilter", "ceph", "ip_vs", "ip_vs_rr", "nbd", "overlay", "rbd"]
         - name: System Configuration (2) | Enable kernel modules on boot
           ansible.builtin.copy:
-            mode: 0644
+            mode: "0644"
             content: "{{ item }}"
             dest: "/etc/modules-load.d/{{ item }}.conf"
-          loop: [br_netfilter, ip_vs, ip_vs_rr, overlay, rbd]
+          loop: ["br_netfilter", "ceph", "ip_vs", "ip_vs_rr", "nbd", "overlay", "rbd"]
         - name: System Configuration (2) | Set sysctls
           ansible.posix.sysctl:
             name: "{{ item.key }}"
@@ -120,8 +114,9 @@
               net.ipv4.conf.default.rp_filter: 0
               net.bridge.bridge-nf-call-iptables: 1
               net.bridge.bridge-nf-call-ip6tables: 0
+              fs.inotify.max_queued_events: 65536
               fs.inotify.max_user_watches: 524288
-              fs.inotify.max_user_instances: 512
+              fs.inotify.max_user_instances: 8192
         - name: System Configuration (2) | Disable swap at runtime
           ansible.builtin.command: swapoff -a
           when: ansible_swaptotal_mb > 0
@@ -134,6 +129,10 @@
       notify: Reboot
 
   handlers:
+    - name: Restart systemd-networkd
+      ansible.builtin.systemd:
+        service: systemd-networkd
+        state: restarted
     - name: Reboot
       ansible.builtin.reboot:
         msg: Rebooting nodes
