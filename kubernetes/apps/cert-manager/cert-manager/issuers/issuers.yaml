@@ -14,7 +14,7 @@ spec:
             email: "${SECRET_ACME_EMAIL}"
             apiTokenSecretRef:
               name: cert-manager-secret
-              key: api-token
+              key: api-key
         selector:
           dnsZones:
             - "${SECRET_DOMAIN}"
