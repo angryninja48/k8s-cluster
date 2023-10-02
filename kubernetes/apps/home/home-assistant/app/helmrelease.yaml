@@ -21,7 +21,7 @@ spec:
 
     image:
       repository: ghcr.io/home-assistant/home-assistant
-      tag: 2023.9.2
+      tag: 2023.9.3
       pullPolicy: Always
 
     initContainers:
