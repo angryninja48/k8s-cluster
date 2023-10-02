@@ -5,15 +5,11 @@ metadata:
   name: cert-manager
   namespace: cert-manager
 spec:
-  interval: 30m
+  interval: 15m
   chart:
     spec:
       chart: cert-manager
-<<<<<<< HEAD:kubernetes/apps/cert-manager/cert-manager/app/helmrelease.yaml
-      version: v1.13.0
-=======
-      version: v1.12.2
->>>>>>> 2023.7.0:bootstrap/templates/kubernetes/apps/cert-manager/cert-manager/app/helmrelease.yaml.j2
+      version: v1.13.1
       sourceRef:
         kind: HelmRepository
         name: jetstack
