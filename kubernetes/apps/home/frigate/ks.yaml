@@ -9,7 +9,7 @@ spec:
     - name: cluster-apps-external-secrets
     - name: cluster-apps-external-secrets-stores
     - name: cluster-apps-mosquitto
-    - name: cluster-apps-rook-ceph-cluster
+    # - name: cluster-apps-rook-ceph-cluster
     - name: cluster-apps-intel-device-plugin-gpu
   path: ./kubernetes/apps/home/frigate/app
   prune: true

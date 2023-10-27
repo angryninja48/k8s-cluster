@@ -95,7 +95,7 @@ spec:
         mountPath: /data
         accessMode: ReadWriteOnce
         size: 5Gi
-        storageClass: ceph-block
+        storageClass: local-path
         labels:
           snapshot.home.arpa/enabled: "true"
 
@@ -107,14 +107,12 @@ spec:
         subPath: config.yaml
         mountPath: /config/config.yml
         readOnly: true
-        storageClass: local-path
       media:
         enabled: true
         existingClaim: frigate-nfs
         mountPath: /media
       cache:
         enabled: true
-        storageClass: local-path
         type: emptyDir
         medium: Memory
         sizeLimit: 4Gi
