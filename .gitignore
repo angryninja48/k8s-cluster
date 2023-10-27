@@ -18,3 +18,5 @@ xanmanning.k3s*
 terraform.tfstate*
 # DB
 *.sql
+# venv
+.venv
