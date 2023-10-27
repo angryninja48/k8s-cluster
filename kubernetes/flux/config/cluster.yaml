@@ -8,7 +8,7 @@ spec:
   interval: 30m
   ref:
     branch: main
-  url: "https://github.com/angryninja48/k3s-cluster"
+  url: "https://github.com/angryninja48/k3s-cluster.git"
   ignore: |
     # exclude all
     /*

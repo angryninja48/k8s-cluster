@@ -11,10 +11,9 @@ spec:
     solvers:
       - dns01:
           cloudflare:
-            email: "${SECRET_ACME_EMAIL}"
             apiTokenSecretRef:
               name: cert-manager-secret
-              key: api-key
+              key: api-token
         selector:
           dnsZones:
             - "${SECRET_DOMAIN}"
@@ -32,10 +31,9 @@ spec:
     solvers:
       - dns01:
           cloudflare:
-            email: "${SECRET_ACME_EMAIL}"
             apiTokenSecretRef:
               name: cert-manager-secret
-              key: api-key
+              key: api-token
         selector:
           dnsZones:
             - "${SECRET_DOMAIN}"

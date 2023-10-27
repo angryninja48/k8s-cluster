@@ -1,3 +1,0 @@
----
-# renovate: datasource=github-releases depName=etcd-io/etcd
-etcd_version: "v3.5.9"
