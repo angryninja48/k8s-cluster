@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./mosquitto/ks.yaml
-  - ./frigate/ks.yaml
+  # - ./frigate/ks.yaml
   - ./home-assistant/ks.yaml
 commonLabels:
   app.kubernetes.io/name: mosquitto
