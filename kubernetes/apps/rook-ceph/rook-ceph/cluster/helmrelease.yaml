@@ -5,7 +5,8 @@ metadata:
   name: rook-ceph-cluster
   namespace: rook-ceph
 spec:
-  interval: 15m
+  interval: 30m
+  timeout: 15m
   chart:
     spec:
       chart: rook-ceph-cluster
@@ -49,12 +50,14 @@ spec:
       [global]
       bdev_enable_discard = true
       bdev_async_discard = true
+      osd_class_update_on_start = false
     cephClusterSpec:
       network:
         provider: host
         connections:
           compression:
-            enabled: false
+            enabled: true
+          requireMsgr2: true
       crashCollector:
         disable: false
       dashboard:
@@ -82,7 +85,6 @@ spec:
           failureDomain: host
           replicated:
             size: 3
-            requireSafeReplicaSize: false
         storageClass:
           enabled: true
           name: ceph-block
