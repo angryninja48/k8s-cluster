@@ -180,7 +180,7 @@ spec:
     - targetPath: objstoreConfig.config.access_key
       kind: Secret
       name: thanos-secret-v1
-      valuesKey: MINIO_ACCESS_KEY_ID
+      valuesKey: MINIO_ACCESS_KEY
     - targetPath: objstoreConfig.config.secret_key
       kind: Secret
       name: thanos-secret-v1
