@@ -5,7 +5,7 @@ metadata:
   name: cloudflared
   namespace: networking
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
       chart: app-template
@@ -16,7 +16,6 @@ spec:
         namespace: flux-system
   maxHistory: 2
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
@@ -38,7 +37,8 @@ spec:
       NO_AUTOUPDATE: "true"
       TUNNEL_CRED_FILE: /etc/cloudflared/creds/credentials.json
       TUNNEL_METRICS: 0.0.0.0:8080
-      TUNNEL_TRANSPORT_PROTOCOL: auto
+      TUNNEL_TRANSPORT_PROTOCOL: quic
+      TUNNEL_POST_QUANTUM: true
       TUNNEL_ID:
         valueFrom:
           secretKeyRef:

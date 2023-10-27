@@ -28,7 +28,7 @@ spec:
   dependsOn:
     - name: local-path-provisioner
       namespace: kube-system
-    - name: ingress-nginx
+    - name: nginx-internal
       namespace: networking
   values:
     extraInitContainers:
@@ -222,7 +222,7 @@ spec:
       enabled: true
     ingress:
       enabled: true
-      ingressClassName: nginx
+      ingressClassName: internal
       annotations:
         nginx.ingress.kubernetes.io/whitelist-source-range: |
           10.0.0.0/8,172.16.0.0/12,192.168.0.0/16

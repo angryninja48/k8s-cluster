@@ -119,7 +119,7 @@ spec:
         tag: 1.25-alpine
       ingress:
         enabled: true
-        ingressClassName: nginx
+        ingressClassName: internal
         hosts:
           - host: &host loki.${SECRET_DOMAIN}
             paths:
