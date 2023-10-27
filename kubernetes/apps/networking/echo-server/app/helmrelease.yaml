@@ -52,7 +52,7 @@ spec:
         enabled: false
     ingress:
       main:
-        enabled: false
+        enabled: true
         ingressClassName: external
         annotations:
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
