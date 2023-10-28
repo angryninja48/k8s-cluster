@@ -27,11 +27,6 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
-  dependsOn:
-    - name: local-path-provisioner
-      namespace: kube-system
-    - name: nginx-internal
-      namespace: networking
   values:
     cleanPrometheusOperatorObjectNames: true
     alertmanager:
