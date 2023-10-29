@@ -29,7 +29,7 @@ spec:
     - name: intel-device-plugin-gpu
       namespace: kube-system
     - name: mosquitto
-      namespace: default
+      namespace: home
     - name: rook-ceph-cluster
       namespace: rook-ceph
   values:
