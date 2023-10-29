@@ -1,22 +1,22 @@
 ---
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: frigate
-  namespace: home
+  namespace: default
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 2.0.3
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-  maxHistory: 3
+  maxHistory: 2
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
@@ -25,112 +25,111 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
-
+  dependsOn:
+    - name: intel-device-plugin-gpu
+      namespace: kube-system
+    - name: mosquitto
+      namespace: default
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   values:
-
-    controller:
-      type: statefulset
-      annotations:
-        reloader.stakater.com/auto: "true"
-
-    image:
-      repository: ghcr.io/blakeblackshear/frigate
-      tag: 0.12.0-rc1
-
-    env:
-      TZ: "${TIMEZONE}"
-      LIBVA_DRIVER_NAME: i965
-      # FRIGATE_MQTT_PASSWORD: ${SECRET_MQTT_USER_PASSWORD}
-    envFrom:
-      - secretRef:
-          name: frigate-secrets
-
+    controllers:
+      main:
+        type: statefulset
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          main:
+            image:
+              repository: ghcr.io/blakeblackshear/frigate
+              tag: 0.13.0-beta3
+            env:
+              TZ: "${TIMEZONE}"
+              LIBVA_DRIVER_NAME: i965
+            envFrom:
+              - secretRef:
+                  name: frigate-secrets
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/version
+                    port: &port 5000
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: false
+            securityContext:
+              privileged: true
+            resources:
+              requests:
+                cpu: 1000m
+                memory: 2Gi
+                gpu.intel.com/i915: "1"
+              limits:
+                memory: 8Gi
+                gpu.intel.com/i915: "1"
+        pod:
+          nodeSelector:
+            google.feature.node.kubernetes.io/coral: "true"
+            intel.feature.node.kubernetes.io/gpu: "true"
+        statefulset:
+          volumeClaimTemplates:
+            - name: config
+              accessMode: ReadWriteOnce
+              size: 5Gi
+              storageClass: local-path
+              globalMounts:
+                - path: /data
     service:
       main:
         ports:
           http:
-            port: &port 5000
-          rtsp:
-            enabled: true
-            port: 8554
-
-    probes:
-      liveness: &probes
-        enabled: true
-        custom: true
-        spec:
-          httpGet:
-            path: /api/version
             port: *port
-          initialDelaySeconds: 0
-          periodSeconds: 10
-          timeoutSeconds: 1
-          failureThreshold: 3
-      readiness: *probes
-      startup:
-        enabled: false
-
+          rtsp:
+            port: 8554
     ingress:
       main:
         enabled: true
-        ingressClassName: internal
-        annotations:
-          nginx.ingress.kubernetes.io/whitelist-source-range: |
-            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
-          hajimari.io/icon: mdi:cctv
+        className: internal
         hosts:
-          - host: &host "frigate.${SECRET_DOMAIN}"
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
               - path: /
-                pathType: Prefix
+                service:
+                  name: main
+                  port: http
         tls:
           - hosts:
               - *host
-
-    securityContext:
-      privileged: true
-
-    volumeClaimTemplates:
-      - name: config
-        mountPath: /data
-        accessMode: ReadWriteOnce
-        size: 5Gi
-        # storageClass: local-path
-
     persistence:
       config-file:
-        enabled: true
         type: configMap
         name: frigate-configmap
-        subPath: config.yaml
-        mountPath: /config/config.yml
-        readOnly: true
-      media:
-        enabled: true
-        existingClaim: frigate-nfs
-        mountPath: /media
+        globalMounts:
+          - path: /config/config.yml
+            subPath: config.yml
+            readOnly: true
       cache:
         enabled: true
         type: emptyDir
         medium: Memory
         sizeLimit: 4Gi
-        mountPath: /dev/shm
+        globalMounts:
+          - path: /dev/shm
       usb:
         enabled: true
         type: hostPath
         hostPath: /dev/bus/usb
         hostPathType: Directory
-        mountPath: /dev/bus/usb
-
-    nodeSelector:
-      google.feature.node.kubernetes.io/coral: "true"
-      intel.feature.node.kubernetes.io/gpu: "true"
-
-    resources:
-      requests:
-        cpu: 10m
-        memory: 1000Mi
-        gpu.intel.com/i915: "1"
-      limits:
-        memory: 6000Mi
-        gpu.intel.com/i915: "1"
+        globalMounts:
+          - path: /dev/bus/usb
+      media:
+        existingClaim: frigate-nfs
+        globalMounts:
+          - path: /media
