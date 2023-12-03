@@ -54,9 +54,6 @@ spec:
     service:
       main:
         type: LoadBalancer
-        annotations:
-          metallb.universe.tf/allow-shared-ip: unifi
-          coredns.io/hostname: mqtt.${SECRET_DOMAIN}
         loadBalancerIP: ${SVC_UNIFI_ADDR}
         externalTrafficPolicy: Local
         ports:
@@ -97,8 +94,6 @@ spec:
         enabled: true
         ingressClassName: "internal"
         annotations:
-          nginx.ingress.kubernetes.io/whitelist-source-range: |
-            10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
           nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
