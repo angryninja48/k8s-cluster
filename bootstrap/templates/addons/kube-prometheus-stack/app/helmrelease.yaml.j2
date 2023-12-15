@@ -3,24 +3,25 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: kube-prometheus-stack
-  namespace: monitoring
 spec:
   interval: 30m
   timeout: 15m
   chart:
     spec:
       chart: kube-prometheus-stack
-      version: 52.0.1
+      version: 54.2.2
       sourceRef:
         kind: HelmRepository
         name: prometheus-community
         namespace: flux-system
   maxHistory: 2
   install:
+    crds: CreateReplace
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
+    crds: CreateReplace
     remediation:
       retries: 3
   uninstall:
