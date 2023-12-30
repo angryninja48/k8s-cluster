@@ -38,7 +38,7 @@ spec:
         maxParallel: 8
       destinationPath: s3://postgresql/
       endpointURL: ${SECRET_S3_URL}
-      serverName: &currentCluster postgres-v4
+      serverName: &currentCluster postgres-v5
       s3Credentials:
         accessKeyId:
           name: cloudnative-pg-secrets
@@ -48,7 +48,7 @@ spec:
           key: MINIO_SECRET_KEY
   # Note: externalClusters is needed when recovering from an existing cnpg cluster
   externalClusters:
-    - name: postgres-v3
+    - name: postgres-v4
       barmanObjectStore:
         wal:
           compression: bzip2
