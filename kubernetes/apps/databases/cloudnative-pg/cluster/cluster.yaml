@@ -8,7 +8,7 @@ metadata:
   annotations:
     kyverno.io/ignore: "true"
 spec:
-  instances: 2
+  instances: 3
   imageName: ghcr.io/cloudnative-pg/postgresql:14.8-10
   # inheritedMetadata:
   #   labels:
@@ -21,7 +21,9 @@ spec:
     name: cloudnative-pg-secret
   bootstrap:
     recovery:
-      source: &previousCluster postgres-v3
+  #     source: &previousCluster postgres-v3
+      backup:
+        name: postgres-manual
   postgresql:
     parameters:
       max_connections: "600"
