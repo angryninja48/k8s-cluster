@@ -61,7 +61,7 @@ go2rtc:
   streams:
     zara_main:
       - "rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_ZARA_CAMERA_HOST}:554/stream1"
-      - "ffmpeg:zara_main#audio=opus"
+      - "ffmpeg:zara_main#audio=aac"
     zara_substream:
       - rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_ZARA_CAMERA_HOST}:554/stream2
     max_main:
@@ -94,11 +94,11 @@ cameras:
       output_args:
         record: preset-record-generic-audio-copy
       inputs:
-        - path: rtsp://127.0.0.1:8554/zara_main?video=copy&audio=aac
+        - path: rtsp://127.0.0.1:8554/zara_main
           input_args: preset-rtsp-restream
           roles:
             - record
-        - path: rtsp://127.0.0.1:8554/zara_substream?video=copy
+        - path: rtsp://127.0.0.1:8554/zara_substream
           input_args: preset-rtsp-restream
           roles:
             - detect
