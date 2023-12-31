@@ -18,13 +18,10 @@ spec:
     size: 50Gi
     storageClass: local-path
   superuserSecret:
-    name: cloudnative-pg-secrets
-  enableSuperuserAccess: true
+    name: cloudnative-pg-secret
   bootstrap:
     recovery:
-      # source: &previousCluster postgres-v4
-      backup:
-        name: postgres-manual
+      source: &previousCluster postgres-v4
   postgresql:
     parameters:
       max_connections: "600"
@@ -39,7 +36,7 @@ spec:
         maxParallel: 8
       destinationPath: s3://postgresql/
       endpointURL: ${SECRET_S3_URL}
-      serverName: &currentCluster postgres-v6
+      serverName: &currentCluster postgres-v5
       s3Credentials:
         accessKeyId:
           name: cloudnative-pg-secrets
@@ -49,7 +46,7 @@ spec:
           key: MINIO_SECRET_KEY
   # Note: externalClusters is needed when recovering from an existing cnpg cluster
   externalClusters:
-    - name: postgres-v4
+    - name: *previousCluster
       barmanObjectStore:
         wal:
           compression: bzip2
