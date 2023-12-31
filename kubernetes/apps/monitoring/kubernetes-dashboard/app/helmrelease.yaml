@@ -25,9 +25,6 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
-  dependsOn:
-    - name: nginx-internal
-      namespace: networking
   values:
     env:
       TZ: "${TIMEZONE}"
@@ -38,9 +35,8 @@ spec:
       - --token-ttl=43200
     ingress:
       enabled: true
-      className: nginx
+      className: internal
       annotations:
-        cert-manager.io/cluster-issuer: letsencrypt-staging
         hajimari.io/icon: mdi:kubernetes
       hosts:
         - &host "kubernetes.${SECRET_DOMAIN}"
