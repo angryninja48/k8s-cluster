@@ -8,7 +8,7 @@ metadata:
   annotations:
     kyverno.io/ignore: "true"
 spec:
-  instances: 3
+  instances: 2
   imageName: ghcr.io/cloudnative-pg/postgresql:14.8-10
   # inheritedMetadata:
   #   labels:
@@ -21,9 +21,7 @@ spec:
     name: cloudnative-pg-secret
   bootstrap:
     recovery:
-      # source: &previousCluster postgres-v4
-      backup:
-        name: postgres-manual
+      source: &previousCluster postgres-v4
   postgresql:
     parameters:
       max_connections: "600"
@@ -38,7 +36,7 @@ spec:
         maxParallel: 8
       destinationPath: s3://postgresql/
       endpointURL: ${SECRET_S3_URL}
-      serverName: &currentCluster postgres-v5
+      serverName: &currentCluster postgres-v6
       s3Credentials:
         accessKeyId:
           name: cloudnative-pg-secrets
@@ -48,7 +46,7 @@ spec:
           key: MINIO_SECRET_KEY
   # Note: externalClusters is needed when recovering from an existing cnpg cluster
   externalClusters:
-    - name: postgres-v4
+    - name: *previousCluster
       barmanObjectStore:
         wal:
           compression: bzip2
