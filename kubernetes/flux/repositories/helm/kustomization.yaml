@@ -3,6 +3,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ./actions-runner-controller.yaml
+  - ./backube.yaml
   - ./bitnami.yaml
   - ./bjw-s.yaml
   - ./cilium.yaml
@@ -20,15 +21,16 @@ resources:
   - ./ingress-nginx.yaml
   - ./intel.yaml
   - ./jetstack.yaml
-  - ./k8s-at-home.yaml
+  # - ./k8s-at-home.yaml
   - ./k8s-gateway.yaml
   - ./kubernetes-dashboard.yaml
   - ./kyverno.yaml
-  - ./metallb.yaml
+  # - ./metallb.yaml
   - ./metrics-server.yaml
-  - ./node-feature-discovery.yaml
+  - ./node-feature-discovery.yaml  
+  - ./piraeus.yaml
   - ./prometheus-community.yaml
-  - ./redis-operator.yaml
+  # - ./redis-operator.yaml
   - ./rook-ceph.yaml
   - ./stakater.yaml
   - ./vmware-tanzu.yaml
