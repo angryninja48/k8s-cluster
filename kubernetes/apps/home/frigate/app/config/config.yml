@@ -66,12 +66,12 @@ go2rtc:
       - rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_ZARA_CAMERA_HOST}:554/stream2
     max_main:
       - "rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_MAX_CAMERA_HOST}:554/stream1"
-      - "ffmpeg:max_main#audio=opus"
+      - "ffmpeg:max_main#audio=aac"
     max_substream:
       - rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_MAX_CAMERA_HOST}:554/stream2
     playroom_main:
       - "rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_PLAYROOM_CAMERA_HOST}:554/stream1"
-      - "ffmpeg:playroom_main#audio=opus"
+      - "ffmpeg:playroom_main#audio=aac"
     playroom_substream:
       - rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_PLAYROOM_CAMERA_HOST}:554/stream2
     garage_door_main:
@@ -112,11 +112,11 @@ cameras:
       output_args:
         record: preset-record-generic-audio-copy
       inputs:
-        - path: rtsp://127.0.0.1:8554/max_main?video=copy&audio=aac
+        - path: rtsp://127.0.0.1:8554/max_main
           input_args: preset-rtsp-restream
           roles:
             - record
-        - path: rtsp://127.0.0.1:8554/max_substream?video=copy
+        - path: rtsp://127.0.0.1:8554/max_substream
           input_args: preset-rtsp-restream
           roles:
             - detect
@@ -130,11 +130,11 @@ cameras:
       output_args:
         record: preset-record-generic-audio-copy
       inputs:
-        - path: rtsp://127.0.0.1:8554/playroom_main?video=copy&audio=aac
+        - path: rtsp://127.0.0.1:8554/playroom_main
           input_args: preset-rtsp-restream
           roles:
             - record
-        - path: rtsp://127.0.0.1:8554/playroom_substream?video=copy
+        - path: rtsp://127.0.0.1:8554/playroom_substream
           input_args: preset-rtsp-restream
           roles:
             - detect
@@ -148,11 +148,11 @@ cameras:
       output_args:
         record: preset-record-generic-audio-copy
       inputs:
-        - path: rtsp://127.0.0.1:8554/garage_door_main?video=copy&audio=aac
+        - path: rtsp://127.0.0.1:8554/garage_door_main
           input_args: preset-rtsp-restream
           roles:
             - record
-        - path: rtsp://127.0.0.1:8554/garage_door_substream?video=copy
+        - path: rtsp://127.0.0.1:8554/garage_door_substream
           input_args: preset-rtsp-restream
           roles:
             - detect
@@ -170,11 +170,11 @@ cameras:
       output_args:
         record: preset-record-generic-audio-copy
       inputs:
-        - path: rtsp://127.0.0.1:8554/garage_main?video=copy&audio=aac
+        - path: rtsp://127.0.0.1:8554/garage_main
           input_args: preset-rtsp-restream
           roles:
             - record
-        - path: rtsp://127.0.0.1:8554/garage_substream?video=copy
+        - path: rtsp://127.0.0.1:8554/garage_substream
           input_args: preset-rtsp-restream
           roles:
             - detect
