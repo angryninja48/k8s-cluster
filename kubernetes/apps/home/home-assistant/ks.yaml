@@ -7,9 +7,9 @@ metadata:
   namespace: flux-system
 spec:
   targetNamespace: home
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
+  # commonMetadata:
+  #   labels:
+  #     app.kubernetes.io/name: *app
   dependsOn:
     - name: cluster-apps-mosquitto
     - name: cluster-apps-cloudnative-pg
