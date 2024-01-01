@@ -30,8 +30,8 @@ spec:
       namespace: kube-system
     # - name: mosquitto
     #   namespace: home
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
+    # - name: rook-ceph-cluster
+    #   namespace: rook-ceph
   values:
     controllers:
       main:
