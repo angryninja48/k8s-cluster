@@ -4,11 +4,14 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: home
 resources:
+  - ./data-pvc.yaml
   - ./externalsecret.yaml
   - ./helmrelease.yaml
 configMapGenerator:
   - name: mosquitto-configmap
     files:
       - mosquitto.conf=./config/mosquitto.conf
-configurations:
-  - ./patches/kustomizeconfig.yaml
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
