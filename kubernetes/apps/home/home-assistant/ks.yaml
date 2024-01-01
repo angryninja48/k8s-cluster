@@ -9,7 +9,7 @@ spec:
   dependsOn:
     - name: cluster-apps-mosquitto
     - name: cluster-apps-cloudnative-pg
-    - name: cluster-apps-rook-ceph-cluster
+    - name: cluster-apps-local-path-provisioner
     - name: cluster-apps-external-secrets
     - name: cluster-apps-external-secrets-stores
   path: ./kubernetes/apps/home/home-assistant/app
