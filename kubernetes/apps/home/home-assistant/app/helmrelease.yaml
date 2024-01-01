@@ -88,11 +88,6 @@ spec:
         existingClaim: home-assistant-config
         mountPath: /config
 
-      config-2:
-        enabled: true
-        existingClaim: home-assistant
-        mountPath: /config-2
-
     securityContext:
       privileged: true
 
