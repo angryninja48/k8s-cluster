@@ -85,7 +85,7 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: home-assistant-config-v2
+        existingClaim: home-assistant-config-v3
         mountPath: /config
 
     securityContext:
