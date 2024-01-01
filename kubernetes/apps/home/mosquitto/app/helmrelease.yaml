@@ -1,21 +1,20 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: mosquitto
-  namespace: default
+  namespace: home
 spec:
   interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 2.0.3
+      version: 2.4.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-  maxHistory: 2
   install:
     remediation:
       retries: 3
@@ -28,42 +27,37 @@ spec:
   values:
     controllers:
       main:
-        type: statefulset
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
           init-config:
             image:
-              repository: public.ecr.aws/docker/library/eclipse-mosquitto
-              tag: 2.0.18
-              pullPolicy: IfNotPresent
+              repository: docker.io/library/eclipse-mosquitto
+              tag: 2.0.18@sha256:8c49a0fab9a1ee9bf5d229061eec4e279f04484c07f60c85c13821788360ce4f
             command: ["/bin/sh", "-c"]
             args: ["cp /tmp/secret/* /mosquitto/external_config/ && mosquitto_passwd -U /mosquitto/external_config/mosquitto_pwd"]
         containers:
           main:
             image:
-              repository: public.ecr.aws/docker/library/eclipse-mosquitto
-              tag: 2.0.18
+              repository: docker.io/library/eclipse-mosquitto
+              tag: 2.0.18@sha256:8c49a0fab9a1ee9bf5d229061eec4e279f04484c07f60c85c13821788360ce4f
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
             resources:
-              requests:
-                cpu: 5m
-                memory: 4Mi
-              limits:
+              limits: &resources
                 memory: 16Mi
+              requests:
+                <<: *resources
+                cpu: 10m
         pod:
           securityContext:
             runAsUser: 568
             runAsGroup: 568
+            runAsNonRoot: true
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
-        statefulset:
-          volumeClaimTemplates:
-            - name: data
-              accessMode: ReadWriteOnce
-              size: 512Mi
-              storageClass: local-path
-              globalMounts:
-                - path: /data
     service:
       main:
         type: LoadBalancer
@@ -73,9 +67,14 @@ spec:
           http:
             port: 1883
     persistence:
+      config:
+        enabled: true
+        existingClaim: mosquitto
+        globalMounts:
+          - path: /data
       config-file:
         type: configMap
-        name: mosquitto-configmap # overriden by kustomizeconfig
+        name: mosquitto-configmap
         advancedMounts:
           main:
             main:
@@ -83,37 +82,11 @@ spec:
                 subPath: mosquitto.conf
       secret-file:
         type: secret
-        name: mosquitto-secrets
+        name: mosquitto-secret
         advancedMounts:
           main:
             init-config:
               - path: /tmp/secret
-      ca-file:
-        type: secret
-        name: mosquitto-secrets
-        advancedMounts:
-          main:
-            main:
-              - path: /data/mosquitto_secret/ca.crt
-                subPath: ca_crt
-      server-cert:
-        enabled: true
-        type: secret
-        name: mosquitto-secrets
-        advancedMounts:
-          main:
-            main:
-              - path: /data/mosquitto_secret/server.crt
-                subPath: server_crt
-      server-key:
-        enabled: true
-        type: secret
-        name: mosquitto-secrets
-        advancedMounts:
-          main:
-            main:
-              - path: /data/mosquitto_secret/server.key
-                subPath: server_key
       external-config:
         type: emptyDir
         globalMounts:
