@@ -5,8 +5,9 @@ metadata:
   name: mosquitto
   namespace: home
 spec:
-  accessModes: ["ReadWriteOnce"]
+  accessModes:
+    - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: 5Gi
   storageClassName: local-path
