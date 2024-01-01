@@ -9,6 +9,7 @@ spec:
   dependsOn:
     - name: cluster-apps-external-secrets
     - name: cluster-apps-external-secrets-stores
+    - name: cluster-apps-local-path-provisioner
   path: ./kubernetes/apps/home/mosquitto/app
   prune: true
   sourceRef:

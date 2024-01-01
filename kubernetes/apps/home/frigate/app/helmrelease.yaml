@@ -28,10 +28,6 @@ spec:
   dependsOn:
     - name: intel-device-plugin-gpu
       namespace: kube-system
-    # - name: mosquitto
-    #   namespace: home
-    # - name: rook-ceph-cluster
-    #   namespace: rook-ceph
   values:
     controllers:
       main:

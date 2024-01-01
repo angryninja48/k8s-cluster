@@ -8,9 +8,9 @@ spec:
   dependsOn:
     - name: cluster-apps-external-secrets
     - name: cluster-apps-external-secrets-stores
-    - name: cluster-apps-mosquitto
-    # - name: cluster-apps-rook-ceph-cluster
     - name: cluster-apps-intel-device-plugin-gpu
+    - name: cluster-apps-local-path-provisioner
+    - name: cluster-apps-mosquitto
   path: ./kubernetes/apps/home/frigate/app
   prune: true
   sourceRef:
