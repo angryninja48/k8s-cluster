@@ -28,3 +28,8 @@ spec:
   interval: 15m
   retryInterval: 1m
   timeout: 5m
+  postBuild:
+    substitute:
+      APP: *app
+      GATUS_SUBDOMAIN: hass
+      VOLSYNC_CAPACITY: 5Gi
