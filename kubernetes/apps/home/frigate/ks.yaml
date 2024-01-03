@@ -13,7 +13,7 @@ spec:
     - name: cluster-apps-external-secrets
     - name: cluster-apps-external-secrets-stores
     - name: intel-device-plugin-gpu
-    - name: cluster-apps-local-path-provisioner
+    - name: cluster-apps-rook-ceph-cluster
     - name: cluster-apps-mosquitto
   path: ./kubernetes/apps/home/frigate/app
   prune: true
@@ -31,5 +31,4 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      GATUS_SUBDOMAIN: hass
       VOLSYNC_CAPACITY: 5Gi
