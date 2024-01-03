@@ -1,23 +1,20 @@
 ---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: unifi
-  namespace: networking
 spec:
   interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
-      interval: 30m
+      version: 2.4.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-  maxHistory: 3
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
@@ -26,30 +23,36 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
-
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    - name: volsync
+      namespace: storage
   values:
-    # controller:
-    #   type: statefulset
+    controllers:
+      main:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          main:
+            image:
+              repository: ghcr.io/jacobalberty/unifi-docker
+              tag: v7.5.176
+            env:
+              TZ: "${TIMEZONE}"
+              RUNAS_UID0: "false"
+              UNIFI_UID: "999"
+              UNIFI_GID: "999"
+              UNIFI_STDOUT: "true"
+              JVM_INIT_HEAP_SIZE:
+              JVM_MAX_HEAP_SIZE: 1024M
 
-    image:
-      repository: jacobalberty/unifi
-      tag: v7.5.176
-
-    podAnnotations:
-      backup.velero.io/backup-volumes: data
-      pre.hook.backup.velero.io/container: fsfreeze
-      pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/data"]'
-      post.hook.backup.velero.io/container: fsfreeze
-      post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/data"]'
-
-    env:
-      RUNAS_UID0: "false"
-      UNIFI_UID: "999"
-      UNIFI_GID: "999"
-      UNIFI_STDOUT: "true"
-      JVM_INIT_HEAP_SIZE:
-      JVM_MAX_HEAP_SIZE: 1024M
-      TZ: ${TIMEZONE}
+            resources:
+              requests:
+                cpu: 23m
+                memory: 1390M
+              limits:
+                memory: 1390M
 
     service:
       main:
@@ -93,7 +96,7 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: "internal"
+        className: internal
         annotations:
           nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         hosts:
@@ -104,25 +107,9 @@ spec:
           - hosts:
               - *host
 
-    resources:
-      requests:
-        cpu: 23m
-        memory: 1390M
-      limits:
-        memory: 1390M
-
     persistence:
       data:
         enabled: true
         existingClaim: unifi-config-v2
-        mountPath: /unifi
-
-    additionalContainers:
-      fsfreeze:
-        name: fsfreeze
-        image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
-        volumeMounts:
-          - name: data
-            mountPath: /data
-        securityContext:
-          privileged: true
+        globalMounts:
+          - path: /unifi
