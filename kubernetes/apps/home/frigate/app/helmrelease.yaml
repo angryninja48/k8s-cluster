@@ -47,7 +47,7 @@ spec:
               LIBVA_DRIVER_NAME: i965
             envFrom:
               - secretRef:
-                  name: frigate-secret
+                  name: frigate-secrets
             probes:
               liveness: &probes
                 enabled: true
