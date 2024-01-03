@@ -223,3 +223,9 @@ spec:
             memory: 2000Mi
           limits:
             memory: 7000Mi
+
+        additionalScrapeConfigs:
+          - job_name: raspberrypi
+            scrape_interval: 10s
+            static_configs:
+              - targets: ['10.20.0.90:9100']
