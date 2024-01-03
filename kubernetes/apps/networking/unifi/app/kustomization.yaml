@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: networking
 resources:
   - ./config-pvc.yaml
-  - ./helmrelease.yaml
+  # - ./helmrelease.yaml
   - ../../../../templates/volsync
 labels:
   - pairs:
