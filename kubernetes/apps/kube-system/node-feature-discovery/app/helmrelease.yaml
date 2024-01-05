@@ -63,3 +63,8 @@ spec:
               matchOn:
                 - usbId:
                     vendor: ["1a6e", "18d1"]
+            - name: "zigbee-controller" # Uninterruptible power supply
+              matchOn:
+                - usbId:
+                    vendor: ["0451"]
+                    device: ["bef3"]
