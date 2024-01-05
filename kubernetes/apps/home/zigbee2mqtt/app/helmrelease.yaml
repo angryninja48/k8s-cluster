@@ -31,6 +31,9 @@ spec:
     - name: volsync
       namespace: storage
   values:
+    defaultPodOptions:
+      nodeSelector:
+        zigbee.feature.node.kubernetes.io/controller: "true"
     controllers:
       main:
         annotations:
@@ -112,3 +115,10 @@ spec:
       config:
         enabled: true
         existingClaim: zigbee2mqtt
+      usb:
+        enabled: true
+        type: hostPath
+        hostPath: /dev/serial/by-id/usb-Texas_Instruments_XDS110__03.00.00.26__Embed_with_CMSIS-DAP_L1100G7G-if00
+        hostPathType: CharDevice
+        globalMounts:
+          - path: /dev/serial/by-id/usb-Texas_Instruments_XDS110__03.00.00.26__Embed_with_CMSIS-DAP_L1100G7G-if00
