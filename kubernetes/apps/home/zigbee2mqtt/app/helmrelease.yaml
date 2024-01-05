@@ -111,9 +111,9 @@ spec:
           - hosts:
               - *host
     persistence:
-      config:
-        enabled: true
-        existingClaim: zigbee2mqtt
+      # config:
+      #   enabled: true
+      #   existingClaim: zigbee2mqtt
       usb:
         enabled: true
         type: hostPath
