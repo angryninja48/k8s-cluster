@@ -33,7 +33,7 @@ metadata:
 spec:
   dependsOn:
     - name: cluster-apps-cloudnative-pg
-    - name: cluster-apps-kyverno
+    # - name: cluster-apps-kyverno
     - name: cluster-apps-rook-ceph-cluster
     - name: cluster-apps-external-secrets
     - name: cluster-apps-external-secrets-stores
