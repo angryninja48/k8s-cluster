@@ -3,11 +3,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-apps-unifi-poller
+  name: unifi-poller
   namespace: flux-system
 spec:
   dependsOn:
-    - name: cluster-apps-unifi
+    - name: unifi
   path: ./kubernetes/apps/monitoring/unifi-poller/app
   prune: true
   sourceRef:
