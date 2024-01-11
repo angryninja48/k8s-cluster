@@ -70,8 +70,8 @@ spec:
               ZIGBEE2MQTT_CONFIG_MQTT_SERVER: mqtt://mosquitto.home.svc.cluster.local
               ZIGBEE2MQTT_CONFIG_MQTT_VERSION: 5
               ZIGBEE2MQTT_CONFIG_PERMIT_JOIN: "false"
-              # ZIGBEE2MQTT_CONFIG_SERIAL_PORT: &usb /dev/serial/by-id/usb-Texas_Instruments_XDS110__03.00.00.26__Embed_with_CMSIS-DAP_L1100G7G-if00
-              ZIGBEE2MQTT_CONFIG_SERIAL_PORT: &usb /dev/ttyACM0
+              ZIGBEE2MQTT_CONFIG_SERIAL_PORT: &usb /dev/serial/by-id/usb-Texas_Instruments_XDS110__03.00.00.26__Embed_with_CMSIS-DAP_L1100G7G-if00
+              # ZIGBEE2MQTT_CONFIG_SERIAL_PORT: &usb /dev/ttyACM0
             envFrom:
               - secretRef:
                   name: zigbee2mqtt-secret
@@ -95,7 +95,7 @@ spec:
           securityContext:
           # securityContext:
           #   # -- (bool) Privileged securityContext may be required if USB controller is accessed directly through the host machine
-            privileged: true
+            privileged: tru
             runAsUser: 1000
             runAsGroup: 1000
             runAsNonRoot: true
@@ -129,6 +129,6 @@ spec:
       usb:
         enabled: true
         type: hostPath
-        hostPath: /dev/ttyACM0
+        hostPath: *usb
         globalMounts:
-          - path: /dev/ttyACM0
+          - path: *usb
