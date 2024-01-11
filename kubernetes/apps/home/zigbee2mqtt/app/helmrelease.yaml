@@ -31,9 +31,9 @@ spec:
     - name: volsync
       namespace: storage
   values:
-    # defaultPodOptions:
-    #   nodeSelector:
-    #     zigbee.feature.node.kubernetes.io/controller: "true"
+    defaultPodOptions:
+      nodeSelector:
+        zigbee.feature.node.kubernetes.io/controller: "true"
     controllers:
       main:
         annotations:
@@ -90,8 +90,8 @@ spec:
                 drop:
                   - ALL
         pod:
-          nodeSelector:
-            zigbee.feature.node.kubernetes.io/controller: "true"
+          # nodeSelector:
+          #   zigbee.feature.node.kubernetes.io/controller: "true"
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
