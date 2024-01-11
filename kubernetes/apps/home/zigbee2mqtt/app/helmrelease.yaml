@@ -123,3 +123,9 @@ spec:
       config:
         enabled: true
         existingClaim: zigbee2mqtt
+      usb:
+        enabled: true
+        type: hostPath
+        hostPath: /dev/ttyACM0
+        globalMounts:
+          - path: /dev/ttyACM0
