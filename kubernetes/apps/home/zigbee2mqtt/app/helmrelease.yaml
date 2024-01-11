@@ -31,9 +31,9 @@ spec:
     - name: volsync
       namespace: storage
   values:
-    defaultPodOptions:
-      nodeSelector:
-        zigbee.feature.node.kubernetes.io/controller: "true"
+    # defaultPodOptions:
+    #   nodeSelector:
+    #     zigbee.feature.node.kubernetes.io/controller: "true"
     controllers:
       main:
         annotations:
@@ -75,23 +75,31 @@ spec:
             envFrom:
               - secretRef:
                   name: zigbee2mqtt-secret
+            resources:
+              requests:
+                smarter-devices/ttyACM0: 1
+                cpu: 10m
+                memory: 100M
+              limits:
+                smarter-devices/ttyACM0: 1
+                memory: 256M
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
-            resources:
-              limits: &resources
-                memory: 512Mi
-              requests:
-                <<: *resources
-                cpu: 10m
+              capabilities:
+                drop:
+                  - ALL
         pod:
+          nodeSelector:
+            zigbee.feature.node.kubernetes.io/controller: "true"
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
             runAsNonRoot: true
             fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch
+            # supplementalGroups:
+            #   - 20
     service:
       main:
         ports:
@@ -115,10 +123,3 @@ spec:
       config:
         enabled: true
         existingClaim: zigbee2mqtt
-      usb:
-        enabled: true
-        type: hostPath
-        hostPath: *usb
-        hostPathType: CharDevice
-        globalMounts:
-          - path: *usb
