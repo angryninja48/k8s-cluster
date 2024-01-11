@@ -93,6 +93,9 @@ spec:
           # nodeSelector:
           #   zigbee.feature.node.kubernetes.io/controller: "true"
           securityContext:
+          # securityContext:
+          #   # -- (bool) Privileged securityContext may be required if USB controller is accessed directly through the host machine
+            privileged: true
             runAsUser: 1000
             runAsGroup: 1000
             runAsNonRoot: true
