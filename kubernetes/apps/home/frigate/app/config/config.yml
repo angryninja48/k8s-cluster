@@ -135,6 +135,24 @@ cameras:
       output_args:
         record: preset-record-generic-audio-copy
       inputs:
+        - path: rtsp://127.0.0.1:8554/dining_room_main
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/dining_room_substream
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    detect:
+      width: 640
+      height: 360
+      fps: 5
+
+  dining_room:
+    ffmpeg:
+      output_args:
+        record: preset-record-generic-audio-copy
+      inputs:
         - path: rtsp://127.0.0.1:8554/playroom_main
           input_args: preset-rtsp-restream
           roles:
