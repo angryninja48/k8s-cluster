@@ -130,7 +130,7 @@ cameras:
       height: 360
       fps: 5
 
-  playroom:
+  dining_room:
     ffmpeg:
       output_args:
         record: preset-record-generic-audio-copy
@@ -148,7 +148,7 @@ cameras:
       height: 360
       fps: 5
 
-  dining_room:
+  playroom:
     ffmpeg:
       output_args:
         record: preset-record-generic-audio-copy
