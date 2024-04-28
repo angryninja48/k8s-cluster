@@ -38,7 +38,7 @@ spec:
               tag: v0.1.2
             env:
             - name: FCC_CONFIG_FILE
-              value: &configFilePath "/config/config.yml"
+              value: &configFilePath "/config/config.yaml"
             - name: FCC_CLIP_DIR
               value: &clipDirectory "/media/frigate/clips/"
 
