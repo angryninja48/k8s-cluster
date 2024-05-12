@@ -27,8 +27,8 @@ spec:
       namespace: kube-system
     - name: rook-ceph-cluster
       namespace: rook-ceph
-    - name: volsync
-      namespace: volsync-system
+    # - name: volsync
+    #   namespace: storage
   values:
     controllers:
       frigate:
