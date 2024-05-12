@@ -10,4 +10,5 @@
         "ansible": "**/ansible/*.yaml",
         "Kubernetes": "**/kubernetes/*.yaml"
     },
+    "ansible.python.interpreterPath": "/opt/homebrew/bin/python3",
 }

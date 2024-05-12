@@ -58,14 +58,18 @@ spec:
                   timeoutSeconds: 1
                   failureThreshold: 3
               readiness: *probes
+              startup:
+                enabled: false
             securityContext:
               privileged: true
             resources:
               requests:
-                cpu: 100m
-              limits:
+                cpu: 1000m
+                memory: 2Gi
                 gpu.intel.com/i915: "1"
+              limits:
                 memory: 8Gi
+                gpu.intel.com/i915: "1"
     defaultPodOptions:
       nodeSelector:
         google.feature.node.kubernetes.io/coral: "true"
