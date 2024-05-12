@@ -1,0 +1,9 @@
+---
+kubernetes:
+  children:
+    controllers:
+      hosts:
+        "k3s-0":
+          ansible_user: "jbaker"
+          ansible_host: "10.20.0.14"
+          ansible_ssh_private_key_file: "/Users/jbaker/.ssh/id_rsa"
