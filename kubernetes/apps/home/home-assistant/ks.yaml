@@ -14,8 +14,8 @@ spec:
     - name: cluster-apps-mosquitto
     - name: cluster-apps-cloudnative-pg
     - name: cluster-apps-local-path-provisioner
-    - name: cluster-apps-external-secrets
-    - name: cluster-apps-external-secrets-stores
+    - name: external-secrets
+    - name: external-secrets-stores
   path: ./kubernetes/apps/home/home-assistant/app
   prune: true
   sourceRef:
