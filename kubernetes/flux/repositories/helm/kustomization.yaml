@@ -27,11 +27,12 @@ resources:
   - ./kyverno.yaml
   # - ./metallb.yaml
   - ./metrics-server.yaml
-  - ./node-feature-discovery.yaml  
+  - ./node-feature-discovery.yaml
   - ./piraeus.yaml
   - ./prometheus-community.yaml
   # - ./redis-operator.yaml
   - ./rook-ceph.yaml
   - ./stakater.yaml
+  - ./stevehipwell.yaml
   - ./vmware-tanzu.yaml
   - ./weave-gitops.yaml
