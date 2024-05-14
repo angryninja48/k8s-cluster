@@ -1,0 +1,30 @@
+---
+- name: Update System
+  hosts: kubernetes
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+  pre_tasks:
+    - name: Pausing for 5 seconds...
+      ansible.builtin.pause:
+        seconds: 5
+    - name: Populate service facts
+      ansible.builtin.service_facts:
+  tasks:
+    - name: Update
+      ansible.builtin.apt:
+        upgrade: dist
+        update_cache: true
+
+    - name: Check if reboot is required
+      ansible.builtin.stat:
+        path: /var/run/reboot-required
+      register: reboot_required
+
+    - name: Reboot
+      when: reboot_required.stat.exists
+      ansible.builtin.reboot:
+        msg: Rebooting node
+        post_reboot_delay: 60
+        reboot_timeout: 3600
+
