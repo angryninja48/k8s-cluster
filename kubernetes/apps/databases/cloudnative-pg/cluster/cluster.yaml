@@ -4,15 +4,10 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: postgres
-  namespace: databases
-  annotations:
-    kyverno.io/ignore: "true"
+  namespace: database
 spec:
   instances: 3
   imageName: ghcr.io/cloudnative-pg/postgresql:14.8-10
-  # inheritedMetadata:
-  #   labels:
-  #     kube-image-keeper.enix.io/image-caching-policy: ignore
   primaryUpdateStrategy: unsupervised
   storage:
     size: 50Gi
@@ -22,7 +17,7 @@ spec:
   enableSuperuserAccess: true
   bootstrap:
     recovery:
-      source: &previousCluster postgres-v4
+      source: &previousCluster postgres-v5
   postgresql:
     parameters:
       max_connections: "600"
@@ -37,7 +32,7 @@ spec:
         maxParallel: 8
       destinationPath: s3://postgresql/
       endpointURL: ${SECRET_S3_URL}
-      serverName: &currentCluster postgres-v5
+      serverName: &currentCluster postgres-v6
       s3Credentials:
         accessKeyId:
           name: cloudnative-pg-secrets
