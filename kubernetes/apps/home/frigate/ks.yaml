@@ -13,8 +13,8 @@ spec:
     - name: external-secrets
     - name: external-secrets-stores
     - name: intel-device-plugin-gpu
-    - name: cluster-apps-rook-ceph-cluster
-    - name: cluster-apps-mosquitto
+    - name: rook-ceph-cluster
+    - name: mosquitto
   path: ./kubernetes/apps/home/frigate/app
   prune: true
   sourceRef:

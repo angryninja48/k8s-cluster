@@ -11,9 +11,9 @@ spec:
   #   labels:
   #     app.kubernetes.io/name: *app
   dependsOn:
-    - name: cluster-apps-mosquitto
-    - name: cluster-apps-cloudnative-pg
-    - name: cluster-apps-local-path-provisioner
+    - name: mosquitto
+    - name: cloudnative-pg
+    - name: local-path-provisioner
     - name: external-secrets
     - name: external-secrets-stores
   path: ./kubernetes/apps/home/home-assistant/app
