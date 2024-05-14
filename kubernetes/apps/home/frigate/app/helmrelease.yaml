@@ -27,8 +27,8 @@ spec:
     #   namespace: flux-system
     - name: rook-ceph-cluster
       namespace: rook-ceph
-    # - name: volsync
-    #   namespace: storage
+    - name: volsync
+      namespace: volsync-system
   values:
     controllers:
       frigate:
@@ -53,10 +53,10 @@ spec:
                   httpGet:
                     path: /api/version
                     port: &port 5000
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
+                  initialDelaySeconds: 60
+                  periodSeconds: 20
                   timeoutSeconds: 1
-                  failureThreshold: 3
+                  failureThreshold: 5
               readiness: *probes
               startup:
                 enabled: false
