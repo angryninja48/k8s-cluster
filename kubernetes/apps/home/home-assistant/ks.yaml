@@ -12,9 +12,9 @@ spec:
   #     app.kubernetes.io/name: *app
   dependsOn:
     - name: mosquitto
-    - name: cloudnative-pg
-    - name: local-path-provisioner
-    - name: external-secrets
+    # - name: cloudnative-pg
+    # - name: local-path-provisioner
+    # - name: external-secrets
     - name: external-secrets-stores
   path: ./kubernetes/apps/home/home-assistant/app
   prune: true
