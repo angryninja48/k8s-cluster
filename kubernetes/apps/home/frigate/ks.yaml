@@ -10,8 +10,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: cluster-apps-external-secrets
-    - name: cluster-apps-external-secrets-stores
+    - name: external-secrets
+    - name: external-secrets-stores
     - name: intel-device-plugin-gpu
     - name: cluster-apps-rook-ceph-cluster
     - name: cluster-apps-mosquitto
