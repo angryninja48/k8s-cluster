@@ -70,15 +70,15 @@ spec:
             securityContext:
               privileged: true
 
-    # service:
-    #   app:
-    #     controller: *app
-    #     type: LoadBalancer
-    #     loadBalancerIP: ${SVC_HASS_ADDR}
-    #     externalTrafficPolicy: Local
-    #     ports:
-    #       http:
-    #         port: 8123
+    service:
+      app:
+        controller: *app
+        type: LoadBalancer
+        loadBalancerIP: ${SVC_HASS_ADDR_V2}
+        externalTrafficPolicy: Local
+        ports:
+          http:
+            port: 8123
 
     ingress:
       app:
