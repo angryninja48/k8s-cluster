@@ -73,7 +73,7 @@ spec:
     ingress:
       app:
         enabled: true
-        className: nginx
+        className: internal
         hosts:
           - host: &host hass-code.${SECRET_CLUSTER_DOMAIN}
             paths:
