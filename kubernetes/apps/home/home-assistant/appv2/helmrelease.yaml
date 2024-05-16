@@ -97,7 +97,7 @@ spec:
 
       code:
         type: ClusterIP
-        controller: app
+        controller: *app
         ports:
           http:
             port: 8081
