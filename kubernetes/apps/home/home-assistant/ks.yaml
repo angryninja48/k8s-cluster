@@ -80,7 +80,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: &app home-assistant
-  path: ./kubernetes/apps/home/home-assistant/code
+  path: ./kubernetes/apps/home/home-assistant/code-server
   prune: true
   sourceRef:
     kind: GitRepository
