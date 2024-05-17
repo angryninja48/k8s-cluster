@@ -36,7 +36,7 @@ spec:
       dashboard:
         ingressClassName: internal
         host:
-          name: "rook.${SECRET_DOMAIN}"
+          name: "rook.${SECRET_CLUSTER_DOMAIN}"
           path: /
     toolbox:
       enabled: true
@@ -226,5 +226,5 @@ spec:
           enabled: true
           ingressClassName: internal
           host:
-            name: "rgw.${SECRET_DOMAIN}"
+            name: "rgw.${SECRET_CLUSTER_DOMAIN}"
             path: /

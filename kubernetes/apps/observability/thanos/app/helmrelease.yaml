@@ -72,7 +72,7 @@ spec:
         size: 10Gi
     query:
       replicas: 3
-      extraArgs: ["--alert.query-url=https://thanos.${SECRET_DOMAIN}"]
+      extraArgs: ["--alert.query-url=https://thanos.${SECRET_CLUSTER_DOMAIN}"]
     queryFrontend:
       enabled: false
       # replicas: 3
@@ -87,7 +87,7 @@ spec:
       #   enabled: true
       #   ingressClassName: internal
       #   hosts:
-      #     - thanos.${SECRET_DOMAIN}
+      #     - thanos.${SECRET_CLUSTER_DOMAIN}
       # podAnnotations: &podAnnotations
       #   configmap.reloader.stakater.com/reload: *configMap
     rule:

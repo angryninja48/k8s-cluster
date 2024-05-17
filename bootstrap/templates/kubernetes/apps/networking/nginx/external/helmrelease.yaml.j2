@@ -34,7 +34,7 @@ spec:
       replicaCount: 1
       service:
         annotations:
-          external-dns.alpha.kubernetes.io/hostname: "external.${SECRET_DOMAIN}"
+          external-dns.alpha.kubernetes.io/hostname: "external.${SECRET_CLUSTER_DOMAIN}"
           io.cilium/lb-ipam-ips: "{{ bootstrap_external_ingress_addr }}"
         externalTrafficPolicy: Cluster
       ingressClassResource:
@@ -75,9 +75,9 @@ spec:
             any: true
       extraArgs:
         {% if bootstrap_acme_production_enabled | default(false) %}
-        default-ssl-certificate: "networking/${SECRET_DOMAIN/./-}-production-tls"
+        default-ssl-certificate: "networking/${SECRET_CLUSTER_DOMAIN/./-}-production-tls"
         {% else %}
-        default-ssl-certificate: "networking/${SECRET_DOMAIN/./-}-staging-tls"
+        default-ssl-certificate: "networking/${SECRET_CLUSTER_DOMAIN/./-}-staging-tls"
         {% endif %}
       topologySpreadConstraints:
         - maxSkew: 1

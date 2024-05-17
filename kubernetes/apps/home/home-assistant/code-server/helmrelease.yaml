@@ -75,7 +75,7 @@ spec:
         enabled: true
         className: internal
         hosts:
-          - host: &host "hass-code.${SECRET_DOMAIN}"
+          - host: &host "hass-code.${SECRET_CLUSTER_DOMAIN}"
             paths:
               - path: /
                 service:
