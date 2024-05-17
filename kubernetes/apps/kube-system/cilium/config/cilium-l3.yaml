@@ -11,23 +11,7 @@ spec:
   virtualRouters:
     - localASN: 65001
       neighbors:
-        - peerAddress: "1/32"
-          peerASN: 65000
-        - peerAddress: "0/32"
-          peerASN: 65000
-        - peerAddress: "./32"
-          peerASN: 65000
-        - peerAddress: "2/32"
-          peerASN: 65000
-        - peerAddress: "0/32"
-          peerASN: 65000
-        - peerAddress: "./32"
-          peerASN: 65000
-        - peerAddress: "0/32"
-          peerASN: 65000
-        - peerAddress: "./32"
-          peerASN: 65000
-        - peerAddress: "1/32"
+        - peerAddress: "10.20.0.1/32"
           peerASN: 65000
       serviceSelector:
         matchExpressions:
