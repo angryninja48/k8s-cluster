@@ -56,10 +56,10 @@ spec:
         enabled: true
         ingressClassName: external
         annotations:
-          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_CLUSTER_DOMAIN}"
           hajimari.io/icon: video-input-antenna
         hosts:
-          - host: &host "{% raw %}{{ .Release.Name }}{% endraw %}.${SECRET_DOMAIN}"
+          - host: &host "{% raw %}{{ .Release.Name }}{% endraw %}.${SECRET_CLUSTER_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix

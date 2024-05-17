@@ -36,7 +36,7 @@ spec:
 
     env:
       TZ: "${TIMEZONE}"
-      PHOTOPRISM_SITE_URL: https://photos.${SECRET_DOMAIN}/
+      PHOTOPRISM_SITE_URL: https://photos.${SECRET_CLUSTER_DOMAIN}/
       PHOTOPRISM_SITE_TITLE: Home Photos
       PHOTOPRISM_SITE_AUTHOR: Jon
       PHOTOPRISM_ORIGINALS_PATH: /photoprism/media/
@@ -61,7 +61,7 @@ spec:
         enabled: true
         ingressClassName: internal
         hosts:
-          - host: &host "photos.${SECRET_DOMAIN}"
+          - host: &host "photos.${SECRET_CLUSTER_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
