@@ -1,83 +1,135 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: home-assistant
-  namespace: home
+  name: &app home-assistant
+  namespace: default
 spec:
   interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
-      interval: 30m
+      version: 3.1.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
+  maxHistory: 2
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  uninstall:
+    keepHistory: false
   values:
-    controller:
-      type: statefulset
+    defaultPodOptions:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+        fsGroup: 0
+        fsGroupChangePolicy: OnRootMismatch
+    controllers:
+      home-assistant:
+        annotations:
+          reloader.stakater.com/auto: "true"
 
-    image:
-      repository: ghcr.io/home-assistant/home-assistant
-      tag: 2024.4.3
-      pullPolicy: Always
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/onedr0p/postgres-init
+              tag: 14
+            envFrom: &envFrom
+              - secretRef:
+                  name: home-assistant-secrets
 
-    initContainers:
-      01-init-db:
-        image: ghcr.io/onedr0p/postgres-init:14.10
-        imagePullPolicy: IfNotPresent
-        envFrom: &envFrom
-          - secretRef:
-              name: home-assistant-secrets
-
-    podAnnotations:
-      backup.velero.io/backup-volumes: config
-      pre.hook.backup.velero.io/container: fsfreeze
-      pre.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--freeze", "/config"]'
-      post.hook.backup.velero.io/container: fsfreeze
-      post.hook.backup.velero.io/command: '["/sbin/fsfreeze", "--unfreeze", "/config"]'
-      secret.reloader.stakater.com/reload: home-assistant-secrets
-
-    envFrom: *envFrom
-
-    hostNetwork: true
-    dnsPolicy: ClusterFirstWithHostNet
+        containers:
+          app:
+            image:
+              repository: ghcr.io/home-assistant/home-assistant
+              tag: 2024.4.3
+            envFrom: *envFrom
+            probes:
+              liveness:
+                enabled: false
+              readiness:
+                enabled: false
+              startup:
+                enabled: false
+            resources:
+              requests:
+                cpu: 1000m
+                memory: 2Gi
+              limits:
+                memory: 8Gi
+            securityContext:
+              privileged: true
+          code:
+            dependsOn: app
+            image:
+              repository: ghcr.io/coder/code-server
+              tag: 4.89.1
+            args:
+              - --auth
+              - "none"
+              - --user-data-dir
+              - "/config/.vscode"
+              - --extensions-dir
+              - "/config/.vscode"
+              - --port
+              - "8081"
+              - "/config"
 
     service:
-      main:
-        ports:
-          http:
-            port: 8123
+      app:
+        controller: *app
         type: LoadBalancer
         loadBalancerIP: ${SVC_HASS_ADDR}
         externalTrafficPolicy: Local
+        ports:
+          http:
+            port: 8123
 
-    serviceMonitor:
-      main:
-        enabled: true
-        endpoints:
-          - port: http
-            scheme: http
-            path: /api/prometheus
-            interval: 60s
-            scrapeTimeout: 10s
-            bearerTokenSecret:
-              name: home-assistant-secrets
-              key: SECRET_PROM_TOKEN
+      code:
+        type: ClusterIP
+        controller: *app
+        ports:
+          http:
+            port: 8081
 
     ingress:
-      main:
+      app:
         enabled: true
-        ingressClassName: external
+        className: external
         annotations:
+          hajimari.io/icon: mdi:home-assistant
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
         hosts:
           - host: &host "hass.${SECRET_DOMAIN}"
             paths:
               - path: /
-                pathType: Prefix
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - hosts:
+              - *host
+
+      code:
+        enabled: true
+        className: internal
+        hosts:
+          - host: &host "hass-code.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: code
+                  port: http
         tls:
           - hosts:
               - *host
@@ -85,66 +137,6 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: home-assistant
-        mountPath: /config
-
-    securityContext:
-      privileged: true
-
-    probes:
-      liveness:
-        enabled: false
-      readiness:
-        enabled: false
-      startup:
-        enabled: true
-
-    addons:
-      codeserver:
-        enabled: true
-        image:
-          repository: codercom/code-server
-          tag: 4.20.1
-        env:
-          GIT_AUTHOR_NAME: ${SECRET_NAME}
-          GIT_COMMITTER_NAME: ${SECRET_NAME}
-          GIT_AUTHOR_EMAIL: ${SECRET_EMAIL}
-          GIT_COMMITTER_EMAIL: ${SECRET_EMAIL}
-        git:
-          deployKeySecret: code-server-secrets
-        workingDir: /config
-        args:
-          - --auth
-          - none
-          - --user-data-dir
-          - /config/.vscode
-          - --extensions-dir
-          - /config/.vscode
-        ingress:
-          enabled: true
-          ingressClassName: internal
-          annotations:
-            hajimari.io/enable: 'true'
-            hajimari.io/icon: microsoft-visual-studio-code
-          hosts:
-            - host: &host-config "hass-config.${SECRET_DOMAIN}"
-              paths:
-                - path: /
-                  pathType: Prefix
-          tls:
-            - hosts:
-                - *host-config
-
-        volumeMounts:
-          - name: config
-            mountPath: /config
-
-    # additionalContainers:
-    #   fsfreeze:
-    #     name: fsfreeze
-    #     image: ghcr.io/k8s-at-home/fsfreeze:v2.37-r0
-    #     volumeMounts:
-    #       - name: config
-    #         mountPath: /config
-    #     securityContext:
-    #       privileged: true
+        existingClaim: *app
+        globalMounts:
+          - path: /config
