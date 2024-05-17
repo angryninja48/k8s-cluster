@@ -50,7 +50,7 @@ spec:
               DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
               JELLYFIN_FFmpeg__probesize: 50000000
               JELLYFIN_FFmpeg__analyzeduration: 50000000
-              JELLYFIN_PublishedServerUrl: &loadBalancerIP ${SVR_JELLYFIN_ADDR}
+              JELLYFIN_PublishedServerUrl: &loadBalancerIP ${SVC_JELLYFIN_ADDR}
               TZ: ${TIMEZONE}
             probes:
               liveness: &probes
