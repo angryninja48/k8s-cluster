@@ -22,4 +22,4 @@ spec:
   allowFirstLastIPs: "Yes"
   blocks:
     - cidr: "${NODE_CIDR}"
-  disabled: true
+  # disabled: true
