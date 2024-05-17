@@ -6,6 +6,7 @@ metadata:
   namespace: flux-system
 data:
   TIMEZONE: "Australia/Sydney"
+  BGP_ADVERTISED_CIDR: "172.16.0.0/16"
   COREDNS_ADDR: "10.43.0.10"
   KUBE_VIP_ADDR: "10.20.0.254"
   CLUSTER_CIDR: "10.42.0.0/16"
