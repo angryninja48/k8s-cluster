@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: wipe-hass
+  name: wipe-job
   namespace: home
 spec:
   ttlSecondsAfterFinished: 3600
@@ -13,14 +13,14 @@ spec:
       containers:
         - name: main
           image: docker.io/library/alpine:latest
-          command: ["/bin/sh", "-c", "cd /config; find . -delete"]
+          command: ["/bin/sh", "-c", "cd /data; find . -delete"]
           volumeMounts:
             - name: config
-              mountPath: /config
+              mountPath: /data
           securityContext:
             privileged: true
           resources: {}
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: home-assistant
+            claimName: frigate
