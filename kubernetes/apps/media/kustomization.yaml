@@ -6,3 +6,4 @@ resources:
   - ./jellyfin/ks.yaml
   - ./miniflux/ks.yaml
   - ./photoprism/ks.yaml
+  - ./radarr/ks.yaml

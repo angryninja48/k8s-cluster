@@ -37,16 +37,7 @@ spec:
     controllers:
       radarr:
         annotations:
-          configmap.reloader.stakater.com/reload: radarr-pushover
           reloader.stakater.com/auto: "true"
-        initContainers:
-          init-db:
-            image:
-              repository: ghcr.io/onedr0p/postgres-init
-              tag: 16
-            envFrom: &envFrom
-              - secretRef:
-                  name: radarr-secret
         containers:
           app:
             image:
@@ -54,15 +45,20 @@ spec:
               tag: 5.5.1.8747@sha256:4ae36e5329fa90aa95e180a9abad4856e147500f65cf7262a193f08a2480a136
             env:
               TZ: "${TIMEZONE}"
-              PUSHOVER_APP_URL: &host "{{ .Release.Name }}.${SECRET_CLUSTER_DOMAIN}"
-              PUSHOVER_DEBUG: "false"
-              PUSHOVER_PRIORITY: "0"
               RADARR__INSTANCE_NAME: Radarr
               RADARR__PORT: &port 8080
               RADARR__APPLICATION_URL: "https://{{ .Release.Name }}.${SECRET_CLUSTER_DOMAIN}"
               RADARR__LOG_LEVEL: info
               RADARR__THEME: dark
-            envFrom: *envFrom
+              # COMPlus_EnableDiagnostics: "0"
+              # RADARR__AUTHENTICATION_METHOD: External
+              # RADARR__AUTHENTICATION_REQUIRED: DisabledForLocalAddresses
+              RADARR__API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: radarr-secret
+                    key: api_key
+
             resources:
               requests:
                 cpu: 500m
@@ -78,13 +74,8 @@ spec:
     ingress:
       app:
         enabled: true
-        className: nginx
+        className: internal
         annotations:
-          nginx.ingress.kubernetes.io/auth-method: GET
-          nginx.ingress.kubernetes.io/auth-url: http://authelia.media.svc.cluster.local.:8888/api/verify
-          nginx.ingress.kubernetes.io/auth-signin: https://auth.${SECRET_CLUSTER_DOMAIN}?rm=$request_method
-          nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
-          nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Method $request_method;
           hajimari.io/icon: mdi:filmstrip
         hosts:
           - host: *host
@@ -105,23 +96,14 @@ spec:
       downloads:
         enabled: true
         type: nfs
-        server: 192.168.9.10
-        path: /var/mnt/vol1/downloads
+        server: 10.20.0.3
+        path: /volume1/Downloads/
         globalMounts:
           - path: /mnt/storage/downloads
       video:
         enabled: true
         type: nfs
-        server: 192.168.9.10
-        path: /var/mnt/vol1/video
+        server: 10.20.0.3
+        path: /volume1/Videos
         globalMounts:
           - path: /mnt/storage/video
-      scripts:
-        enabled: true
-        type: configMap
-        name: radarr-pushover
-        mediaMode: 0775
-        globalMounts:
-          - path: /scripts/pushover-notify.sh
-            subPath: pushover-notify.sh
-            readOnly: true
