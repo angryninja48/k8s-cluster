@@ -1,6 +1,6 @@
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: rook-ceph-cluster
@@ -36,7 +36,7 @@ spec:
       dashboard:
         ingressClassName: internal
         host:
-          name: "rook.${SECRET_DOMAIN}"
+          name: "rook.${SECRET_CLUSTER_DOMAIN}"
           path: /
     toolbox:
       enabled: true
@@ -62,11 +62,20 @@ spec:
         connections:
           requireMsgr2: true
       storage:
-        useAllNodes: true
-        useAllDevices: true
-        deviceFilter: nvme0n1
+        useAllNodes: false
+        useAllDevices: false
         config:
           osdsPerDevice: "1"
+        nodes:
+          - name: k3s-0
+            devices:
+              - name: "/dev/disk/by-id/ata-WDC_WDS240G2G0B-00EPW0_191959804062"
+          - name: k3s-1
+            devices:
+              - name: "/dev/disk/by-id/ata-CT500MX500SSD1_2324E6E218EA"
+          - name: k3s-2
+            devices:
+              - name: "/dev/disk/by-id/ata-WDC_WDS240G2G0B-00EPW0_191838801396"
       placement:
         mgr: &placement
           nodeAffinity:
@@ -217,5 +226,5 @@ spec:
           enabled: true
           ingressClassName: internal
           host:
-            name: "rgw.${SECRET_DOMAIN}"
+            name: "rgw.${SECRET_CLUSTER_DOMAIN}"
             path: /

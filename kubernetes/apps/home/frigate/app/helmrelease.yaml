@@ -1,6 +1,6 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: frigate
@@ -27,8 +27,8 @@ spec:
     #   namespace: flux-system
     - name: rook-ceph-cluster
       namespace: rook-ceph
-    # - name: volsync
-    #   namespace: storage
+    - name: volsync
+      namespace: volsync-system
   values:
     controllers:
       frigate:
@@ -53,10 +53,10 @@ spec:
                   httpGet:
                     path: /api/version
                     port: &port 5000
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
+                  initialDelaySeconds: 60
+                  periodSeconds: 20
                   timeoutSeconds: 1
-                  failureThreshold: 3
+                  failureThreshold: 5
               readiness: *probes
               startup:
                 enabled: false
@@ -86,7 +86,7 @@ spec:
       app:
         className: internal
         hosts:
-          - host: "{{ .Release.Name }}.${SECRET_DOMAIN}"
+          - host: "{{ .Release.Name }}.${SECRET_CLUSTER_DOMAIN}"
             paths:
               - path: /
                 service:

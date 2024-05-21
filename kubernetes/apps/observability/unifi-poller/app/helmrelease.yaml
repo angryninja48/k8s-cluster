@@ -1,6 +1,6 @@
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: unifi-poller
@@ -29,7 +29,7 @@ spec:
   values:
     image:
       repository: golift/unifi-poller
-      tag: v2.9.5
+      tag: v2.11.2
     env:
       TZ: Australia/Sydney
       UP_UNIFI_DEFAULT_ROLE: unifi-poller
