@@ -9,7 +9,6 @@ resources:
   - ./nodefeaturerule.yaml
   - ./nfs-pvc.yaml
   - ./helmrelease.yaml
-  # - ./hr-old.yaml
   - ../../../../templates/volsync
 configMapGenerator:
   - name: frigate-configmap

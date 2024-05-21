@@ -1,5 +1,5 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: hajimari
@@ -47,7 +47,7 @@ spec:
         annotations:
           hajimari.io/enable: "false"
         hosts:
-          - host: &host "hajimari.${SECRET_DOMAIN}"
+          - host: &host "hajimari.${SECRET_CLUSTER_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix

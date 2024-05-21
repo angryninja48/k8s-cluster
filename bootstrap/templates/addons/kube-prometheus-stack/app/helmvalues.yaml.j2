@@ -101,10 +101,10 @@ data:
           hajimari.io/icon: simple-icons:prometheus
         pathType: Prefix
         hosts:
-          - "prometheus.${SECRET_DOMAIN}"
+          - "prometheus.${SECRET_CLUSTER_DOMAIN}"
         tls:
           - hosts:
-              - "prometheus.${SECRET_DOMAIN}"
+              - "prometheus.${SECRET_CLUSTER_DOMAIN}"
       prometheusSpec:
         ruleSelectorNilUsesHelmValues: false
         serviceMonitorSelectorNilUsesHelmValues: false

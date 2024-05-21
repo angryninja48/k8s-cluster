@@ -1,5 +1,5 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: kubernetes-dashboard
@@ -39,7 +39,7 @@ spec:
       annotations:
         hajimari.io/icon: mdi:kubernetes
       hosts:
-        - &host "kubernetes.${SECRET_DOMAIN}"
+        - &host "kubernetes.${SECRET_CLUSTER_DOMAIN}"
       tls:
         - hosts:
             - *host

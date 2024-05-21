@@ -1,10 +1,10 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: &app jellyfin
-  namespace: default
+  namespace: media
 spec:
   interval: 30m
   chart:
@@ -28,7 +28,7 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    defaultPodOptions:
+    mediaPodOptions:
       enableServiceLinks: false
       nodeSelector:
         intel.feature.node.kubernetes.io/gpu: "true"
@@ -44,13 +44,13 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/onedr0p/jellyfin
-              tag: 10.8.11@sha256:926e2a9f6677a0c7b12feba29f36c954154869318d6a52df72f72ff9c74cf494
+              repository: jellyfin/jellyfin
+              tag: 10.8.13-1
             env:
               DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
               JELLYFIN_FFmpeg__probesize: 50000000
               JELLYFIN_FFmpeg__analyzeduration: 50000000
-              JELLYFIN_PublishedServerUrl: &loadBalancerIP ${CLUSTER_LB_JELLYFIN}
+              JELLYFIN_PublishedServerUrl: &loadBalancerIP ${SVC_JELLYFIN_ADDR}
               TZ: ${TIMEZONE}
             probes:
               liveness: &probes
@@ -79,7 +79,7 @@ spec:
       app:
         controller: *app
         type: LoadBalancer
-        loadBalancerIP: 192.168.169.110
+        loadBalancerIP: *loadBalancerIP
         externalTrafficPolicy: Local
         ports:
           http:
@@ -87,10 +87,8 @@ spec:
     ingress:
       app:
         enabled: true
-        className: nginx
+        className: internal
         annotations:
-          external-dns.alpha.kubernetes.io/enabled: "true"
-          external-dns.alpha.kubernetes.io/target: services.${SECRET_DOMAIN}.
           hajimari.io/icon: simple-icons:jellyfin
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_CLUSTER_DOMAIN}"
@@ -108,25 +106,11 @@ spec:
         existingClaim: *app
         globalMounts:
           - path: /config
-      music:
-        enabled: true
-        type: nfs
-        server: 192.168.9.10
-        path: /var/mnt/vol1/music
-        globalMounts:
-          - path: /mnt/storage/music
-      photo:
-        enabled: true
-        type: nfs
-        server: 192.168.9.10
-        path: /var/mnt/vol1/photo
-        globalMounts:
-          - path: /mnt/storage/photo
       video:
         enabled: true
         type: nfs
-        server: 192.168.9.10
-        path: /var/mnt/vol1/video
+        server: 10.20.0.3
+        path: /volume1/Videos
         globalMounts:
           - path: /mnt/storage/video
       transcode:

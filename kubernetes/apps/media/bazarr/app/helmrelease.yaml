@@ -1,0 +1,129 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app bazarr
+  namespace: media
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.1.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  uninstall:
+    keepHistory: false
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    - name: volsync
+      namespace: volsync
+  values:
+    mediaPodOptions:
+      securityContext:
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
+    controllers:
+      bazarr:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/onedr0p/postgres-init
+              tag: 16
+            envFrom: &envFrom
+              - secretRef:
+                  name: bazarr-secret
+        containers:
+          app:
+            image:
+              repository: ghcr.io/onedr0p/bazarr
+              tag: 1.4.2@sha256:62558b2f9210b288f01e96753c99699dc2fab7c27f9e678f994bd0068bc6d41e
+            env:
+              TZ: "${TIMEZONE}"
+            envFrom: *envFrom
+            resources:
+              requests:
+                cpu: 23m
+                memory: 204M
+              limits:
+                memory: 1Gi
+          subcleaner:
+            image:
+              repository: registry.k8s.io/git-sync/git-sync
+              tag: v4.2.2@sha256:2dc189a0886c0df1b5b0cc816c60b5fe0799230a5bb7e123aa28ff4f74ac988a
+              pullPolicy: IfNotPresent
+            args:
+              - --repo=https://github.com/KBlixt/subcleaner
+              - --branch=master
+              - --wait=86400 # 1 day
+              - --root=/add-ons
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: 6767
+    ingress:
+      app:
+        enabled: true
+        className: nginx
+        annotations:
+          nginx.ingress.kubernetes.io/auth-method: GET
+          nginx.ingress.kubernetes.io/auth-url: http://authelia.media.svc.cluster.local.:8888/api/verify
+          nginx.ingress.kubernetes.io/auth-signin: https://auth.${SECRET_CLUSTER_DOMAIN}?rm=$request_method
+          nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
+          nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Method $request_method;
+          hajimari.io/icon: mdi:subtitles-outline
+        hosts:
+          - host: &host "{{ .Release.Name }}.${SECRET_CLUSTER_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - hosts:
+              - *host
+    persistence:
+      config:
+        enabled: true
+        existingClaim: *app
+        globalMounts:
+          - path: /config
+      add-ons:
+        enabled: true
+        type: emptyDir
+        globalMounts:
+          - path: /add-ons
+      video:
+        enabled: true
+        type: nfs
+        server: 192.168.9.10
+        path: /var/mnt/vol1/video
+        globalMounts:
+          - path: /mnt/storage/video
+      scripts:
+        enabled: true
+        type: configMap
+        name: bazarr-scripts # overriden by kustomizeconfig
+        mediaMode: 0775
+        globalMounts:
+          - path: /scripts
