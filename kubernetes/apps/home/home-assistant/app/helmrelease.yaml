@@ -84,7 +84,9 @@ spec:
               - --port
               - "8081"
               - "/config"
-
+            envFrom:
+              - secretRef:
+                  name: code-server-secrets
     service:
       app:
         controller: *app
