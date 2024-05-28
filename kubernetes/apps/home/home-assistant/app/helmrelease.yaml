@@ -84,6 +84,8 @@ spec:
               - --port
               - "8081"
               - "/config"
+            git:
+              deployKeySecret: code-server-secrets
             envFrom:
               - secretRef:
                   name: code-server-secrets
