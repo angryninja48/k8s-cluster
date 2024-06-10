@@ -82,6 +82,8 @@ spec:
               - "/config/.vscode"
               - --extensions-dir
               - "/config/.vscode"
+              - --port
+              - "8081"
               - /config
             envFrom:
               - secretRef:
