@@ -148,7 +148,7 @@ spec:
         name: code-server-secrets
         defaultMode: 420  # 644 (octal) in decimal
         advancedMounts:
-          homeassistant:
-            codeserver:
+          home-assistant:
+            code:
               - path: /home/coder/.ssh/id_rsa
                 subPath: GIT_DEPLOY_KEY
