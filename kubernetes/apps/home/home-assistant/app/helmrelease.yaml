@@ -84,8 +84,6 @@ spec:
               - --port
               - "8081"
               - "/config"
-            git:
-              deployKeySecret: code-server-secrets
             envFrom:
               - secretRef:
                   name: code-server-secrets
@@ -144,3 +142,13 @@ spec:
         existingClaim: *app
         globalMounts:
           - path: /config
+
+      deploy-key:
+        type: secret
+        name: code-server-secrets
+        defaultMode: 420  # 644 (octal) in decimal
+        advancedMounts:
+          homeassistant:
+            codeserver:
+              - path: /home/coder/.ssh/id_rsa
+                subPath: GIT_DEPLOY_KEY
