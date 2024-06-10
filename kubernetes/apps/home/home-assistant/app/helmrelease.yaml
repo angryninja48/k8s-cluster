@@ -30,9 +30,9 @@ spec:
   values:
     defaultPodOptions:
       securityContext:
-        runAsUser: 0
-        runAsGroup: 0
-        fsGroup: 0
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
         fsGroupChangePolicy: OnRootMismatch
     controllers:
       home-assistant:
@@ -41,6 +41,7 @@ spec:
 
         initContainers:
           init-db:
+            enabled: false
             image:
               repository: ghcr.io/onedr0p/postgres-init
               tag: 14
@@ -81,9 +82,7 @@ spec:
               - "/config/.vscode"
               - --extensions-dir
               - "/config/.vscode"
-              - --port
-              - "8081"
-              - "/config"
+              - /config
             envFrom:
               - secretRef:
                   name: code-server-secrets
