@@ -3,7 +3,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: wipe-job
-  namespace: home
+  namespace: network
 spec:
   ttlSecondsAfterFinished: 3600
   template:
@@ -15,12 +15,12 @@ spec:
           image: docker.io/library/alpine:latest
           command: ["/bin/sh", "-c", "cd /data; find . -delete"]
           volumeMounts:
-            - name: config
+            - name: data
               mountPath: /data
           securityContext:
             privileged: true
           resources: {}
       volumes:
-        - name: config
+        - name: data
           persistentVolumeClaim:
-            claimName: frigate
+            claimName: unifi
