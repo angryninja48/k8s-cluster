@@ -11,6 +11,9 @@ configMapGenerator:
   - name: mosquitto-configmap
     files:
       - mosquitto.conf=./config/mosquitto.conf
+  - name: venus-configmap
+    files:
+      - venus-broker.conf=./config/venus-broker.conf
 generatorOptions:
   disableNameSuffixHash: true
   annotations:
