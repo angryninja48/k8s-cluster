@@ -80,6 +80,14 @@ spec:
             main:
               - path: /mosquitto/config/mosquitto.conf
                 subPath: mosquitto.conf
+      venus-file:
+        type: configMap
+        name: venus-configmap
+        advancedMounts:
+          main:
+            main:
+              - path: /mosquitto/config/venus-broker.conf
+                subPath: venus-broker.conf
       secret-file:
         type: secret
         name: mosquitto-secret
