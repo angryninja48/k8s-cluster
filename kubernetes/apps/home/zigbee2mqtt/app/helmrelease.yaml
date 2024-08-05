@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.4.0
+      version: 3.3.2
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -20,29 +20,25 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
   dependsOn:
     - name: mosquitto
       namespace: home
     - name: rook-ceph-cluster
       namespace: rook-ceph
     - name: volsync
-      namespace: storage
+      namespace: volsync-system
   values:
-    defaultPodOptions:
-      nodeSelector:
-        zigbee.feature.node.kubernetes.io/controller: "true"
     controllers:
-      main:
+      zigbee2mqtt:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/koenkk/zigbee2mqtt
-              tag: 1.35.1@sha256:92eef11713c41fba5b3eb842de41464e01651ba2997d9c57898d4f07750a9101
+              tag: 1.39.1@sha256:1f5f59f0e67c4271f7773dd1e3f2a90b3354a1b36492fbc1b2b9facbce3af07f
             env:
               TZ: "${TIMEZONE}"
               ZIGBEE2MQTT_DATA: /config
@@ -60,9 +56,8 @@ spec:
               ZIGBEE2MQTT_CONFIG_DEVICE_OPTIONS_LEGACY: "false"
               ZIGBEE2MQTT_CONFIG_DEVICE_OPTIONS_RETAIN: "true"
               ZIGBEE2MQTT_CONFIG_EXPERIMENTAL_NEW_API: "true"
-              ZIGBEE2MQTT_CONFIG_FRONTEND_PORT: &port 8080
+              ZIGBEE2MQTT_CONFIG_FRONTEND_PORT: &port 80
               ZIGBEE2MQTT_CONFIG_FRONTEND_URL: "https://zigbee.${SECRET_CLUSTER_DOMAIN}"
-              ZIGBEE2MQTT_CONFIG_FRONTEND: "false"
               ZIGBEE2MQTT_CONFIG_HOMEASSISTANT: "true"
               ZIGBEE2MQTT_CONFIG_MQTT_INCLUDE_DEVICE_INFORMATION: "true"
               ZIGBEE2MQTT_CONFIG_MQTT_KEEPALIVE: 60
@@ -70,65 +65,67 @@ spec:
               ZIGBEE2MQTT_CONFIG_MQTT_SERVER: mqtt://mosquitto.home.svc.cluster.local
               ZIGBEE2MQTT_CONFIG_MQTT_VERSION: 5
               ZIGBEE2MQTT_CONFIG_PERMIT_JOIN: "false"
-              # ZIGBEE2MQTT_CONFIG_SERIAL_PORT: &usb /dev/serial/by-id/usb-Texas_Instruments_XDS110__03.00.00.26__Embed_with_CMSIS-DAP_L1100G7G-if00
-              ZIGBEE2MQTT_CONFIG_SERIAL_PORT: &usb /dev/ttyACM0
+              ZIGBEE2MQTT_CONFIG_SERIAL_PORT: &usb /dev/ttyUSB0
+
+              # DEBUG: "zigbee-herdsman*"
             envFrom:
               - secretRef:
                   name: zigbee2mqtt-secret
-            resources:
-              requests:
-                # smarter-devices/ttyACM0: 1
-                cpu: 10m
-                memory: 100M
-              limits:
-                # smarter-devices/ttyACM0: 1
-                memory: 256M
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 10
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities:
-                drop:
-                  - ALL
-        pod:
-          # nodeSelector:
-          #   zigbee.feature.node.kubernetes.io/controller: "true"
-          securityContext:
-          # securityContext:
-          #   # -- (bool) Privileged securityContext may be required if USB controller is accessed directly through the host machine
-            privileged: tru
-            runAsUser: 1000
-            runAsGroup: 1000
-            runAsNonRoot: true
-            fsGroup: 1000
-            fsGroupChangePolicy: OnRootMismatch
-            # supplementalGroups:
-            #   - 20
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 512Mi
+    defaultPodOptions:
+      nodeSelector:
+        feature.node.kubernetes.io/zigbee: "true"
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
     service:
-      main:
+      app:
+        controller: zigbee2mqtt
         ports:
           http:
             port: *port
     ingress:
-      main:
-        enabled: true
+      app:
         className: internal
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_CLUSTER_DOMAIN}"
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: app
                   port: http
         tls:
           - hosts:
               - *host
     persistence:
       config:
-        enabled: true
         existingClaim: zigbee2mqtt
+
       usb:
         enabled: true
         type: hostPath
-        hostPath: *usb
+        hostPath: /dev/serial/by-id/usb-Texas_Instruments_XDS110__03.00.00.26__Embed_with_CMSIS-DAP_L1100G7G-if00
         globalMounts:
           - path: *usb
