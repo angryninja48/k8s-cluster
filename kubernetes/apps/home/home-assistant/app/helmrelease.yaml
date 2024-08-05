@@ -36,6 +36,8 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     controllers:
       home-assistant:
+        replicas: 2
+
         annotations:
           reloader.stakater.com/auto: "true"
 
