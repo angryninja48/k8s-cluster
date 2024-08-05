@@ -49,14 +49,22 @@ spec:
         secretAccessKey:
           name: cloudnative-pg-secrets
           key: MINIO_SECRET_KEY
-  # Note: previousCluster needs to be set to the name of the previous
-  # cluster when recovering from an existing cnpg cluster
-  # bootstrap:
-  #   recovery:
-  #     source: &previousCluster postgres16-v
-  # # Note: externalClusters is needed when recovering from an existing cnpg cluster
-  # externalClusters:
-  #   - name: *previousCluster
-  #     barmanObjectStore:
-  #       <<: *barmanObjectStore
-  #       serverName: *previousCluster
+  bootstrap:
+    initdb:
+      import:
+        type: monolith
+        databases: ["*"]
+        roles: ["*"]
+        source:
+          externalCluster: cnpg-6
+  externalClusters:
+    - name: cnpg-6
+      connectionParameters:
+        # Use the correct IP or host name for the source database
+        host: postgres-rw.database.svc.cluster.local
+        user: postgres
+        dbname: postgres
+        sslmode: require
+      password:
+        name: cloudnative-pg-secrets
+        key: POSTGRES_SUPER_PASS
