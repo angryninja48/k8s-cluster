@@ -7,9 +7,9 @@ metadata:
 spec:
   rules:
     - # Zigbee Texas Instruments CC26X2R1
-      name: zigbee.controller
+      name: zigbee
       labels:
-        zigbee.feature.node.kubernetes.io/controller: "true"
+        feature.node.kubernetes.io/zigbee: "true"
       matchFeatures:
         - feature: usb.device
           matchExpressions:
