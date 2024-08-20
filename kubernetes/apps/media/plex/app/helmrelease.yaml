@@ -1,65 +1,70 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: plex
 spec:
+  interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 3.1.0
-      interval: 30m
+      version: 3.3.2
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-  interval: 30m
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  dependsOn:
+    - name: intel-device-plugin-gpu
+      namespace: kube-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    - name: volsync
+      namespace: volsync-system
   values:
     controllers:
       plex:
         annotations:
           reloader.stakater.com/auto: "true"
-
-        pod:
-          affinity:
-            podAntiAffinity:
-              requiredDuringSchedulingIgnoredDuringExecution:
-                - labelSelector:
-                    matchExpressions:
-                      - key: app.kubernetes.io/name
-                        operator: In
-                        values: ["frigate"]
-                  topologyKey: kubernetes.io/hostname
-          nodeSelector:
-            intel.feature.node.kubernetes.io/gpu: "true"
-          securityContext:
-            runAsUser: 2000
-            runAsGroup: 2000
-            fsGroup: 2000
-            fsGroupChangePolicy: "OnRootMismatch"
-            supplementalGroups:
-              - 44
-              - 109
-
         containers:
           app:
             image:
               repository: ghcr.io/onedr0p/plex
               tag: 1.40.5.8854-f36c552fd@sha256:b9c296227e318d81b62873aebfb25ba78685b65546e47a4840d31dd501504f1c
             env:
+              TZ: ${TIMEZONE}
               PLEX_ADVERTISE_URL: https://${SVC_PLEX_ADDR}:32400,https://plex.${SECRET_CLUSTER_DOMAIN}:443
               PLEX_NO_AUTH_NETWORKS: ${SECRET_LAN_CIDR}
             probes:
-              liveness:
+              liveness: &probes
                 enabled: true
-              readiness:
-                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /identity
+                    port: 32400
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
               startup:
                 enabled: true
                 spec:
                   failureThreshold: 30
-                  periodSeconds: 5
+                  periodSeconds: 10
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 100m
@@ -68,22 +73,40 @@ spec:
               limits:
                 gpu.intel.com/i915: 1
                 memory: 9248M
-
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups: [44, 10000]
+        seccompProfile: { type: RuntimeDefault }
+      nodeSelector:
+        intel.feature.node.kubernetes.io/gpu: "true"
+      # pod:
+      #   affinity:
+      #     podAntiAffinity:
+      #       requiredDuringSchedulingIgnoredDuringExecution:
+      #         - labelSelector:
+      #             matchExpressions:
+      #               - key: app.kubernetes.io/name
+      #                 operator: In
+      #                 values: ["frigate"]
+      #           topologyKey: kubernetes.io/hostname
     service:
       app:
         controller: plex
         type: LoadBalancer
-        # externalTrafficPolicy: Cluster
         annotations:
           io.cilium/lb-ipam-ips: ${SVC_PLEX_ADDR}
         ports:
           http:
             port: 32400
-
     ingress:
       app:
         annotations:
-          nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         className: internal
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_CLUSTER_DOMAIN}"
@@ -92,41 +115,30 @@ spec:
                 service:
                   identifier: app
                   port: http
-        # tls:
-        #   - hosts:
-        #       - *host
-
     persistence:
       config:
         existingClaim: plex-config
-        advancedMounts:
-          plex:
-            app:
-              - path: /config
-      plex-cache:
+        # TODO: If setting up Plex for the first time, you'll want to add the globalMounts section
+        globalMounts:
+          - path: /config/Library/Application Support/Plex Media Server
+      # Separate PVC for cache to avoid backing up cache files
+      cache:
         existingClaim: plex-cache
-        advancedMounts:
-          plex:
-            app:
-              - path: /config/Library/Application Support/Plex Media Server/Cache
+        globalMounts:
+          - path: /config/Library/Application Support/Plex Media Server/Cache
       logs:
         type: emptyDir
-        advancedMounts:
-          plex:
-            app:
-              - path: /config/Library/Application Support/Plex Media Server/Logs
-      nfs-nas-media:
+        globalMounts:
+          - path: /config/Library/Application Support/Plex Media Server/Logs
+      tmp:
+        type: emptyDir
+      transcode:
+        type: emptyDir
+      media:
         type: nfs
         server: 10.20.0.3
         path: /volume1/Videos
-        advancedMounts:
-          plex:
-            app:
-              - path: /data/nas-media
-      transcode:
-        type: emptyDir
-        advancedMounts:
-          plex:
-            app:
-              - path: /transcode
+        globalMounts:
+          - path: /media
+            readOnly: true
 

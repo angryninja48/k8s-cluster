@@ -43,7 +43,7 @@ spec:
       # TODO: Switch to release tag on next release
       tag: latest-alpine@sha256:c18601e3c994200cbb5b3d9e1dbe0e671653753bb92032a903211a01c5042663
     env:
-      TZ: ${TZ}
+      TZ: ${TIMEZONE}
       LLDAP_HTTP_PORT: &port 80
       LLDAP_HTTP_URL: "https://lldap.${SECRET_CLUSTER_DOMAIN}"
       LLDAP_LDAP_PORT: &ldapPort 389
