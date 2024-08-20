@@ -46,7 +46,7 @@ spec:
           app:
             image:
               repository: ghcr.io/onedr0p/plex
-              tag: 1.40.2.8395-c67dce28e@sha256:3861cc940ecdf97b773fa24d826407cea86559d0f26366d7acd10cef1704f46c
+              tag: 1.40.5.8854-f36c552fd@sha256:b9c296227e318d81b62873aebfb25ba78685b65546e47a4840d31dd501504f1c
             env:
               PLEX_ADVERTISE_URL: https://${SVC_PLEX_ADDR}:32400,https://plex.${SECRET_CLUSTER_DOMAIN}:443
               PLEX_NO_AUTH_NETWORKS: ${SECRET_LAN_CIDR}
@@ -73,7 +73,7 @@ spec:
       app:
         controller: plex
         type: LoadBalancer
-        externalTrafficPolicy: Cluster
+        # externalTrafficPolicy: Cluster
         annotations:
           io.cilium/lb-ipam-ips: ${SVC_PLEX_ADDR}
         ports:
@@ -92,9 +92,9 @@ spec:
                 service:
                   identifier: app
                   port: http
-        tls:
-          - hosts:
-              - *host
+        # tls:
+        #   - hosts:
+        #       - *host
 
     persistence:
       config:
@@ -115,15 +115,18 @@ spec:
           plex:
             app:
               - path: /config/Library/Application Support/Plex Media Server/Logs
+      nfs-nas-media:
+        type: nfs
+        server: 10.20.0.3
+        path: /volume1/Videos
+        advancedMounts:
+          plex:
+            app:
+              - path: /data/nas-media
       transcode:
         type: emptyDir
         advancedMounts:
           plex:
             app:
               - path: /transcode
-      video:
-        type: nfs
-        server: 10.20.0.3
-        path: /volume1/Videos
-        globalMounts:
-          - path: /mnt/storage/video
+
