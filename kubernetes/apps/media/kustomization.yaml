@@ -6,6 +6,6 @@ resources:
   # - ./miniflux/ks.yaml
   - ./photoprism/ks.yaml
   - ./plex/ks.yaml
-  # - ./radarr/ks.yaml
+  - ./radarr/ks.yaml
   # - ./sonarr/ks.yaml
   # - ./tautulli/ks.yaml
