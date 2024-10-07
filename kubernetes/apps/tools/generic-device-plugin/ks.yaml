@@ -13,7 +13,7 @@ spec:
   path: ./kubernetes/apps/tools/generic-device-plugin/app
   sourceRef:
     kind: GitRepository
-    name: home-ops
+    name: home-kubernetes
   interval: 30m
   timeout: 5m
   prune: true
