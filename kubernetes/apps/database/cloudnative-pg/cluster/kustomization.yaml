@@ -9,7 +9,6 @@ resources:
   - ./externalsecret.yaml
   - ./scheduledbackup.yaml
   - ./prometheusrule.yaml
-  # - ./service.yaml
   - ./service16.yaml
 
 labels:
