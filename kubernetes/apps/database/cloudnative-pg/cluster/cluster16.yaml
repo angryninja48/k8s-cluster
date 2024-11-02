@@ -19,6 +19,8 @@ spec:
     parameters:
       max_connections: "400"
       shared_buffers: 256MB
+      max_wal_size: 4GB
+      min_wal_size: 1GB
   nodeMaintenanceWindow:
     inProgress: false
     reusePVC: true
