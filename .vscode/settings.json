@@ -11,4 +11,5 @@
         "Kubernetes": "**/kubernetes/*.yaml"
     },
     "ansible.python.interpreterPath": "/opt/homebrew/bin/python3",
+    "CodeGPT.apiKey": "Ollama",
 }
