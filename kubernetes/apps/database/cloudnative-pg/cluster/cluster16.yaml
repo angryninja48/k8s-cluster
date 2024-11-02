@@ -7,7 +7,7 @@ metadata:
   namespace: database
 spec:
   instances: 3
-  imageName: ghcr.io/cloudnative-pg/postgresql:16.4-28
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.3-10
   primaryUpdateStrategy: unsupervised
   storage:
     size: 50Gi
@@ -19,8 +19,6 @@ spec:
     parameters:
       max_connections: "400"
       shared_buffers: 256MB
-      max_wal_size: 4GB
-      min_wal_size: 1GB
   nodeMaintenanceWindow:
     inProgress: false
     reusePVC: true
