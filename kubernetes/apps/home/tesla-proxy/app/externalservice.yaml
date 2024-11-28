@@ -4,10 +4,13 @@ metadata:
   name: tesla-proxy
   namespace: home
 spec:
-  type: ExternalName
-  externalName: orangepi.angryninja.cloud # eg example.example.com
+  type: ClusterIP
   ports:
-  - port: 8888
+    - protocol: TCP
+      port: 8888
+      targetPort: 8888
+  externalIPs:
+    - ${SECRET_ORANGEPI_IP}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
