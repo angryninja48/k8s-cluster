@@ -12,6 +12,17 @@ spec:
   externalIPs:
     - ${SECRET_ORANGEPI_IP}
 ---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: tesla-proxy
+  namespace: home
+subsets:
+  - addresses:
+      - ip: ${SECRET_ORANGEPI_IP}
+    ports:
+      - port: 8888
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
