@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.4.0
+      version: 3.5.1
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -87,16 +87,6 @@ spec:
         seccompProfile: { type: RuntimeDefault }
       nodeSelector:
         intel.feature.node.kubernetes.io/gpu: "true"
-      # pod:
-      #   affinity:
-      #     podAntiAffinity:
-      #       requiredDuringSchedulingIgnoredDuringExecution:
-      #         - labelSelector:
-      #             matchExpressions:
-      #               - key: app.kubernetes.io/name
-      #                 operator: In
-      #                 values: ["frigate"]
-      #           topologyKey: kubernetes.io/hostname
     service:
       app:
         controller: plex
