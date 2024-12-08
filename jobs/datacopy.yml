@@ -1,42 +1,42 @@
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: hass-nfs
-spec:
-  storageClassName: hass
-  capacity:
-    storage: 1Mi
-  accessModes:
-    - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain
-  nfs:
-    server: 10.20.0.3
-    path: /volume1/Downloads/hass-backup
-  mountOptions:
-    - nfsvers=4.1
-    - hard
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: hass-nfs
-  namespace: home
-spec:
-  accessModes:
-    - ReadWriteMany
-  storageClassName: hass
-  resources:
-    requests:
-      storage: 1Mi
----
+# ---
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: hass-nfs
+# spec:
+#   storageClassName: hass
+#   capacity:
+#     storage: 1Mi
+#   accessModes:
+#     - ReadWriteMany
+#   persistentVolumeReclaimPolicy: Retain
+#   nfs:
+#     server: 10.20.0.3
+#     path: /volume1/Downloads/hass-backup
+#   mountOptions:
+#     - nfsvers=4.1
+#     - hard
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: hass-nfs
+#   namespace: home
+# spec:
+#   accessModes:
+#     - ReadWriteMany
+#   storageClassName: hass
+#   resources:
+#     requests:
+#       storage: 1Mi
+# ---
 
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: populate-hass-pvc
-  namespace: home
+  name: populate-photo-pvc
+  namespace: media
   finalizers:
     - foregroundDeletion
 spec:
@@ -47,11 +47,11 @@ spec:
       - name: src-vol
         persistentVolumeClaim:
           # SRC PVC
-          claimName: hass-nfs
+          claimName: photoprism-config
       - name: dest-vol
         persistentVolumeClaim:
           # DEST PVC
-          claimName: home-assistant
+          claimName: photoprism
       containers:
       - name: alpine
         image: alpine:latest
