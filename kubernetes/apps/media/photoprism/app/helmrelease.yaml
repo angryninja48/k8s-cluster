@@ -1,84 +1,112 @@
----
-# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helmrelease_v2beta1.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: photoprism
   namespace: media
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
-      interval: 30m
+      version: 3.5.1
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-  maxHistory: 3
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
-
   values:
-
-    image:
-      repository: photoprism/photoprism
-      tag: '240915'
-
-    env:
-      TZ: "${TIMEZONE}"
-      PHOTOPRISM_SITE_URL: https://photos.${SECRET_CLUSTER_DOMAIN}/
-      PHOTOPRISM_SITE_TITLE: Home Photos
-      PHOTOPRISM_SITE_AUTHOR: Jon
-      PHOTOPRISM_ORIGINALS_PATH: /photoprism/media/
-      PHOTOPRISM_STORAGE_PATH: /photoprism/storage/
-      PHOTOPRISM_IMPORT_PATH: /photoprism/unsorted/
-      # PHOTOPRISM_DATABASE_SERVER:
-      # PHOTOPRISM_DATABASE_NAME: photoprism
-      # PHOTOPRISM_DATABASE_USER: photoprism
-      # PHOTOPRISM_DATABASE_PASSWORD:
-    envFrom:
-      - secretRef:
-          name: photoprism-secrets
-
+    controllers:
+      photoprism:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: photoprism/photoprism
+              tag: '240915'
+            env:
+              TZ: "${TIMEZONE}"
+              PHOTOPRISM_SITE_URL: https://photos.${SECRET_CLUSTER_DOMAIN}/
+              PHOTOPRISM_SITE_TITLE: Home Photos
+              PHOTOPRISM_SITE_AUTHOR: Jon
+              PHOTOPRISM_ORIGINALS_PATH: /photoprism/media/
+              PHOTOPRISM_STORAGE_PATH: /photoprism/storage/
+              PHOTOPRISM_IMPORT_PATH: /photoprism/unsorted/
+            envFrom:
+              - secretRef:
+                  name: photoprism-secrets
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /ping
+                    port: 80
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /ping
+                    port: 80
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 100m
+              limits:
+                memory: 4Gi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups: [10000]
+        seccompProfile: { type: RuntimeDefault }
     service:
-      main:
+      app:
+        controller: photoprism
         ports:
           http:
-            port: 2342
-
+            port: 80
     ingress:
-      main:
-        enabled: true
-        ingressClassName: internal
+      app:
+        className: internal
         hosts:
-          - host: &host "photos.${SECRET_CLUSTER_DOMAIN}"
+          - host: "photos.${SECRET_CLUSTER_DOMAIN}"
             paths:
               - path: /
-                pathType: Prefix
-        tls:
-          - hosts:
-              - *host
-
+                service:
+                  identifier: app
+                  port: http
     persistence:
       config:
         enabled: true
-        mountPath: /photoprism/storage
         existingClaim: photoprism-config
       media:
         enabled: true
-        mountPath: /photoprism/media
         existingClaim: media-nfs-photos
       unsorted:
         enabled: true
-        mountPath: /photoprism/unsorted
         existingClaim: media-nfs-photos-unsorted
