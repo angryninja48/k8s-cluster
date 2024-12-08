@@ -32,7 +32,7 @@ spec:
 
     image:
       repository: photoprism/photoprism
-      tag: '20220121'
+      tag: '240915'
 
     env:
       TZ: "${TIMEZONE}"
