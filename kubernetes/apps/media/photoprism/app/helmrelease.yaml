@@ -73,7 +73,7 @@ spec:
       config:
         enabled: true
         mountPath: /photoprism/storage
-        existingClaim: photoprism-config
+        existingClaim: photoprism
       media:
         enabled: true
         mountPath: /photoprism/media
