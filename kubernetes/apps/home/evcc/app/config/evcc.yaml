@@ -1,0 +1,96 @@
+## minimal configuration example
+
+site:
+  title: Home # display name for UI
+  meters:
+    grid: my_grid
+    pv:
+      - my_pv
+    # battery:
+    #   - my_battery
+
+# define your loadpoints according your needs
+# see https://docs.evcc.io/en/docs/reference/configuration/loadpoints
+loadpoints:
+  - title: Garage # display name for UI
+    charger: my_charger # charger
+    vehicle: my_car # default vehicle
+
+# meter definitions
+# name can be freely chosen and is used as reference when assigning meters to site and loadpoints
+# for documentation see https://docs.evcc.io/docs/devices/meters
+meters:
+  - name: my_grid
+    type: template
+    template: enphase
+    usage: grid
+    host: {{ .EVCC_ENPHASE_IP }}
+    token: {{ .EVCC_ENPHASE_ACCESS_TOKEN }}
+
+  - name: my_pv
+    type: template
+    template: enphase
+    usage: pv
+    host: {{ .EVCC_ENPHASE_IP }}
+    token: {{ .EVCC_ENPHASE_ACCESS_TOKEN }}
+
+
+# # replace with your real charger
+# # see https://docs.evcc.io/docs/devices/chargers
+chargers:
+  - name: my_charger
+    type: template
+    template: victron-evcs
+    # Modbus TCP
+    modbus: tcpip
+    id: 1
+    host: {{ .EVCC_CHARGER_IP }}
+    port: 502 # Port
+
+
+# replace with your real vehicle (optional)
+# see https://docs.evcc.io/docs/devices/vehicles
+vehicles:
+  - name: my_car
+    type: template
+    template: tesla
+    # title: # Will be displayed in the user interface (optional)
+    accessToken: {{ .EVCC_TESLA_ACCESS_TOKEN }}
+    refreshToken: {{ .EVCC_TESLA_REFRESH_TOKEN }}
+    # vin: W... # Required if you own multiple vehicles of the same brand (optional)
+    # capacity: 50 # Battery capacity in kWh (optional)
+
+# enter your real grid tariff and feed-in price
+# see https://docs.evcc.io/docs/devices/tariffs
+tariffs:
+  currency: AUD # Set the currency to AUD
+  grid:
+    type: fixed
+    price: 0.299310 # Default shoulder price (AUD/kWh)
+    zones:
+      # Peak tariff - Summer (1 Nov - 31 Mar)
+      - days: Mo-Fr
+        hours: 14-20
+        price: 0.567380 # Peak price (AUD/kWh)
+
+      # Peak hours for winter (1 Jun - 31 Aug)
+      # - days: Mo-Fr
+      #   hours: 17-21
+      #   price: 0.567380 # Peak price (AUD/kWh)
+
+      # Off-Peak tariff
+      - hours: 22-0
+        price: 0.172700 # Off-Peak price (AUD/kWh)
+      - hours: 0-7
+        price: 0.172700 # Off-Peak price (AUD/kWh)
+
+  feedin:
+    type: fixed
+    price: 0.05 # Feed-in tariff
+
+# mqtt message broker
+mqtt:
+  broker: mosquitto.home.svc.cluster.local:1833
+  topic: evcc # root topic for publishing, set empty to disable
+  user: {{ .MQTT_USERNAME }}
+  password: {{ .MQTT_PASSWORD }}
