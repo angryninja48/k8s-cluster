@@ -7,10 +7,10 @@ resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
   - ../../../../templates/volsync
-# configMapGenerator:
-#   - name: evcc-configmap
-#     files:
-#       - evcc.yaml=./config/evcc.yaml
+configMapGenerator:
+  - name: evcc-configmap
+    files:
+      - evcc.yaml=./config/evcc.yaml
 generatorOptions:
   disableNameSuffixHash: true
   annotations:
