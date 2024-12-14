@@ -87,6 +87,16 @@ spec:
         seccompProfile: { type: RuntimeDefault }
       nodeSelector:
         intel.feature.node.kubernetes.io/gpu: "true"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/name
+                    operator: In
+                    values:
+                      - frigate
+              topologyKey: "kubernetes.io/hostname"
     service:
       app:
         controller: plex
