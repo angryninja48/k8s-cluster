@@ -53,8 +53,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/home-assistant/home-assistant
-              tag: 2024.12.5
+              repository: ghcr.io/angryninja48/home-assistant
+              tag: 2024.12.5-6d3ff63
             envFrom: *envFrom
             probes:
               liveness:
