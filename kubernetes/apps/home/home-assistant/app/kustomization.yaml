@@ -6,7 +6,7 @@ namespace: home
 resources:
   - ./config-pvc.yaml
   - ./externalsecret.yaml
-  - ./helmrelease2.yaml
+  - ./helmrelease.yaml
   - ../../../../templates/volsync
 labels:
   - pairs:
