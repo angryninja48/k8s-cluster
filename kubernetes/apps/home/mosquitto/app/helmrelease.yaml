@@ -62,9 +62,12 @@ spec:
         type: LoadBalancer
         annotations:
           io.cilium/lb-ipam-ips: ${SVC_MOSQUITTO_ADDR}
+        externalTrafficPolicy: Cluster
         ports:
           mqtt:
+            enabled: true
             port: 1883
+            protocol: TCP
 
     persistence:
       config:
