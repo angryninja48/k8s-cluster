@@ -23,7 +23,7 @@ spec:
       strategy: rollback
       retries: 3
   values:
-    replicas: 2
+    replicas: 1
     kind: Deployment
     deschedulerPolicyAPIVersion: descheduler/v1alpha2
     deschedulerPolicy:
@@ -47,6 +47,17 @@ spec:
                 constraints:
                   - DoNotSchedule
                   - ScheduleAnyway
+            - name: RemoveFailedPods
+              args:
+                excludeOwnerKinds:
+                  - Job
+                includingInitContainers: true
+                minPodLifetimeSeconds: 1800
+                reasons:
+                  - NodeShutdown
+                  - ImagePullBackOff
+                  - CreateContainerConfigError
+                  - UnexpectedAdmissionError
           plugins:
             balance:
               enabled:
