@@ -70,7 +70,7 @@ spec:
                 spec:
                   httpGet:
                     path: /api/version
-                    port: 5000
+                    port: &port 5000
                   periodSeconds: 10
                   timeoutSeconds: 1
                   failureThreshold: 30
@@ -81,7 +81,7 @@ spec:
         intel.feature.node.kubernetes.io/gpu: "true"
     service:
       app:
-        controller: frigate
+        controller:  *app
         ports:
           http:
             port: *port
