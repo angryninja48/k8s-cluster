@@ -26,3 +26,5 @@ wiki
 /config.yaml
 # SQL DB
 /pg_dumps
+
+.codegpt
