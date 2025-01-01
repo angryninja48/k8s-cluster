@@ -20,4 +20,4 @@ spec:
   volumes:
     - name: hass-vol
       persistentVolumeClaim:
-        claimName: evcc
+        claimName: home-assistant
