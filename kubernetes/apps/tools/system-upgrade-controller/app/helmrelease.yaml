@@ -65,6 +65,7 @@ spec:
       name: system-upgrade
     service:
       app:
+        controller: *app
         enabled: false
     persistence:
       tmp:
