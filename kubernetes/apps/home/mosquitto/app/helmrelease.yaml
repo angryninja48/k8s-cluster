@@ -61,7 +61,6 @@ spec:
         controller: *app
         enabled: true
         type: LoadBalancer
-        externalTrafficPolicy: Cluster
         annotations:
           io.cilium/lb-ipam-ips: ${SVC_MOSQUITTO_ADDR}
         ports:
