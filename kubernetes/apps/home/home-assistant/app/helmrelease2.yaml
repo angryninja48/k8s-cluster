@@ -125,10 +125,10 @@ spec:
           - hosts:
               - *host
     persistence:
-      config:
-        existingClaim: *app
-        globalMounts:
-          - path: /config
+      # config:
+      #   existingClaim: *app
+      #   globalMounts:
+      #     - path: /config
       logs:
         type: emptyDir
         globalMounts:
