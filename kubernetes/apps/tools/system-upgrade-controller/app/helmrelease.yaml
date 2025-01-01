@@ -64,7 +64,7 @@ spec:
     serviceAccount:
       name: system-upgrade
     service:
-      system-upgrade-controller:
+      app:
         enabled: false
     persistence:
       tmp:
