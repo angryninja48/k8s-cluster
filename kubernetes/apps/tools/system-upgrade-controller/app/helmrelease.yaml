@@ -37,20 +37,35 @@ spec:
                 valueFrom:
                   fieldRef:
                     fieldPath: metadata.namespace
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
-              seccompProfile:
-                type: RuntimeDefault
         pod:
           securityContext:
+            runAsNonRoot: true
             runAsUser: 65534
             runAsGroup: 65534
-            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop: ["ALL"]
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: node-role.kubernetes.io/control-plane
+                        operator: Exists
+          tolerations:
+            - {key: CriticalAddonsOnly, operator: Exists}
+            - {key: node-role.kubernetes.io/master, operator: Exists, effect: NoSchedule}
+            - {key: node-role.kubernetes.io/controlplane, operator: Exists, effect: NoSchedule}
+            - {key: node-role.kubernetes.io/control-plane, operator: Exists, effect: NoSchedule}
+            - {key: node-role.kubernetes.io/etcd, operator: Exists, effect: NoExecute}
     serviceAccount:
-      create: true
       name: system-upgrade
+    service:
+      main:
+        enabled: false
     persistence:
       tmp:
         type: emptyDir
