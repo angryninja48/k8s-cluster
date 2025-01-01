@@ -1,23 +1,20 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: &app home-assistant
-  namespace: default
 spec:
   interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 3.3.2
+      version: 3.6.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-  maxHistory: 2
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
@@ -25,21 +22,14 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   values:
-    defaultPodOptions:
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
-        fsGroupChangePolicy: OnRootMismatch
     controllers:
       home-assistant:
-
         annotations:
           reloader.stakater.com/auto: "true"
-
         initContainers:
           init-db:
             enabled: false
@@ -49,46 +39,48 @@ spec:
             envFrom: &envFrom
               - secretRef:
                   name: home-assistant-secrets
-
         containers:
           app:
             image:
-              repository: ghcr.io/home-assistant/home-assistant
-              tag: 2024.9.3
+              repository: ghcr.io/onedr0p/home-assistant
+              tag: 2024.12.5@sha256:638e519c874a06389ce6f03e435dd80a6697e8692eac88b459775839410f3439
             envFrom: *envFrom
-            probes:
-              liveness:
-                enabled: false
-              readiness:
-                enabled: false
-              startup:
-                enabled: false
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
             resources:
               requests:
-                cpu: 1000m
-                memory: 2Gi
+                cpu: 10m
               limits:
-                memory: 8Gi
-            securityContext:
-              privileged: true
+                memory: 2Gi
           code:
-            dependsOn: app
             image:
               repository: ghcr.io/coder/code-server
-              tag: 4.89.1
-            args:
-              - --auth
-              - "none"
-              - --user-data-dir
-              - "/config/.vscode"
-              - --extensions-dir
-              - "/config/.vscode"
-              - --port
-              - "8081"
-              - /config
+              tag: 4.96.2@sha256:6b8c0e944caec80057e71d2c2f352cee38fe00ae4b7515fc4458eb300844f699
+            args: [
+              "--auth", "none",
+              "--user-data-dir", "/config/.vscode",
+              "--extensions-dir", "/config/.vscode",
+              "--port", "8081",
+              "/config"
+            ]
             envFrom:
               - secretRef:
                   name: code-server-secrets
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 512Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
     service:
       app:
         controller: *app
@@ -98,17 +90,14 @@ spec:
         ports:
           http:
             port: 8123
-
       code:
         type: ClusterIP
         controller: *app
         ports:
           http:
             port: 8081
-
     ingress:
       app:
-        enabled: true
         className: external
         annotations:
           hajimari.io/icon: mdi:home-assistant
@@ -123,9 +112,7 @@ spec:
         tls:
           - hosts:
               - *host
-
       code:
-        enabled: true
         className: internal
         hosts:
           - host: &host "hass-code.${SECRET_CLUSTER_DOMAIN}"
@@ -137,14 +124,19 @@ spec:
         tls:
           - hosts:
               - *host
-
     persistence:
       config:
-        enabled: true
         existingClaim: *app
         globalMounts:
           - path: /config
-
+      logs:
+        type: emptyDir
+        globalMounts:
+          - path: /config/logs
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
       deploy-key:
         type: secret
         name: code-server-secrets
