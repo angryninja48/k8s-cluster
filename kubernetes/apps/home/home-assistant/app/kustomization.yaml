@@ -5,7 +5,7 @@ kind: Kustomization
 namespace: home
 resources:
   - ./externalsecret.yaml
-  - ./helmrelease2.yaml
+  - ./helmrelease.yaml
   - ../../../../templates/volsync
 labels:
   - pairs:
