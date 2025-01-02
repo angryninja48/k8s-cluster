@@ -84,6 +84,12 @@ tariffs:
       - hours: 0-7
         price: 0.172700 # Off-Peak price (AUD/kWh)
 
+  co2:
+    type: template
+    template: electricitymaps-free
+    token: {{ .EVCC_CO2_TOKEN }}
+    zone: AU # see https://api.electricitymap.org/v3/zones
+
   feedin:
     type: fixed
     price: 0.05 # Feed-in tariff
