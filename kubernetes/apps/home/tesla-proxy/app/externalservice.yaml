@@ -7,8 +7,8 @@ spec:
   type: ClusterIP
   ports:
     - protocol: TCP
-      port: 8888
-      targetPort: 8888
+      port: 4430
+      targetPort: 4430
   externalIPs:
     - ${SECRET_ORANGEPI_IP}
 ---
@@ -21,7 +21,7 @@ subsets:
   - addresses:
       - ip: ${SECRET_ORANGEPI_IP}
     ports:
-      - port: 8888
+      - port: 4430
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -44,7 +44,7 @@ spec:
               service:
                 name: tesla-proxy
                 port:
-                  number: 8888
+                  number: 4430
   tls:
   - hosts:
     - tesla-proxy.angryninja.cloud
