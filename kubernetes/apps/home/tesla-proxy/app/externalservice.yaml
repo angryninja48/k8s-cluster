@@ -43,20 +43,20 @@ spec:
     - host: tesla-proxy.${SECRET_CLUSTER_DOMAIN}
       http:
         paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: tesla-proxy
-                port:
-                  number: 4430
           # - path: /
           #   pathType: Prefix
           #   backend:
           #     service:
           #       name: tesla-proxy
           #       port:
-          #         number: 8888
+          #         number: 4430
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: tesla-proxy
+                port:
+                  number: 8888
   tls:
   - hosts:
     - tesla-proxy.angryninja.cloud
