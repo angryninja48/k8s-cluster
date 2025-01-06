@@ -82,7 +82,16 @@ spec:
               - secretRef:
                   name: code-server-secrets #Use the same as home assistant
     service:
-
+      app:
+        controller: *app
+        type: LoadBalancer
+        loadBalancerIP: ${SVC_HASS_ADDR}
+        externalTrafficPolicy: Local
+        ports:
+          http:
+            port: 8090
+          https:
+            port: 443
       code:
         type: ClusterIP
         controller: *app
