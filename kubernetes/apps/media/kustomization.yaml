@@ -4,8 +4,8 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   # - ./miniflux/ks.yaml
-  - ./photoprism/ks.yaml
-  - ./plex/ks.yaml
-  - ./radarr/ks.yaml
+  # - ./photoprism/ks.yaml
+  # - ./plex/ks.yaml
+  # - ./radarr/ks.yaml
   # - ./sonarr/ks.yaml
   # - ./tautulli/ks.yaml
