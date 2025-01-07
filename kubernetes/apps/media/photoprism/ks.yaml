@@ -21,9 +21,9 @@ spec:
       kind: HelmRelease
       name: photoprism
       namespace: media
-  interval: 15m
+  interval: 240m
   retryInterval: 1m
-  timeout: 5m
+  timeout: 120m
   postBuild:
     substitute:
       APP: *app
