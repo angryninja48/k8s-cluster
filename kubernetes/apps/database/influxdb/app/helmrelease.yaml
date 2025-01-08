@@ -42,7 +42,7 @@ spec:
     #   enabled: true
     #   tls: true
     #   secretName: influxdb-tls
-    #   hostname: &host "influxdb.${SECRET_CLUSTER_DOMAIN}"
+    #   hostname: &host "influxdb.${SECRET_DOMAIN}"
     #   annotations:
     #     cert-manager.io/cluster-issuer: letsencrypt-production
 

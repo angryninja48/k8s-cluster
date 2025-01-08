@@ -42,7 +42,7 @@ spec:
       repository: ghcr.io/miniflux/miniflux
       tag: 2.1.2
     env:
-      BASE_URL: "https://miniflux.${SECRET_CLUSTER_DOMAIN}"
+      BASE_URL: "https://miniflux.${SECRET_DOMAIN}"
       CREATE_ADMIN: "1"
       DEBUG: "1"
       LOG_DATE_TIME: "1"
@@ -65,7 +65,7 @@ spec:
         enabled: true
         ingressClassName: internal
         hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_CLUSTER_DOMAIN}"
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
