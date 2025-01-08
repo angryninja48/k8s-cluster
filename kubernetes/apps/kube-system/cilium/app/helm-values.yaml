@@ -2,23 +2,18 @@
 autoDirectNodeRoutes: true
 bandwidthManager:
   enabled: true
-  bbr: true
 bpf:
-  datapathMode: netkit
-  masquerade: true
-  preallocateMaps: true
-  tproxy: true
+  masquerade: false
 cgroup:
   automount:
     enabled: false
   hostRoot: /sys/fs/cgroup
 cluster:
   id: 1
-  name: main
+  name: home-kubernetes
 cni:
   exclusive: false
-devices: enp+
-enableIPv4BIGTCP: true
+# devices: en0+
 endpointRoutes:
   enabled: true
 envoy:
@@ -27,19 +22,19 @@ hubble:
   enabled: false
 ipam:
   mode: kubernetes
-ipv4NativeRoutingCIDR: 10.69.0.0/16
+ipv4NativeRoutingCIDR: 10.42.0.0/16
 k8sServiceHost: 127.0.0.1
-k8sServicePort: 7445
+k8sServicePort: 6443
 kubeProxyReplacement: true
 kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
 l2announcements:
   enabled: true
 loadBalancer:
   algorithm: maglev
-  mode: dsr
+  mode: snat
 localRedirectPolicy: true
 operator:
-  replicas: 2
+  replicas: 1
   rollOutPods: true
   prometheus:
     enabled: true
@@ -47,6 +42,8 @@ operator:
       enabled: true
   dashboards:
     enabled: true
+    annotations:
+      grafana_folder: Cilium
 prometheus:
   enabled: true
   serviceMonitor:
@@ -54,6 +51,8 @@ prometheus:
     trustCRDsExist: true
 dashboards:
   enabled: true
+  annotations:
+    grafana_folder: Cilium
 rollOutCiliumPods: true
 routingMode: native
 securityContext:
