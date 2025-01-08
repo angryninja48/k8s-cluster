@@ -36,7 +36,7 @@ spec:
       dashboard:
         ingressClassName: internal
         host:
-          name: "rook.${SECRET_CLUSTER_DOMAIN}"
+          name: "rook.${SECRET_DOMAIN}"
           path: /
     toolbox:
       enabled: true
@@ -73,13 +73,13 @@ spec:
         nodes:
           - name: talos01
             devices:
-              - name: "/dev/disk/by-id/ata-WDC_WDS240G2G0B-00EPW0_191959804062"
+              - name: "sdb"
           - name: talos02
             devices:
-              - name: "/dev/disk/by-id/ata-CT500MX500SSD1_2324E6E218EA"
+              - name: "sda"
           - name: talos03
             devices:
-              - name: "/dev/disk/by-id/ata-CT500MX500SSD1_2403E88F7DD2"
+              - name: "sdb"
       placement:
         mgr: &placement
           nodeAffinity:
