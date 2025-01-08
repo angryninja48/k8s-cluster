@@ -93,7 +93,7 @@ spec:
           hajimari.io/appName: "Alert Manager"
           hajimari.io/icon: mdi:alert-decagram-outline
         hosts:
-          - &host alert-manager.${SECRET_CLUSTER_DOMAIN}
+          - &host alert-manager.${SECRET_DOMAIN}
         tls:
           - hosts:
               - *host
@@ -148,7 +148,7 @@ spec:
         enabled: true
         ingressClassName: internal
         pathType: Prefix
-        hosts: ["prometheus.${SECRET_CLUSTER_DOMAIN}"]
+        hosts: ["prometheus.${SECRET_DOMAIN}"]
       thanosService:
         enabled: true
       thanosServiceMonitor:

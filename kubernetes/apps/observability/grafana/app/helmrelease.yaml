@@ -48,7 +48,7 @@ spec:
       GF_FEATURE_TOGGLES_ENABLE: publicDashboards
       GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: natel-discrete-panel,pr0ps-trackmap-panel,panodata-map-panel
       GF_SECURITY_COOKIE_SAMESITE: grafana
-      GF_SERVER_ROOT_URL: https://grafana.${SECRET_CLUSTER_DOMAIN}
+      GF_SERVER_ROOT_URL: https://grafana.${SECRET_DOMAIN}
 
     envFromSecret: *secret
 
@@ -225,7 +225,7 @@ spec:
         hajimari.io/icon: simple-icons:grafana
       pathType: Prefix
       hosts:
-        - &host grafana.${SECRET_CLUSTER_DOMAIN}
+        - &host grafana.${SECRET_DOMAIN}
       tls:
         - hosts:
             - *host

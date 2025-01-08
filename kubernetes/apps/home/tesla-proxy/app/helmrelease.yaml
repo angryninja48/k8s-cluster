@@ -46,7 +46,7 @@ spec:
               repository: iainbullock/tesla_http_proxy
               tag: v1.0.5
             env:
-              DOMAIN: tesla-proxy.${SECRET_CLUSTER_DOMAIN}
+              DOMAIN: tesla-proxy.${SECRET_DOMAIN}
             envFrom:
               - secretRef:
                   name: tesla-proxy-secrets
@@ -104,9 +104,9 @@ spec:
         enabled: true
         className: external
         annotations:
-          external-dns.alpha.kubernetes.io/target: "external.${SECRET_CLUSTER_DOMAIN}"
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
         hosts:
-          - host: &host "tesla-proxy.${SECRET_CLUSTER_DOMAIN}"
+          - host: &host "tesla-proxy.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
@@ -120,7 +120,7 @@ spec:
         enabled: true
         className: internal
         hosts:
-          - host: &host "tesla-code.${SECRET_CLUSTER_DOMAIN}"
+          - host: &host "tesla-code.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:

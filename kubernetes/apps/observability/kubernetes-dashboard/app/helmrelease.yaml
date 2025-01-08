@@ -39,7 +39,7 @@ spec:
       annotations:
         hajimari.io/icon: mdi:kubernetes
       hosts:
-        - &host "kubernetes.${SECRET_CLUSTER_DOMAIN}"
+        - &host "kubernetes.${SECRET_DOMAIN}"
       tls:
         - hosts:
             - *host

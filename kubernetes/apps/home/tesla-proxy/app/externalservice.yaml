@@ -36,11 +36,11 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS" # Use HTTPS for backend
-    external-dns.alpha.kubernetes.io/target: external.${SECRET_CLUSTER_DOMAIN}
+    external-dns.alpha.kubernetes.io/target: external.${SECRET_DOMAIN}
 spec:
   ingressClassName: external
   rules:
-    - host: tesla-proxy.${SECRET_CLUSTER_DOMAIN}
+    - host: tesla-proxy.${SECRET_DOMAIN}
       http:
         paths:
           - path: /
