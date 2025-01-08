@@ -25,7 +25,7 @@ cniConfig:
 nodes:
   - hostname: "talos03"
     ipAddress: "10.20.0.16"
-    installDisk: "/dev/sda"
+    installDisk: "/dev/sdb"
     talosImageURL: factory.talos.dev/installer/376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba
     controlPlane: true
     networkInterfaces:
