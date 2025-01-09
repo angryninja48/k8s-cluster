@@ -13,6 +13,7 @@ spec:
       neighbors:
         - peerAddress: "10.20.0.1/32"
           peerASN: 65000
+          peerPort: 179
       serviceSelector:
         matchExpressions:
           - {key: somekey, operator: NotIn, values: ['never-used-value']}
@@ -24,4 +25,4 @@ metadata:
 spec:
   allowFirstLastIPs: "Yes"
   blocks:
-    - cidr: "${BGP_ADVERTISED_CIDR}"
+    - cidr: "10.213.0.0/16"
