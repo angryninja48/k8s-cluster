@@ -19,4 +19,6 @@ metadata:
 spec:
   allowFirstLastIPs: "Yes"
   blocks:
-    - cidr: "${NODE_CIDR}"
+    - # Controller VIP: 10.20.0.250
+      start: 10.20.0.50
+      stop: 10.20.0.59
