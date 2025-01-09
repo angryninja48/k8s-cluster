@@ -73,7 +73,7 @@ spec:
         nodes:
           - name: talos01
             devices:
-              - name: "/dev/sdb"
+              - name: "/dev/sda"
           - name: talos02
             devices:
               - name: "/dev/sda"
