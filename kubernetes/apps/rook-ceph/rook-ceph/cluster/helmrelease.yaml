@@ -30,8 +30,8 @@ spec:
       namespace: volsync-system
   values:
     monitoring:
-      enabled: true
-      createPrometheusRules: true
+      enabled: false
+      createPrometheusRules: false
     ingress:
       dashboard:
         ingressClassName: internal
@@ -49,7 +49,7 @@ spec:
       crashCollector:
         disable: false
       dashboard:
-        enabled: true
+        enabled: false
         urlPrefix: /
         ssl: false
         prometheusEndpoint: http://prometheus-operated.observability.svc.cluster.local:9090
