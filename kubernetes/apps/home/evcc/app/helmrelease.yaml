@@ -54,9 +54,10 @@ spec:
 
     ingress:
       app:
+        enabled: true
         className: internal
         hosts:
-          - host: &host "evcc.${SECRET_DOMAIN}"
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
