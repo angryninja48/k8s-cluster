@@ -31,7 +31,7 @@ l2announcements:
   enabled: true
 loadBalancer:
   algorithm: maglev
-  mode: snat
+  mode: dsr
 localRedirectPolicy: true
 operator:
   replicas: 1
@@ -73,3 +73,5 @@ securityContext:
       - NET_ADMIN
       - SYS_ADMIN
       - SYS_RESOURCE
+socketLB:
+  hostNamespaceOnly: true
