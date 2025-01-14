@@ -8,5 +8,5 @@ resources:
   - ./kube-prometheus-stack/ks.yaml
   - ./loki/ks.yaml
   - ./promtail/ks.yaml
-  # - ./speedtest/ks.yaml
+  - ./speedtest-exporter/ks.yaml
 
