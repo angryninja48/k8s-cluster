@@ -100,10 +100,9 @@ spec:
       app:
         className: external
         annotations:
-          hajimari.io/icon: mdi:home-assistant
-          external-dns.alpha.kubernetes.io/target: "external.${SECRET_CLUSTER_DOMAIN}"
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
         hosts:
-          - host: &host "hass.${SECRET_CLUSTER_DOMAIN}"
+          - host: &host "hass.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
@@ -115,7 +114,7 @@ spec:
       code:
         className: internal
         hosts:
-          - host: &host "hass-code.${SECRET_CLUSTER_DOMAIN}"
+          - host: &host "hass-code.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
