@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/gitrepository-source-v1.json
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
@@ -10,13 +11,14 @@ spec:
   secretRef:
     name: github-deploy-key
   ref:
-    branch: "main"
+    branch: "new-cluster"
   ignore: |
     # exclude all
     /*
     # include kubernetes directory
     !/kubernetes
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -38,5 +40,7 @@ spec:
     substituteFrom:
       - kind: ConfigMap
         name: cluster-settings
+        optional: true
       - kind: Secret
         name: cluster-secrets
+        optional: true

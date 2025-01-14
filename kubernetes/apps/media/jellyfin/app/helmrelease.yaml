@@ -91,7 +91,7 @@ spec:
         annotations:
           hajimari.io/icon: simple-icons:jellyfin
         hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_CLUSTER_DOMAIN}"
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:

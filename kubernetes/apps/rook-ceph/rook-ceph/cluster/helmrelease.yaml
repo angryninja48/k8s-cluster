@@ -30,13 +30,13 @@ spec:
       namespace: volsync-system
   values:
     monitoring:
-      enabled: true
-      createPrometheusRules: true
+      enabled: false
+      createPrometheusRules: false
     ingress:
       dashboard:
         ingressClassName: internal
         host:
-          name: "rook.${SECRET_CLUSTER_DOMAIN}"
+          name: "rook.${SECRET_DOMAIN}"
           path: /
     toolbox:
       enabled: true
@@ -49,7 +49,7 @@ spec:
       crashCollector:
         disable: false
       dashboard:
-        enabled: true
+        enabled: false
         urlPrefix: /
         ssl: false
         prometheusEndpoint: http://prometheus-operated.observability.svc.cluster.local:9090
@@ -71,15 +71,15 @@ spec:
         config:
           osdsPerDevice: "1"
         nodes:
-          - name: k3s-0
+          - name: talos01
             devices:
-              - name: "/dev/disk/by-id/ata-WDC_WDS240G2G0B-00EPW0_191959804062"
-          - name: k3s-1
+              - name: "/dev/sda"
+          - name: talos02
             devices:
-              - name: "/dev/disk/by-id/ata-CT500MX500SSD1_2324E6E218EA"
-          - name: k3s-2
+              - name: "/dev/sda"
+          - name: talos03
             devices:
-              - name: "/dev/disk/by-id/ata-WDC_WDS240G2G0B-00EPW0_191838801396"
+              - name: "/dev/sdb"
       placement:
         mgr: &placement
           nodeAffinity:
