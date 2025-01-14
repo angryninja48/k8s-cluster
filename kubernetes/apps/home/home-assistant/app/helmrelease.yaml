@@ -35,7 +35,7 @@ spec:
             enabled: false
             image:
               repository: ghcr.io/onedr0p/postgres-init
-              tag: 14
+              tag: 16
             envFrom: &envFrom
               - secretRef:
                   name: home-assistant-secrets
