@@ -99,3 +99,11 @@ spec:
         tls:
           - hosts:
               - *host
+
+    persistence:
+      config-file:
+        type: secret
+        name: litellm-secret
+        globalMounts:
+          - path: /app/proxy_server_config.yaml
+            readOnly: true
