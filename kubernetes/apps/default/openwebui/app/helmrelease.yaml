@@ -29,29 +29,32 @@ spec:
     controllers:
       openwebui:
         type: deployment
+
         annotations:
           reloader.stakater.com/auto: "true"
 
         containers:
           app:
             image:
-              repository: ghcr.io/ollama-webui/ollama-webui
-              tag: main
+              repository: ghcr.io/open-webui/open-webui
+              tag: v0.5.4@sha256:42e8fa544facc38d731e3d516fbf478abe435bb4b80798e0934930afea6c5bab
             env:
-              OLLAMA_API_BASE_URL: http://ollama.default.svc:11434/api
+              OLLAMA_BASE_URL: http://ollama.default.svc:11434
+
             resources:
               requests:
-                cpu: 200m
+                cpu: 500m
+                memory: 2Gi
               limits:
                 memory: 2Gi
 
-            probes:
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
-              startup:
-                enabled: false
+            # probes:
+            #   liveness:
+            #     enabled: true
+            #   readiness:
+            #     enabled: true
+            #   startup:
+            #     enabled: false
 
     service:
       app:
