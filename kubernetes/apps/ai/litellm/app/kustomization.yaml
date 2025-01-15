@@ -5,6 +5,11 @@ kind: Kustomization
 namespace: ai
 resources:
   - ./helmrelease.yaml
+  - ./externalsecret.yaml
+configMapGenerator:
+  - name: litellm-configmap
+    files:
+      - litellm.yaml=./config/litellm.yaml
 generatorOptions:
   disableNameSuffixHash: true
   annotations:
