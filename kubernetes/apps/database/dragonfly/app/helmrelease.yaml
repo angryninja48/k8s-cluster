@@ -32,7 +32,7 @@ spec:
             image:
               repository: ghcr.io/dragonflydb/operator
               tag: v1.1.8@sha256:5e0ebd5d58066499fb19ea4102531972401f2a6100fc9f4dbc45284c4175de82
-            command: [/manager]
+            command: ["/manager"]
             args:
               - --health-probe-bind-address=:8081
               - --metrics-bind-address=:8080
@@ -67,7 +67,7 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: { drop: [ALL] }
+              capabilities: { drop: ["ALL"] }
         pod:
           securityContext:
             runAsUser: 65534
