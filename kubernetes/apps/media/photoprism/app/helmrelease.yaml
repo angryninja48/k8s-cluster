@@ -36,18 +36,18 @@ spec:
               repository: photoprism/photoprism
               tag: 240915
 
-          env:
-            TZ: "${TIMEZONE}"
-            PHOTOPRISM_SITE_URL: https://photos.${SECRET_DOMAIN}/
-            PHOTOPRISM_SITE_TITLE: Home Photos
-            PHOTOPRISM_SITE_AUTHOR: Jon
-            PHOTOPRISM_ORIGINALS_PATH: /photoprism/media/
-            PHOTOPRISM_STORAGE_PATH: /photoprism/storage/
-            PHOTOPRISM_IMPORT_PATH: /photoprism/unsorted/
-            # PHOTOPRISM_DATABASE_SERVER:
-            # PHOTOPRISM_DATABASE_NAME: photoprism
-            # PHOTOPRISM_DATABASE_USER: photoprism
-            # PHOTOPRISM_DATABASE_PASSWORD:
+            env:
+              TZ: "${TIMEZONE}"
+              PHOTOPRISM_SITE_URL: https://photos.${SECRET_DOMAIN}/
+              PHOTOPRISM_SITE_TITLE: Home Photos
+              PHOTOPRISM_SITE_AUTHOR: Jon
+              PHOTOPRISM_ORIGINALS_PATH: /photoprism/media/
+              PHOTOPRISM_STORAGE_PATH: /photoprism/storage/
+              PHOTOPRISM_IMPORT_PATH: /photoprism/unsorted/
+              # PHOTOPRISM_DATABASE_SERVER:
+              # PHOTOPRISM_DATABASE_NAME: photoprism
+              # PHOTOPRISM_DATABASE_USER: photoprism
+              # PHOTOPRISM_DATABASE_PASSWORD:
 
             envFrom:
               - secretRef:
