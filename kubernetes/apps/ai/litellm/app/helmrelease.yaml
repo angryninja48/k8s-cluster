@@ -106,4 +106,4 @@ spec:
         name: litellm-secret
         globalMounts:
           - path: /app/proxy_config.yaml
-            subPath: proxy_config.yaml
+            subPath: litellm.yaml
