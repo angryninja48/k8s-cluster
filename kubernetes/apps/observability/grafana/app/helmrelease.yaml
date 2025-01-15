@@ -185,7 +185,8 @@ spec:
           # renovate: depName="Speedtest Exporter"
           gnetId: 13665
           revision: 4
-          datasource: Prometheus
+          datasource:
+            - { name: DS_PROMETHEUS, value: Prometheus }
         unifi-insights:
           # renovate: depName="UniFi-Poller: Client Insights - Prometheus"
           gnetId: 11315
