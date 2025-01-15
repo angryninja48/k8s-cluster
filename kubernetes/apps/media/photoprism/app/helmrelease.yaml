@@ -1,84 +1,90 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helmrelease_v2beta1.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: photoprism
+  name: &app photoprism
   namespace: media
 spec:
-  interval: 15m
+  interval: 30m
   chart:
     spec:
       chart: app-template
       version: 3.6.1
-      interval: 30m
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-  maxHistory: 3
   install:
-    createNamespace: true
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: uninstall
       retries: 3
   uninstall:
     keepHistory: false
-
   values:
+    controllers:
+      photoprism:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          main:
+            image:
+              repository: photoprism/photoprism
+              tag: 240915
 
-    image:
-      repository: photoprism/photoprism
-      tag: '240915'
+          env:
+            TZ: "${TIMEZONE}"
+            PHOTOPRISM_SITE_URL: https://photos.${SECRET_DOMAIN}/
+            PHOTOPRISM_SITE_TITLE: Home Photos
+            PHOTOPRISM_SITE_AUTHOR: Jon
+            PHOTOPRISM_ORIGINALS_PATH: /photoprism/media/
+            PHOTOPRISM_STORAGE_PATH: /photoprism/storage/
+            PHOTOPRISM_IMPORT_PATH: /photoprism/unsorted/
+            # PHOTOPRISM_DATABASE_SERVER:
+            # PHOTOPRISM_DATABASE_NAME: photoprism
+            # PHOTOPRISM_DATABASE_USER: photoprism
+            # PHOTOPRISM_DATABASE_PASSWORD:
 
-    env:
-      TZ: "${TIMEZONE}"
-      PHOTOPRISM_SITE_URL: https://photos.${SECRET_DOMAIN}/
-      PHOTOPRISM_SITE_TITLE: Home Photos
-      PHOTOPRISM_SITE_AUTHOR: Jon
-      PHOTOPRISM_ORIGINALS_PATH: /photoprism/media/
-      PHOTOPRISM_STORAGE_PATH: /photoprism/storage/
-      PHOTOPRISM_IMPORT_PATH: /photoprism/unsorted/
-      # PHOTOPRISM_DATABASE_SERVER:
-      # PHOTOPRISM_DATABASE_NAME: photoprism
-      # PHOTOPRISM_DATABASE_USER: photoprism
-      # PHOTOPRISM_DATABASE_PASSWORD:
-    envFrom:
-      - secretRef:
-          name: photoprism-secrets
+            envFrom:
+              - secretRef:
+                  name: photoprism-secrets
 
     service:
-      main:
+      app:
+        controller: *app
         ports:
           http:
             port: 2342
 
     ingress:
-      main:
+      app:
         enabled: true
-        ingressClassName: internal
+        className: internal
         hosts:
           - host: &host "photos.${SECRET_DOMAIN}"
             paths:
               - path: /
-                pathType: Prefix
+                service:
+                  identifier: app
+                  port: http
         tls:
           - hosts:
               - *host
 
     persistence:
       config:
-        enabled: true
-        mountPath: /photoprism/storage
         existingClaim: photoprism
+        globalMounts:
+          - path: /photoprism/storage
       media:
-        enabled: true
-        mountPath: /photoprism/media
         existingClaim: media-nfs-photos
+        globalMounts:
+          - path: /photoprism/media
       unsorted:
-        enabled: true
-        mountPath: /photoprism/unsorted
         existingClaim: media-nfs-photos-unsorted
+        globalMounts:
+          - path: /photoprism/unsorted
