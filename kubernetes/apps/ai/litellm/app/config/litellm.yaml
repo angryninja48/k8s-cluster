@@ -39,6 +39,29 @@ model_list:
       tags: ["paid"]
       api_key: {{ .LITELLM_ANTHROPIC_API_KEY }}
 
+  # Bedrock models
+
+  - model_name: bedrock-claude-3.5v2
+    litellm_params:
+      model: bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0
+      aws_access_key_id: {{ .LITELLM_BEDROCK_ACCESS_KEY }}
+      aws_secret_access_key: {{ .LITELLM_BEDROCK_SECRET_KEY }}
+      aws_region_name: {{ .LITELLM_BEDROCK_REGION }}
+
+  - model_name: bedrock-haiku-3.5
+    litellm_params:
+      model: bedrock/anthropic.claude-3-5-haiku-20241022-v1:0
+      aws_access_key_id: {{ .LITELLM_BEDROCK_ACCESS_KEY }}
+      aws_secret_access_key: {{ .LITELLM_BEDROCK_SECRET_KEY }}
+      aws_region_name: {{ .LITELLM_BEDROCK_REGION }}
+
+  - model_name: bedrock-claude-3.5
+    litellm_params:
+      model: anthropic.claude-3-5-sonnet-20240620-v1:0
+      aws_access_key_id: {{ .LITELLM_BEDROCK_ACCESS_KEY }}
+      aws_secret_access_key: {{ .LITELLM_BEDROCK_SECRET_KEY }}
+      aws_region_name: {{ .LITELLM_BEDROCK_REGION }}
+
 # -*= Free models =*-
 # -------------------
   - model_name: gpt-4o-mini
