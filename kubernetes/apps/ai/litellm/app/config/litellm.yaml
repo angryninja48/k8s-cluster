@@ -10,7 +10,7 @@ router_settings:
 
 general_settings:
   master_key: {{ .LITELLM_MASTER_KEY }}
-  # database_url: "postgresql://{{ .LITELLM_POSTGRES_USER }}:{{ .LITELLM_POSTGRES_PASSWORD }}@postgres16-rw.database.svc.cluster.local"
+  database_url: "postgresql://{{ .LITELLM_POSTGRES_USER }}:{{ .LITELLM_POSTGRES_PASSWORD }}@postgres16-rw.database.svc.cluster.local/litellm"
   # enforce_user_param: true
 
 litellm_settings:

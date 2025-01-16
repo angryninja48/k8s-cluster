@@ -32,6 +32,15 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
 
+        initContainers:
+          01-init-db:
+            image:
+              repository: ghcr.io/onedr0p/postgres-init
+              tag: "16.6"
+            envFrom: &envFrom
+              - secretRef:
+                  name: litellm-secret
+
         containers:
           app:
             image:
@@ -39,8 +48,6 @@ spec:
               tag: main-v1.58.1
             env:
               TZ: ${TIMEZONE}
-
-
             args:
               - "--config"
               - "/app/proxy_config.yaml"
