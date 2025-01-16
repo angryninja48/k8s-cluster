@@ -1,8 +1,51 @@
 model_list:
-  - model_name: claude-3.5-sonnet
+# -*= Paid models =*-
+# -------------------
+
+  # Anthropic models
+  - model_name: "claude-3.5-sonnet-20240620"
     litellm_params:
-      model: claude-3-5-sonnet-20241022
+      model: "claude-3-5-sonnet-20240620"
+      tags: ["paid"]
       api_key: {{ .LITELLM_ANTHROPIC_API_KEY }}
+
+  - model_name: "claude-3.5-sonnet"
+    litellm_params:
+      model: "claude-3-5-sonnet-20241022"
+      tags: ["paid"]
+      api_key: {{ .LITELLM_ANTHROPIC_API_KEY }}
+
+  - model_name: "claude-3.5-sonnet-20241022"
+    litellm_params:
+      model: "claude-3-5-sonnet-20241022"
+      tags: ["paid"]
+      api_key: {{ .LITELLM_ANTHROPIC_API_KEY }}
+
+  - model_name: "claude-3-opus"
+    litellm_params:
+      model: "claude-3-opus-20240229"
+      tags: ["paid"]
+      api_key: {{ .LITELLM_ANTHROPIC_API_KEY }}
+
+  - model_name: "claude-3-sonnet"
+    litellm_params:
+      model: "claude-3-sonnet-20240229"
+      tags: ["paid"]
+      api_key: {{ .LITELLM_ANTHROPIC_API_KEY }}
+
+  - model_name: "claude-3-haiku"
+    litellm_params:
+      model: "claude-3-haiku-20240307"
+      tags: ["paid"]
+      api_key: {{ .LITELLM_ANTHROPIC_API_KEY }}
+
+# -*= Free models =*-
+# -------------------
+  - model_name: gpt-4o-mini
+    litellm_params:
+      model: openai/gpt-4o-mini
+      api_key: {{ .LITELLM_OPENAI_API_KEY }}
+      tags: ["free"]
 
 router_settings:
   routing_strategy: simple-shuffle
@@ -25,9 +68,9 @@ litellm_settings:
   add_function_to_prompt: true
 
   set_verbose: false
-  # cache: true
-  # cache_params:        # set cache params for redis
-    # type: redis
-    # namespace: "litellm_caching"
-    # host: dragonfly.database.svc.cluster.local.
-    # port: 6379
+  cache: true
+  cache_params:        # set cache params for redis
+    type: redis
+    namespace: "litellm_caching"
+    host: dragonfly.database.svc.cluster.local.
+    port: 6379
