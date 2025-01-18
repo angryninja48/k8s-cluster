@@ -62,7 +62,7 @@ spec:
         type: LoadBalancer
         annotations:
           io.cilium/lb-ipam-ips: ${SVC_MOSQUITTO_ADDR}
-        externalTrafficPolicy: Cluster
+        # externalTrafficPolicy: Cluster
         ports:
           mqtt:
             enabled: true
