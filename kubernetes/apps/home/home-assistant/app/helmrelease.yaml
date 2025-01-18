@@ -145,3 +145,12 @@ spec:
             code:
               - path: /home/coder/.ssh/id_rsa
                 subPath: GIT_DEPLOY_KEY
+    metrics:
+      enabled: true
+      serviceMonitor:
+        bearerTokenSecret:
+          name: "home-assistant-secrets"
+          key: "SECRET_PROM_TOKEN"
+      prometheusRule:
+        enabled: true
+        rules: []
