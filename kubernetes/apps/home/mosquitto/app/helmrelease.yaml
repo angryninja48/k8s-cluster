@@ -73,14 +73,15 @@ spec:
         existingClaim: mosquitto
         globalMounts:
           - path: /data
+
       config-file:
         type: configMap
         name: mosquitto-configmap
-        advancedMounts:
-          mosquitto:
-            main:
-              - path: /mosquitto/config/mosquitto.conf
-                subPath: mosquitto.conf
+        globalMounts:
+          - path: /mosquitto/config/mosquitto.conf
+            subPath: mosquitto.conf
+            readOnly: true
+
       secret-file:
         type: secret
         name: mosquitto-secret
@@ -88,6 +89,7 @@ spec:
           mosquitto:
             init-config:
               - path: /tmp/secret
+
       external-config:
         type: emptyDir
         globalMounts:
