@@ -1,11 +1,15 @@
 ---
 autoDirectNodeRoutes: true
-bgpControlPlane:
-  enabled: true
 bandwidthManager:
   enabled: true
+  bbr: true
 bpf:
-  masquerade: false
+  datapathMode: netkit
+  masquerade: true
+  preallocateMaps: true
+  tproxy: true
+bgpControlPlane:
+  enabled: true
 cgroup:
   automount:
     enabled: false
@@ -30,13 +34,13 @@ k8sServicePort: 7445
 kubeProxyReplacement: true
 kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
 l2announcements:
-  enabled: false
+  enabled: true
 loadBalancer:
   algorithm: maglev
   mode: snat
 localRedirectPolicy: true
 operator:
-  replicas: 1
+  replicas: 2
   rollOutPods: true
   prometheus:
     enabled: true
@@ -77,5 +81,3 @@ securityContext:
       - NET_ADMIN
       - SYS_ADMIN
       - SYS_RESOURCE
-socketLB:
-  hostNamespaceOnly: true
