@@ -3,13 +3,14 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app mosquitto
+  name: mosquitto
+  namespace: home
 spec:
   interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 3.6.1
+      version: 2.4.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -20,11 +21,12 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
-      strategy: rollback
       retries: 3
+  uninstall:
+    keepHistory: false
   values:
     controllers:
-      mosquitto:
+      main:
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
@@ -35,7 +37,7 @@ spec:
             command: ["/bin/sh", "-c"]
             args: ["cp /tmp/secret/* /mosquitto/external_config/ && mosquitto_passwd -U /mosquitto/external_config/mosquitto_pwd"]
         containers:
-          app:
+          main:
             image:
               repository: docker.io/library/eclipse-mosquitto
               tag: 2.0.20@sha256:deae95623b9d5c6ca5e264380629db53b992106d436b56d42f7c8df46b41b96f
@@ -56,19 +58,17 @@ spec:
             runAsNonRoot: true
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
-
     service:
-      app:
-        controller: *app
+      main:
         type: LoadBalancer
         annotations:
           io.cilium/lb-ipam-ips: ${SVC_MOSQUITTO_ADDR}
         ports:
           http:
             port: 1883
-
     persistence:
       config:
+        enabled: true
         existingClaim: mosquitto
         globalMounts:
           - path: /data
@@ -76,15 +76,23 @@ spec:
         type: configMap
         name: mosquitto-configmap
         advancedMounts:
-          mosquitto:
+          main:
             main:
               - path: /mosquitto/config/mosquitto.conf
                 subPath: mosquitto.conf
+      # venus-file:
+      #   type: configMap
+      #   name: venus-configmap
+      #   advancedMounts:
+      #     main:
+      #       main:
+      #         - path: /mosquitto/config/venus-broker.conf
+      #           subPath: venus-broker.conf
       secret-file:
         type: secret
         name: mosquitto-secret
         advancedMounts:
-          mosquitto:
+          main:
             init-config:
               - path: /tmp/secret
       external-config:
