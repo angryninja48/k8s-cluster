@@ -56,18 +56,16 @@ spec:
             runAsNonRoot: true
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
+
     service:
       app:
         controller: *app
         type: LoadBalancer
         annotations:
           io.cilium/lb-ipam-ips: ${SVC_MOSQUITTO_ADDR}
-        # externalTrafficPolicy: Cluster
         ports:
-          mqtt:
-            enabled: true
+          http:
             port: 1883
-            protocol: TCP
 
     persistence:
       config:
