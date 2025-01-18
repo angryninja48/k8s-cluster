@@ -58,6 +58,10 @@ spec:
             fsGroup: 1883
             fsGroupChangePolicy: OnRootMismatch
 
+    defaultPodOptions:
+      nodeSelector:
+        kubernetes.io/hostname: "talos01"
+
     service:
       app:
         controller: *app
