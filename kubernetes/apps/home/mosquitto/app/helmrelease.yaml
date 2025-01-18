@@ -51,10 +51,10 @@ spec:
                 cpu: 10m
         pod:
           securityContext:
-            runAsUser: 568
-            runAsGroup: 568
+            runAsUser: 1883
+            runAsGroup: 1883
             runAsNonRoot: true
-            fsGroup: 568
+            fsGroup: 1883
             fsGroupChangePolicy: OnRootMismatch
 
     service:
