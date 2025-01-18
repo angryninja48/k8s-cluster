@@ -5,6 +5,7 @@ kind: Kustomization
 namespace: home
 resources:
   - ./data-pvc.yaml
+  - ./data-pvc-ebs.yaml
   - ./externalsecret.yaml
   - ./helmrelease.yaml
 configMapGenerator:
