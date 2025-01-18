@@ -15,7 +15,7 @@ cluster:
   name: home-kubernetes
 cni:
   exclusive: false
-# devices: en0+
+devices: eth+
 endpointRoutes:
   enabled: true
 envoy:
@@ -67,6 +67,8 @@ securityContext:
       - IPC_LOCK
       - SYS_ADMIN
       - SYS_RESOURCE
+      - PERFMON
+      - BPF
       - DAC_OVERRIDE
       - FOWNER
       - SETGID
