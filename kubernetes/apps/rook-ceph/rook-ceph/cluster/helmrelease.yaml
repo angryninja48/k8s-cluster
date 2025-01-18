@@ -89,6 +89,19 @@ spec:
                     - key: node-role.kubernetes.io/control-plane
                       operator: Exists
         mon: *placement
+        csi:
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                    - csi-rbdplugin
+                    - csi-cephfsplugin
+                topologyKey: kubernetes.io/hostname
       resources:
         mgr:
           requests:
@@ -196,4 +209,3 @@ spec:
       isDefault: false
       deletionPolicy: Delete
     cephObjectStores: []
-
