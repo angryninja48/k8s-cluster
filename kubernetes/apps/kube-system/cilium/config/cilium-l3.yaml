@@ -1,5 +1,3 @@
----
-# https://docs.cilium.io/en/latest/network/bgp-control-plane/
 apiVersion: cilium.io/v2alpha1
 kind: CiliumBGPPeeringPolicy
 metadata:
@@ -14,9 +12,10 @@ spec:
         - peerAddress: "10.20.0.1/32"
           peerASN: 65000
           peerPort: 179
+      # This explicitly selects LoadBalancer services
       serviceSelector:
         matchExpressions:
-          - {key: somekey, operator: NotIn, values: ['never-used-value']}
+          - {key: type, operator: In, values: [LoadBalancer]}
 ---
 apiVersion: cilium.io/v2alpha1
 kind: CiliumLoadBalancerIPPool
