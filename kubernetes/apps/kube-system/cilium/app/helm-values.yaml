@@ -5,7 +5,8 @@ bgpControlPlane:
 bandwidthManager:
   enabled: true
 bpf:
-  masquerade: false
+  masquerade: true
+  tproxy: true
 cgroup:
   automount:
     enabled: false
