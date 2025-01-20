@@ -10,4 +10,4 @@ resources:
   - ./loki/ks.yaml
   - ./promtail/ks.yaml
   - ./speedtest-exporter/ks.yaml
-
+  - ./unpoller/ks.yaml
