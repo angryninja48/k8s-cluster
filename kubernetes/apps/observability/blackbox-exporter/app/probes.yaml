@@ -1,0 +1,16 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: devices
+spec:
+  module: icmp
+  prober:
+    url: blackbox-exporter.observability.svc.cluster.local:9115
+  targets:
+    staticConfig:
+      static:
+        - 10.20.0.1 # Gateway
+        - 10.20.0.2 # Switch
+        - 10.20.0.3 # NAS
+        - 10.20.0.6 # Orangepi
