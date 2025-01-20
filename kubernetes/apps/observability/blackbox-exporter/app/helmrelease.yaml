@@ -1,10 +1,9 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app blackbox-exporter
-  namespace: monitoring
+  name: blackbox-exporter
 spec:
   interval: 30m
   chart:
@@ -15,32 +14,24 @@ spec:
         kind: HelmRepository
         name: prometheus-community
         namespace: flux-system
-  maxHistory: 2
   install:
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
   values:
-    fullnameOverride: *app
-    image:
-      repository: quay.io/prometheus/blackbox-exporter
-    pspEnabled: false
+    fullnameOverride: blackbox-exporter
     ingress:
       enabled: true
       className: internal
       hosts:
-        - host: &host blackbox.${SECRET_DOMAIN}
+        - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
           paths:
             - path: /
               pathType: Prefix
-      tls:
-        - hosts:
-            - *host
     securityContext:
       readOnlyRootFilesystem: true
       allowPrivilegeEscalation: false
@@ -54,28 +45,24 @@ spec:
           http:
             valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
             follow_redirects: true
-            preferred_ip_protocol: "ip4"
+            preferred_ip_protocol: ipv4
         icmp:
           prober: icmp
-          timeout: 30s
+          timeout: 5s
           icmp:
-            preferred_ip_protocol: "ip4"
+            preferred_ip_protocol: ipv4
+        tcp_connect:
+          prober: tcp
+          timeout: 5s
+          tcp:
+            preferred_ip_protocol: ipv4
     serviceMonitor:
       enabled: true
       defaults:
-        labels:
-          release: prometheus
-        interval: 5m
-        scrapeTimeout: 30s
-      targets:
-        # Devices
-        - { name: opnsense-icmp, module: icmp, url: "10.20.0.1" }
-        - { name: zigbee-controller-icmp, module: icmp, url: "10.20.0.90" }
+        interval: 1m
+        scrapeTimeout: 10s
     prometheusRule:
       enabled: true
-      additionalLabels:
-        app: prometheus-operator
-        release: prometheus
       rules:
         - alert: BlackboxProbeFailed
           expr: probe_success == 0
@@ -83,5 +70,5 @@ spec:
           labels:
             severity: critical
           annotations:
-            description: |-
-              The host {{"{{ $labels.target }}"}} is currently unreachable
+            summary: |-
+              The host {{ $labels.target }} is currently unreachable
