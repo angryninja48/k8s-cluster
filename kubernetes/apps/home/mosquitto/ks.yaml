@@ -9,7 +9,7 @@ spec:
   dependsOn:
     - name: external-secrets
     - name: external-secrets-stores
-    - name: local-path-provisioner
+    - name: openebs
   path: ./kubernetes/apps/home/mosquitto/app
   prune: true
   sourceRef:
