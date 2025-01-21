@@ -5,7 +5,9 @@ bgpControlPlane:
 bandwidthManager:
   enabled: true
 bpf:
+  datapathMode: netkit
   masquerade: true
+  preallocateMaps: true
   tproxy: true
 cgroup:
   automount:
