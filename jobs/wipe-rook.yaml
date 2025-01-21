@@ -24,12 +24,12 @@ spec:
         [
           "/bin/sh",
           "-c",
-          "echo 'Starting disk operations on /dev/sda'; \
-          echo 'Running sgdisk --zap-all /dev/sda'; time sgdisk --zap-all /dev/sda; \
-          echo 'Running dd if=/dev/zero bs=1M count=10000 oflag=direct of=/dev/sda'; time dd if=/dev/zero bs=1M count=10000 oflag=direct of=/dev/sda; \
-          echo 'Running blkdiscard /dev/sda'; time blkdiscard /dev/sda; \
-          echo 'Running partprobe /dev/sda'; time partprobe /dev/sda; \
-          echo 'Disk operations completed on /dev/sda'"
+          "echo 'Starting disk operations on /dev/sdb'; \
+          echo 'Running sgdisk --zap-all /dev/sdb'; time sgdisk --zap-all /dev/sdb; \
+          echo 'Running dd if=/dev/zero bs=1M count=10000 oflag=direct of=/dev/sdb'; time dd if=/dev/zero bs=1M count=10000 oflag=direct of=/dev/sdb; \
+          echo 'Running blkdiscard /dev/sdb'; time blkdiscard /dev/sdb; \
+          echo 'Running partprobe /dev/sdb'; time partprobe /dev/sdb; \
+          echo 'Disk operations completed on /dev/sdb'"
         ]
       volumeMounts:
         - mountPath: /dev

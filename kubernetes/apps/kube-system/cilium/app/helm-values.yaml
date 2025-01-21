@@ -16,7 +16,7 @@ cluster:
   name: home-kubernetes
 cni:
   exclusive: false
-devices: eth+
+devices: eno+
 endpointRoutes:
   enabled: true
 envoy:
