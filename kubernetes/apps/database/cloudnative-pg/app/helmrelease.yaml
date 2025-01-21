@@ -22,9 +22,6 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  dependsOn:
-    - name: local-path-provisioner
-      namespace: kube-system
   values:
     crds:
       create: true
