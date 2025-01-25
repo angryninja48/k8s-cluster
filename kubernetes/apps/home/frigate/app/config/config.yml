@@ -147,6 +147,11 @@ cameras:
       width: 640
       height: 360
       fps: 5
+    objects:
+      track:
+        - bird
+        - dog
+        - cat
 
   playroom:
     ffmpeg:
