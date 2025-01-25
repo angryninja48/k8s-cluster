@@ -75,10 +75,10 @@ go2rtc:
     playroom_substream:
       - rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_PLAYROOM_CAMERA_HOST}:554/stream2
     dining_room_main:
-      - "rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_DINING_ROOM_CAMERA_HOST}:554/stream1"
+      - "rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_DINING_ROOM_CAMERA_HOST}:554/stream1"
       - "ffmpeg:playroom_main#audio=aac"
     dining_room_substream:
-      - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_DINING_ROOM_CAMERA_HOST}:554/stream2
+      - rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_DINING_ROOM_CAMERA_HOST}:554/stream2
     garage_door_main:
       - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_GARAGE_DOOR_CAMERA_HOST}:554/h264Preview_01_main
     garage_door_substream:
