@@ -130,23 +130,23 @@ cameras:
       height: 360
       fps: 5
 
-  # dining_room:
-  #   ffmpeg:
-  #     output_args:
-  #       record: preset-record-generic-audio-copy
-  #     inputs:
-  #       - path: rtsp://127.0.0.1:8554/dining_room_main
-  #         input_args: preset-rtsp-restream
-  #         roles:
-  #           - record
-  #       - path: rtsp://127.0.0.1:8554/dining_room_substream
-  #         input_args: preset-rtsp-restream
-  #         roles:
-  #           - detect
-  #   detect:
-  #     width: 640
-  #     height: 360
-  #     fps: 5
+  roof_main:
+    ffmpeg:
+      output_args:
+        record: preset-record-generic-audio-copy
+      inputs:
+        - path: rtsp://127.0.0.1:8554/roof_main_main
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/roof_main_substream
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    detect:
+      width: 640
+      height: 360
+      fps: 5
 
   playroom:
     ffmpeg:
