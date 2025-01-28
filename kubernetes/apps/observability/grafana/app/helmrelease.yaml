@@ -23,6 +23,13 @@ spec:
       strategy: rollback
       retries: 3
   values:
+    extraInitContainers:
+      - name: init-db
+        image: ghcr.io/onedr0p/postgres-init:16
+        imagePullPolicy: IfNotPresent
+        envFrom:
+          - secretRef:
+              name: grafana-secret
     deploymentStrategy:
       type: Recreate
     admin:
@@ -33,6 +40,8 @@ spec:
       GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: natel-discrete-panel,pr0ps-trackmap-panel,panodata-map-panel
       GF_SECURITY_ANGULAR_SUPPORT_ENABLED: true
       GF_SERVER_ROOT_URL: https://grafana.${SECRET_DOMAIN}
+    envFromSecrets:
+      - name: grafana-secret
     grafana.ini:
       analytics:
         check_for_updates: false
