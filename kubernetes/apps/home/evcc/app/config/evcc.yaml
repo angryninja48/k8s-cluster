@@ -53,12 +53,10 @@ chargers:
 vehicles:
   - name: my_car
     type: template
-    template: tesla
-    # title: # Will be displayed in the user interface (optional)
-    accessToken: {{ .EVCC_TESLA_ACCESS_TOKEN }}
-    refreshToken: {{ .EVCC_TESLA_REFRESH_TOKEN }}
-    # vin: W... # Required if you own multiple vehicles of the same brand (optional)
-    # capacity: 50 # Battery capacity in kWh (optional)
+    template: teslamate
+    capacity: 59.9
+    mode: pv
+
 
 # enter your real grid tariff and feed-in price
 # see https://docs.evcc.io/docs/devices/tariffs
