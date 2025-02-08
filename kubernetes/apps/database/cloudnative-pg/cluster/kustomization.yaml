@@ -7,9 +7,9 @@ resources:
   - ./cluster16.yaml
   - ./externalsecret.yaml
   - ./scheduledbackup.yaml
-  # - ./prometheusrule.yaml
   - ./service16.yaml
-
+  - ./vector16.yaml
+  
 labels:
   - pairs:
       app.kubernetes.io/name: cloudnative-pg-cluster
