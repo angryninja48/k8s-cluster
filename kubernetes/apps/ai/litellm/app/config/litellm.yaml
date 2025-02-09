@@ -94,6 +94,12 @@ model_list:
     model_info:
       supports_function_calling: true
 
+embeddings:
+  ollama:
+    model_name: "mxbai-embed-large"
+    version: "latest"  # Ensure the version is specified if needed
+    api_url: "http://10.20.0.7:11434"
+
 router_settings:
   routing_strategy: simple-shuffle
   num_retries: 3
