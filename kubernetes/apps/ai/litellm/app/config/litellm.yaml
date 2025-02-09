@@ -70,6 +70,15 @@ model_list:
       api_key: {{ .LITELLM_OPENAI_API_KEY }}
       tags: ["free"]
 
+# -*= Self Hosted models =*-
+# -------------------
+
+  - model_name: "llama3.2"             
+    litellm_params:
+      model: "ollama_chat/llama3.2"
+    model_info:
+      supports_function_calling: true
+
 router_settings:
   routing_strategy: simple-shuffle
   num_retries: 3
