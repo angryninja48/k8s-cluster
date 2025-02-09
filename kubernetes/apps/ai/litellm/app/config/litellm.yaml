@@ -80,6 +80,13 @@ model_list:
     model_info:
       supports_function_calling: true
 
+  - model_name: "deepseek-r1:1.5b"
+    litellm_params:
+      model: "ollama_chat/deepseek-r1:1.5b"
+      api_base: "http://10.20.0.7:11434"
+    model_info:
+      supports_function_calling: true
+
 router_settings:
   routing_strategy: simple-shuffle
   num_retries: 3
