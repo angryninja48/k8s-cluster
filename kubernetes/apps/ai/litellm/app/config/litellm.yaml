@@ -77,8 +77,6 @@ model_list:
     litellm_params:
       model: "ollama_chat/llama3.2"
       api_base: "http://10.20.0.7:11434"
-    model_info:
-      supports_function_calling: true
 
   - model_name: "mxbai-embed-large"
     litellm_params:
