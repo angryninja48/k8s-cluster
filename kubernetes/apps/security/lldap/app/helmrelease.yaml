@@ -40,8 +40,7 @@ spec:
         reloader.stakater.com/auto: "true"
     image:
       repository: ghcr.io/lldap/lldap
-      # TODO: Switch to release tag on next release
-      tag: latest-alpine@sha256:c18601e3c994200cbb5b3d9e1dbe0e671653753bb92032a903211a01c5042663
+      tag: v0.6.1
     env:
       TZ: ${TIMEZONE}
       LLDAP_HTTP_PORT: &port 80
@@ -69,10 +68,7 @@ spec:
         tls:
           - hosts:
               - *host
-    persistence:
-      data:
-        enabled: true
-        type: emptyDir
+
     topologySpreadConstraints:
       - maxSkew: 1
         topologyKey: kubernetes.io/hostname
@@ -86,3 +82,7 @@ spec:
         memory: 100Mi
       limits:
         memory: 500Mi
+    persistence:
+      data:
+        enabled: true
+        type: emptyDir
