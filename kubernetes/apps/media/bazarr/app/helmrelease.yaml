@@ -55,7 +55,7 @@ spec:
           app:
             image:
               repository: ghcr.io/onedr0p/bazarr
-              tag: 1.4.2@sha256:62558b2f9210b288f01e96753c99699dc2fab7c27f9e678f994bd0068bc6d41e
+              tag: 1.5.1@sha256:e1058dabc45dfa0c3eea397e8a320e1b25d7c24cf1ef78eaf550b842a43da87c
             env:
               TZ: "${TIMEZONE}"
             envFrom: *envFrom
