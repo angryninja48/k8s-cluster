@@ -27,4 +27,14 @@ wiki
 # SQL DB
 /pg_dumps
 
+# Additional sensitive files
+*.env
+*.log
+*.bak
+
+# Additional directories
+/build
+/dist
+/node_modules
+
 .codegpt
