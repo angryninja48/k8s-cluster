@@ -1,3 +1,13 @@
 * text=auto eol=lf
 *.yaml.j2 linguist-language=YAML
 *.sops.* diff=sopsdiffer
+
+# Ensure YAML files are treated as YAML
+*.yaml linguist-language=YAML
+*.yml linguist-language=YAML
+
+# Ensure JSON files are treated as JSON
+*.json linguist-language=JSON
+
+# Ensure Dockerfiles are treated as Dockerfile
+Dockerfile linguist-language=Dockerfile
