@@ -61,8 +61,8 @@ tariffs:
     type: custom
     forecast:
       source: http
-      uri: https://hass.angryninja.cloud/api/states/sensor.tariff_price
-      jq: '[{"start": (now | strftime("%Y-%m-%dT%H:00:00Z")), "end": (now + 3600 | strftime("%Y-%m-%dT%H:00:00Z")), "price": (.state | tonumber)}]'
+      uri: https://hass.angryninja.cloud/api/states/sensor.evcc_tariff_data
+      jq: '.state | fromjson'
       headers:
         Authorization: "Bearer {{ .EVCC_HASS_TOKEN }}"
 
