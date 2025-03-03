@@ -11,7 +11,7 @@ site:
 # see https://docs.evcc.io/en/docs/reference/configuration/loadpoints
 loadpoints:
   - title: Garage # display name for UI
-    charger: victron-evcs # charger
+    charger: victron # charger
     vehicle: my_car # default vehicle
 
 # meter definitions
@@ -36,7 +36,7 @@ meters:
 # name can be freely chosen and is used as reference when assigning chargers to loadpoints
 # for documentation see https://docs.evcc.io/docs/devices/chargers
 chargers:
-  - name: victron-evcs
+  - name: victron
     type: template
     template: victron-evcs
     modbus: tcpip
