@@ -71,16 +71,34 @@ tariffs:
         hours: 14-20
         price: 0.567380 # Peak price (AUD/kWh)
 
+      # Off-Peak tariff - Summer (1 Nov - 31 Mar)
+      - hours: 22-7
+        price: 0.172700 # Off-Peak price (AUD/kWh)
+
+      # Shoulder tariff - Summer (1 Nov - 31 Mar)
+      - days: Mo-Fr
+        hours: 7-14
+        price: 0.299310 # Shoulder price (AUD/kWh)
+      - days: Sa-Su
+        hours: 7-24
+        price: 0.299310 # Shoulder price (AUD/kWh)
+
       # Peak hours for winter (1 Jun - 31 Aug)
       # - days: Mo-Fr
       #   hours: 17-21
       #   price: 0.567380 # Peak price (AUD/kWh)
 
-      # Off-Peak tariff
-      - hours: 22-0
-        price: 0.172700 # Off-Peak price (AUD/kWh)
-      - hours: 0-7
-        price: 0.172700 # Off-Peak price (AUD/kWh)
+      # Off-Peak tariff - Winter (1 Jun - 31 Aug)
+      # - hours: 22-7
+      #   price: 0.172700 # Off-Peak price (AUD/kWh)
+
+      # Shoulder tariff - Winter (1 Jun - 31 Aug)
+      # - days: Mo-Fr
+      #   hours: 7-17
+      #   price: 0.299310 # Shoulder price (AUD/kWh)
+      # - days: Sa-Su
+      #   hours: 0-24
+      #   price: 0.299310 # Shoulder price (AUD/kWh)
 
   co2:
     type: template
