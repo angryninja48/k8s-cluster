@@ -6,14 +6,12 @@ site:
     grid: my_grid
     pv:
       - my_pv
-    # battery:
-    #   - my_battery
 
 # define your loadpoints according your needs
 # see https://docs.evcc.io/en/docs/reference/configuration/loadpoints
 loadpoints:
   - title: Garage # display name for UI
-    charger: my_charger # charger
+    charger: victron-evcs # charger
     vehicle: my_car # default vehicle
 
 # meter definitions
@@ -34,22 +32,21 @@ meters:
     host: {{ .EVCC_ENPHASE_IP }}
     token: {{ .EVCC_ENPHASE_ACCESS_TOKEN }}
 
-
-# # replace with your real charger
-# # see https://docs.evcc.io/docs/devices/chargers
+# charger definitions
+# name can be freely chosen and is used as reference when assigning chargers to loadpoints
+# for documentation see https://docs.evcc.io/docs/devices/chargers
 chargers:
-  - name: my_charger
+  - name: victron-evcs
     type: template
     template: victron-evcs
-    # Modbus TCP
     modbus: tcpip
     id: 1
     host: {{ .EVCC_CHARGER_IP }}
-    port: 502 # Port
+    port: 502
 
-
-# replace with your real vehicle (optional)
-# see https://docs.evcc.io/docs/devices/vehicles
+# vehicle definitions
+# name can be freely chosen and is used as reference when assigning vehicles to loadpoints
+# for documentation see https://docs.evcc.io/docs/devices/vehicles
 vehicles:
   - name: my_car
     type: template
@@ -57,48 +54,17 @@ vehicles:
     capacity: 59.9
     mode: pv
 
-
 # enter your real grid tariff and feed-in price
 # see https://docs.evcc.io/docs/devices/tariffs
 tariffs:
-  currency: AUD # Set the currency to AUD
   grid:
-    type: fixed
-    price: 0.299310 # Default shoulder price (AUD/kWh)
-    zones:
-      # Peak tariff - Summer (1 Nov - 31 Mar)
-      - days: Mo-Fr
-        hours: 14-20
-        price: 0.567380 # Peak price (AUD/kWh)
-
-      # Off-Peak tariff - Summer (1 Nov - 31 Mar)
-      - hours: 22-7
-        price: 0.172700 # Off-Peak price (AUD/kWh)
-
-      # Shoulder tariff - Summer (1 Nov - 31 Mar)
-      - days: Mo-Fr
-        hours: 7-14
-        price: 0.299310 # Shoulder price (AUD/kWh)
-      - days: Sa-Su
-        hours: 7-24
-        price: 0.299310 # Shoulder price (AUD/kWh)
-
-      # Peak hours for winter (1 Jun - 31 Aug)
-      # - days: Mo-Fr
-      #   hours: 17-21
-      #   price: 0.567380 # Peak price (AUD/kWh)
-
-      # Off-Peak tariff - Winter (1 Jun - 31 Aug)
-      # - hours: 22-7
-      #   price: 0.172700 # Off-Peak price (AUD/kWh)
-
-      # Shoulder tariff - Winter (1 Jun - 31 Aug)
-      # - days: Mo-Fr
-      #   hours: 7-17
-      #   price: 0.299310 # Shoulder price (AUD/kWh)
-      # - days: Sa-Su
-      #   hours: 0-24
-      #   price: 0.299310 # Shoulder price (AUD/kWh)
+    type: custom
+    forecast:
+      source: http
+      uri: https://hass.angryninja.cloud/api/states/sensor.tariff_price
+      jq: '.attributes.formatted_data | fromjson'
+      headers:
+        Authorization: "Bearer {{ .EVCC_HASS_TOKEN }}"
 
   co2:
     type: template
