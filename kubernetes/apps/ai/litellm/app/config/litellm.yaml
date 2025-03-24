@@ -41,6 +41,13 @@ model_list:
 
   # Bedrock models
 
+  - model_name: bedrock-claude-3.7
+    litellm_params:
+      model: bedrock/anthropic.claude-3-7-sonnet-20250219-v1:0
+      aws_access_key_id: {{ .LITELLM_BEDROCK_ACCESS_KEY }}
+      aws_secret_access_key: {{ .LITELLM_BEDROCK_SECRET_KEY }}
+      aws_region_name: {{ .LITELLM_BEDROCK_REGION }}
+
   - model_name: bedrock-claude-3.5v2
     litellm_params:
       model: bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0
