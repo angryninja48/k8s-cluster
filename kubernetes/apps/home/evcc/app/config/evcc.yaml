@@ -13,6 +13,9 @@ loadpoints:
   - title: Garage # display name for UI
     charger: my_charger # charger
     vehicle: my_car # default vehicle
+    enable:
+      threshold: 100 #Allow for 100w draw from grid
+      delay: 0s #Home assistant caters for this - Start immediately when triggered
 
 # meter definitions
 # name can be freely chosen and is used as reference when assigning meters to site and loadpoints
