@@ -8,7 +8,7 @@ resources:
   - ./externalsecret.yaml
   - ./scheduledbackup.yaml
   - ./service16.yaml
-  - ./vector16.yaml
+  # - ./vector16.yaml
 
 labels:
   - pairs:
