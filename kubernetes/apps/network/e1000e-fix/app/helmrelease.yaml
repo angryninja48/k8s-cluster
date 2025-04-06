@@ -24,6 +24,7 @@ spec:
       retries: 3
   values:
     controllers:
+      # https://github.com/siderolabs/talos/issues/10200
       e1000e-fix:
         type: daemonset
         pod:

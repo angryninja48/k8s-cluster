@@ -30,7 +30,7 @@ nodes:
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "1c:69:7a:05:9d:a3"
+          hardwareAddr: "c8:a3:62:b7:dc:20"
         dhcp: false
         addresses:
           - "10.20.0.14/24"
@@ -48,7 +48,7 @@ nodes:
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "1c:69:7a:01:1e:02"
+          hardwareAddr: "c8:a3:62:b7:5a:24"
         dhcp: false
         addresses:
           - "10.20.0.15/24"
@@ -66,7 +66,7 @@ nodes:
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "1c:69:7a:01:1c:fb"
+          hardwareAddr: "c8:a3:62:b7:72:cb"
         dhcp: false
         addresses:
           - "10.20.0.16/24"
@@ -104,13 +104,19 @@ controlPlane:
         - net.ifnames=1 # Enable predictable NIC naming
       systemExtensions:
         officialExtensions:
-          - siderolabs/gasket-driver
-          - siderolabs/i915
-          - siderolabs/intel-ucode
-          - siderolabs/mei
-          - siderolabs/thunderbolt
+            - siderolabs/gasket-driver
+            - siderolabs/i915
+            - siderolabs/intel-ucode
+            - siderolabs/mei
+            - siderolabs/thunderbolt
+            - siderolabs/usb-modem-drivers
 
   patches:
+    - |-
+      machine:
+        kernel:
+          modules:
+            - name: ax88179_178a
     # Configure containerd
     - |-
       machine:
