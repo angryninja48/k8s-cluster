@@ -13,11 +13,11 @@ spec:
       - "604800"
     imagePullPolicy: IfNotPresent
     name: ubuntu
-    volumeMounts:
-    - name: hass-vol
-      mountPath: /config
+    # volumeMounts:
+    # - name: hass-vol
+    #   mountPath: /config
   restartPolicy: Always
-  volumes:
-    - name: hass-vol
-      persistentVolumeClaim:
-        claimName: home-assistant
+  # volumes:
+  #   - name: hass-vol
+  #     persistentVolumeClaim:
+  #       claimName: home-assistant
