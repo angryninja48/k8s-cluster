@@ -17,20 +17,20 @@ spec:
     cnpg.io/cluster: postgres16
     role: primary
 
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres-vector-lb
-  annotations:
-    io.cilium/lb-ipam-ips: ${SVC_POSTGRES_VECTOR_ADDR}
-spec:
-  type: LoadBalancer
-  ports:
-    - name: postgres
-      port: 5432
-      protocol: TCP
-      targetPort: 5432
-  selector:
-    cnpg.io/cluster: postgres16-vector
-    role: primary
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: postgres-vector-lb
+#   annotations:
+#     io.cilium/lb-ipam-ips: ${SVC_POSTGRES_VECTOR_ADDR}
+# spec:
+#   type: LoadBalancer
+#   ports:
+#     - name: postgres
+#       port: 5432
+#       protocol: TCP
+#       targetPort: 5432
+#   selector:
+#     cnpg.io/cluster: postgres16-vector
+#     role: primary
