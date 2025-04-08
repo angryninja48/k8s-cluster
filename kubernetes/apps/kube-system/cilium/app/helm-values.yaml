@@ -1,14 +1,12 @@
 ---
 autoDirectNodeRoutes: true
 bgpControlPlane:
-  enabled: true
+  enabled: false
 bandwidthManager:
   enabled: true
-  bbr: true
 bpf:
   masquerade: true
-  # tproxy: true
-bpfClockProbe: true
+  tproxy: true
 cgroup:
   automount:
     enabled: false
