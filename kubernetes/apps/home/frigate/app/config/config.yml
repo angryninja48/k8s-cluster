@@ -36,14 +36,16 @@ snapshots:
 
 # Global record configuration
 record:
-  enabled: true
+  enabled: True
   retain:
-    days: 3
-    mode: all
-  events:
+    days: 7
+    mode: motion
+  alerts:
     retain:
-      default: 14
-      mode: active_objects
+      days: 30
+  detections:
+    retain:
+      days: 30
 
 # Global objects configuration
 objects:
