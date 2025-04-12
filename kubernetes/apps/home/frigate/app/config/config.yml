@@ -43,9 +43,11 @@ record:
   alerts:
     retain:
       days: 30
+    mode: motion
   detections:
     retain:
       days: 30
+    mode: motion
 
 # Global objects configuration
 objects:
