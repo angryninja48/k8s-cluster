@@ -38,15 +38,7 @@ snapshots:
 record:
   enabled: True
   retain:
-    days: 7
-    mode: motion
-  alerts:
-    retain:
-      days: 30
-    mode: motion
-  detections:
-    retain:
-      days: 30
+    days: 30
     mode: motion
 
 # Global objects configuration
