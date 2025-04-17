@@ -6,6 +6,7 @@ site:
     grid: my_grid
     pv:
       - my_pv
+    residualPower: 0 # set to 0 to disable residual power
 
 # define your loadpoints according your needs
 # see https://docs.evcc.io/en/docs/reference/configuration/loadpoints
