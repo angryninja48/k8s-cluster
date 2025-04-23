@@ -258,10 +258,5 @@ cameras:
         - person
         - dog
         - car
-        - animal
-    zones:
-      driveway:
-        coordinates: [0,0, 0,1, 1,1, 1,0]
-        objects:
-          - person
-          - car
+
+
