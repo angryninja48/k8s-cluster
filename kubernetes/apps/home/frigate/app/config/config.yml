@@ -87,6 +87,11 @@ go2rtc:
       - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_DOORBELL_HOST}:554/h264Preview_01_main
     doorbell_substream:
       - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_DOORBELL_HOST}:554/h264Preview_01_sub
+    # New Reolink 810A camera streams
+    reolink_810a_main:
+      - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@10.20.0.205:554/h265Preview_01_main
+    reolink_810a_substream:
+      - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@10.20.0.205:554/h265Preview_01_sub
 
 
 cameras:
@@ -229,3 +234,34 @@ cameras:
       width: 640
       height: 480
       fps: 5
+
+  # New Reolink 810A camera configuration
+  reolink_810a:
+    ffmpeg:
+      output_args:
+        record: preset-record-generic-audio-copy
+      inputs:
+        - path: rtsp://127.0.0.1:8554/reolink_810a_main
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://127.0.0.1:8554/reolink_810a_substream
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+    detect:
+      width: 640
+      height: 480
+      fps: 5
+    objects:
+      track:
+        - person
+        - dog
+        - car
+        - animal
+    zones:
+      driveway:
+        coordinates: [0,0, 0,1, 1,1, 1,0]
+        objects:
+          - person
+          - car
