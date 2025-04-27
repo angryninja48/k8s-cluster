@@ -60,3 +60,23 @@ spec:
   #     barmanObjectStore:
   #       <<: *barmanObjectStore
   #       serverName: *previousCluster
+
+  bootstrap:
+    initdb:
+      import:
+        type: monolith
+        databases: ["*"]
+        roles: ["*"]
+        source:
+          externalCluster: postgres16-v10
+  externalClusters:
+    - name: postgres16-v10
+      connectionParameters:
+        # Use the correct IP or host name for the source database
+        host: postgres16-rw.database.svc.cluster.local
+        user: postgres
+        # dbname: postgres
+        # sslmode: require
+      password:
+        name: cloudnative-pg-secrets
+        key: POSTGRES_SUPER_PASS
