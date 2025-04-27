@@ -9,7 +9,7 @@ resources:
   - ./externalsecret.yaml
   - ./scheduledbackup.yaml
   - ./service16.yaml
-  # - ./service17.yaml
+  - ./service17.yaml
   # - ./vector16.yaml
 
 labels:
