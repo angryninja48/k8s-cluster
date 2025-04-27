@@ -36,7 +36,7 @@ spec:
           01-init-db:
             image:
               repository: ghcr.io/onedr0p/postgres-init
-              tag: "16"
+              tag: "17"
             envFrom: &envFrom
               - secretRef:
                   name: openwebui-secret
@@ -48,9 +48,9 @@ spec:
               tag: v0.6.5@sha256:fe7a6870ec6b2fd540c0f2007e6aa812dc4bf04a2d0a305bb344eeb10de0a7b7
             env:
               OLLAMA_BASE_URL: http://ollama.ai.svc:11434
-              # ENABLE_RAG_WEB_SEARCH: 
-              # RAG_WEB_SEARCH_ENGINE: 
-              # SEARXNG_QUERY_URL: 
+              # ENABLE_RAG_WEB_SEARCH:
+              # RAG_WEB_SEARCH_ENGINE:
+              # SEARXNG_QUERY_URL:
             envFrom: *envFrom
 
             resources:
