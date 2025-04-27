@@ -8,7 +8,7 @@ resources:
   - ./cluster17.yaml
   - ./externalsecret.yaml
   - ./scheduledbackup.yaml
-  - ./service16.yaml
+  # - ./service16.yaml
   - ./service17.yaml
   # - ./vector16.yaml
 
