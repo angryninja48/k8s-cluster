@@ -93,7 +93,7 @@ spec:
             basicAuth: false
             withCredentials: false
             jsonData:
-              postgresVersion: 1000
+              postgresVersion: 1500
               sslmode: disable
             version: 1
             editable: true
