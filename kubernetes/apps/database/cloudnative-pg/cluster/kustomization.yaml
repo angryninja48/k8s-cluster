@@ -5,7 +5,7 @@ kind: Kustomization
 namespace: database
 resources:
   # - ./cluster16.yaml
-  # - ./cluster17.yaml
+  - ./cluster17.yaml
   - ./externalsecret.yaml
   - ./scheduledbackup.yaml
   # - ./service16.yaml
