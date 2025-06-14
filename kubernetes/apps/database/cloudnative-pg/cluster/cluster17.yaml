@@ -6,7 +6,7 @@ metadata:
   name: postgres17
   namespace: database
 spec:
-  instances: 2
+  instances: 3
   imageName: ghcr.io/cloudnative-pg/postgresql:17.4-minimal-bookworm
   primaryUpdateStrategy: unsupervised
   storage:
