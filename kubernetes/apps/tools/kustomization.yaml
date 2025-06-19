@@ -10,4 +10,3 @@ resources:
   - ./generic-device-plugin/ks.yaml
   - ./intel-device-plugin/ks.yaml
   - ./node-feature-discovery/ks.yaml
-  # - ./system-upgrade-controller/ks.yaml
