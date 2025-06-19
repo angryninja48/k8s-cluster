@@ -38,7 +38,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
-  wait: true
+  wait: false  # Disable health checks due to Flux compatibility issue with external-secrets 0.18.0
   interval: 30m
   retryInterval: 1m
   timeout: 5m
