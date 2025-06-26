@@ -27,7 +27,7 @@ spec:
     keepHistory: false
   values:
     controllers:
-      app:
+      ollama:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
