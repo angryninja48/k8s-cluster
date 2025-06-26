@@ -9,9 +9,7 @@ spec:
   targetNamespace: selfhosted
   dependsOn:
     - name: external-secrets-stores
-      namespace: external-secrets
     - name: volsync
-      namespace: system
   path: ./kubernetes/apps/selfhosted/actual/app
   prune: true
   sourceRef:
