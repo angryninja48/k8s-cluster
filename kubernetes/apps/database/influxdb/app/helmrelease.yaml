@@ -21,7 +21,7 @@ spec:
 
     image:
       repository: "influxdb"
-      tag: "1.8.10-alpine"
+      tag: "2.7.12-alpine"
 
     persistence:
       enabled: true
