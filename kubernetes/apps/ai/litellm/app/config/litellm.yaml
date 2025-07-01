@@ -70,6 +70,12 @@ model_list:
       aws_secret_access_key: {{ .LITELLM_BEDROCK_SECRET_KEY }}
       aws_region_name: {{ .LITELLM_BEDROCK_REGION }}
 
+
+  - model_name: qwen2.5-coder-32b-instruct
+    litellm_params:
+      model: openrouter/qwen/qwen-2.5-coder-32b-instruct
+      api_key: {{ .LITELLM_OPENROUTER_API_KEY }}
+
 # -*= Free models =*-
 # -------------------
   - model_name: gpt-4o-mini
@@ -77,6 +83,11 @@ model_list:
       model: openai/gpt-4o-mini
       api_key: {{ .LITELLM_OPENAI_API_KEY }}
       tags: ["free"]
+
+  - model_name: qwen2.5-coder-32b-instruct-free
+    litellm_params:
+      model: openrouter/qwen/qwen-2.5-coder-32b-instruct:free
+      api_key: {{ .LITELLM_OPENROUTER_API_KEY }}
 
 # -*= Self Hosted models =*-
 # -------------------
