@@ -1,80 +1,86 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: &app qbittorrent
-  namespace: media
 spec:
-  interval: 30m
-  chart:
-    spec:
-      chart: app-template
-      version: 3.7.3
-      sourceRef:
-        kind: HelmRepository
-        name: bjw-s
-        namespace: flux-system
-  maxHistory: 2
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
   install:
-    createNamespace: true
     remediation:
-      retries: 3
+      retries: -1
   upgrade:
     cleanupOnFail: true
     remediation:
-      strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
   values:
-    mediaPodOptions:
-      securityContext:
-        runAsUser: 568
-        runAsGroup: 568
-        fsGroup: 568
-        fsGroupChangePolicy: OnRootMismatch
     controllers:
       qbittorrent:
         containers:
           app:
             image:
-              repository: ghcr.io/onedr0p/qbittorrent
-              tag: 4.6.4@sha256:b9af0f2173572a69d2c02eab8f701ef7b04f61689efe1c5338b96445d528dec4
+              repository: ghcr.io/home-operations/qbittorrent
+              tag: 5.1.2@sha256:a724f86a39fa637fc4ff81165585d7273dc9dcd9ca59818a34e9fa9c467dd26c
             env:
-              TZ: "${TIMEZONE}"
-              QBITTORRENT__PORT: &port 8080
-              QBITTORRENT__BT_PORT: &port-bt 58462
+              TZ: ${TIMEZONE}
+              QBT_WEBUI_PORT: &port 80
+              QBT_TORRENTING_PORT: &torrentPort 50413
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/v2/app/version
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 10
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
             resources:
               requests:
-                cpu: 500m
-                memory: 1Gi
+                cpu: 100m
               limits:
-                memory: 8Gi
+                memory: 32Gi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
     service:
       app:
-        controller: *app
+        forceRename: *app
+        primary: true
         ports:
           http:
             port: *port
-      bittorent:
-        enabled: true
-        controller: *app
+      bittorrent:
         type: LoadBalancer
-        loadBalancerIP: 192.168.169.105
+        annotations:
+              io.cilium/lb-ipam-ips: ${SVC_QBITTORRENT_ADDR}
         ports:
-          bittorrent:
-            enabled: true
-            port: *port-bt
+          bittorrent-tcp:
+            port: *torrentPort
             protocol: TCP
-            targetPort: *port-bt
-        externalTrafficPolicy: Local
     ingress:
       app:
         enabled: true
-        className: nginx
-        annotations:
-          hajimari.io/icon: mdi:download
+        className: internal
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
@@ -87,25 +93,13 @@ spec:
               - *host
     persistence:
       config:
-        enabled: true
-        existingClaim: *app
-        globalMounts:
-          - path: /config
-      downloads:
+        existingClaim: qbittorrent
+      media:
         type: nfs
-        server: 192.168.9.10
-        path: /var/mnt/vol1/downloads
+        server: 10.20.0.3
+        path: /volume1/Downloads/
         globalMounts:
-          - path: /mnt/storage/downloads
-      music-qbittorrent:
-        type: nfs
-        server: 192.168.9.10
-        path: /var/mnt/vol1/music/.qbittorrent
-        globalMounts:
-          - path: /mnt/storage/music/.qbittorrent
-      video-qbittorrent:
-        type: nfs
-        server: 192.168.9.10
-        path: /var/mnt/vol1/video/.qbittorrent
-        globalMounts:
-          - path: /mnt/storage/video/.qbittorrent
+          - path: /media/Downloads/qbittorrent
+            subPath: Downloads/qbittorrent
+      tmp:
+        type: emptyDir
