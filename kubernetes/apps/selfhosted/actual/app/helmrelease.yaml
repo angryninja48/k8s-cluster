@@ -60,7 +60,7 @@ spec:
           actual:
             app:
             - path: /data
-        existingClaim: actual-data
+        existingClaim: actual
 
     service:
       app:
