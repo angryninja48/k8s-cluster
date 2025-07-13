@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -10,10 +10,10 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.1.2
       sourceRef:
         kind: HelmRepository
-        name: bjw-s
+        name: bjw-s-labs
         namespace: flux-system
   maxHistory: 2
   install:
@@ -28,12 +28,13 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    mediaPodOptions:
+    defaultPodOptions:
       securityContext:
         runAsUser: 568
         runAsGroup: 568
         fsGroup: 568
         fsGroupChangePolicy: OnRootMismatch
+
     controllers:
       sonarr:
         annotations:
@@ -41,8 +42,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/onedr0p/sonarr-develop
-              tag: 4.0.4.1668@sha256:a124ebab8c3747af7267c25b0c093350363ecf7d24dd68255b3de2f1921ae7d9
+              repository: ghcr.io/home-operations/sonarr
+              tag: 4.0.15
             env:
               TZ: "${TIMEZONE}"
               SONARR__INSTANCE_NAME: Sonarr
@@ -53,7 +54,7 @@ spec:
               SONARR__API_KEY:
                 valueFrom:
                   secretKeyRef:
-                    name: radarr-secret
+                    name: sonarr-secret
                     key: api_key
             probes:
               liveness: &probes
@@ -76,16 +77,18 @@ spec:
                 memory: 256M
               limits:
                 memory: 1Gi
+
     service:
       app:
         controller: *app
         ports:
           http:
             port: *port
+
     ingress:
       app:
         enabled: true
-        className: nginx
+        className: internal
         annotations:
           hajimari.io/icon: mdi:television-classic
         hosts:
@@ -98,6 +101,7 @@ spec:
         tls:
           - hosts:
               - *host
+
     persistence:
       config:
         enabled: true
