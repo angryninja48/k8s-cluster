@@ -5,6 +5,4 @@ kind: Kustomization
 namespace: media
 resources:
   - ./helmrelease.yaml
-  - ./upgrade-p2pblocklist
-  - ../../../../templates/gatus/guarded
   - ../../../../templates/volsync
