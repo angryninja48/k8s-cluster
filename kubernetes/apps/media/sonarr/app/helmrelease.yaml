@@ -30,9 +30,10 @@ spec:
   values:
     defaultPodOptions:
       securityContext:
-        runAsUser: 568
-        runAsGroup: 568
-        fsGroup: 568
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
 
     controllers:
@@ -45,17 +46,25 @@ spec:
               repository: ghcr.io/home-operations/sonarr
               tag: 4.0.15
             env:
+              # SONARR__PORT: &port 8080
+              # SONARR__APPLICATION_URL: "https://{{ .Release.Name }}.${SECRET_DOMAIN}"
+              # SONARR__LOG_LEVEL: info
+              # SONARR__THEME: dark
+              # SONARR__API_KEY:
+              #   valueFrom:
+              #     secretKeyRef:
+              #       name: sonarr-secret
+              #       key: api_key
+              SONARR__APP__INSTANCENAME: Sonarr
+              SONARR__APP__THEME: dark
+              SONARR__LOG__DBENABLED: "False"
+              SONARR__LOG__LEVEL: info
+              SONARR__SERVER__PORT: &port 80
+              SONARR__UPDATE__BRANCH: develop
               TZ: "${TIMEZONE}"
-              SONARR__INSTANCE_NAME: Sonarr
-              SONARR__PORT: &port 8080
-              SONARR__APPLICATION_URL: "https://{{ .Release.Name }}.${SECRET_DOMAIN}"
-              SONARR__LOG_LEVEL: info
-              SONARR__THEME: dark
-              SONARR__API_KEY:
-                valueFrom:
-                  secretKeyRef:
-                    name: sonarr-secret
-                    key: api_key
+            envFrom:
+              - secretRef:
+                  name: sonarr-secret
             probes:
               liveness: &probes
                 enabled: true
@@ -69,8 +78,6 @@ spec:
                   timeoutSeconds: 1
                   failureThreshold: 3
               readiness: *probes
-              startup:
-                enabled: false
             resources:
               requests:
                 cpu: 10m
@@ -122,3 +129,5 @@ spec:
         path: /volume1/Videos
         globalMounts:
           - path: /mnt/storage/video
+      tmp:
+        type: emptyDir
