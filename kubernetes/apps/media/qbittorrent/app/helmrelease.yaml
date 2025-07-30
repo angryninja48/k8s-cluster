@@ -4,7 +4,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: &app qbittorrent
-  namespace: media
 spec:
   interval: 1h
   chart:
@@ -25,6 +24,8 @@ spec:
   values:
     controllers:
       qbittorrent:
+        annotations:
+          reloader.stakater.com/auto: "true"
         containers:
           app:
             image:
@@ -35,23 +36,35 @@ spec:
               QBT_WEBUI_PORT: &port 80
               QBT_TORRENTING_PORT: &torrentPort 50413
             probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /api/v2/app/version
-                    port: *port
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
+              liveness:
+                enabled: false
+              readiness:
+                enabled: false
               startup:
-                enabled: true
-                spec:
-                  failureThreshold: 30
-                  periodSeconds: 10
+                enabled: false
+              # liveness: &probes
+              #   enabled: true
+              #   custom: true
+              #   spec:
+              #     httpGet:
+              #       path: /api/v2/app/version
+              #       port: *port
+              #     initialDelaySeconds: 30
+              #     periodSeconds: 30
+              #     timeoutSeconds: 10
+              #     failureThreshold: 3
+              # readiness: *probes
+              # startup:
+              #   enabled: true
+              #   custom: true
+              #   spec:
+              #     httpGet:
+              #       path: /api/v2/app/version
+              #       port: *port
+              #     initialDelaySeconds: 0
+              #     periodSeconds: 10
+              #     timeoutSeconds: 10
+              #     failureThreshold: 30
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -61,7 +74,8 @@ spec:
                 cpu: 100m
                 memory: 512Mi
               limits:
-                memory: 4Gi
+                cpu: 2000m
+                memory: 2Gi
 
     defaultPodOptions:
       securityContext:
@@ -74,14 +88,17 @@ spec:
     service:
       app:
         controller: *app
+        primary: true
+        ports:
+          http:
+            port: *port
+      bittorrent:
+        controller: *app
         type: LoadBalancer
         annotations:
           io.cilium/lb-ipam-ips: ${SVC_QBITTORRENT_ADDR}
         ports:
-          http:
-            port: *port
-          bittorrent:
-            enabled: true
+          bittorrent-tcp:
             port: *torrentPort
             protocol: TCP
 
@@ -100,9 +117,23 @@ spec:
           - hosts:
               - *host
 
+    configMaps:
+      config:
+        data:
+          .qbt.toml: |
+            [qbittorrent]
+            addr = "http://localhost:80"
+
     persistence:
       config:
         existingClaim: qbittorrent
+      config-file:
+        type: configMap
+        name: qbittorrent
+        globalMounts:
+          - path: /config/.qbt.toml
+            subPath: .qbt.toml
+            readOnly: true
       media:
         type: nfs
         server: 10.20.0.3
