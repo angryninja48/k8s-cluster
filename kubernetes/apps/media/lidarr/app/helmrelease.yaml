@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.1.2
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -28,66 +28,69 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    mediaPodOptions:
+    defaultPodOptions:
       securityContext:
-        runAsUser: 568
-        runAsGroup: 568
-        fsGroup: 568
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
+
     controllers:
       lidarr:
         annotations:
           reloader.stakater.com/auto: "true"
-          configmap.reloader.stakater.com/reload: lidarr-pushover
-        initContainers:
-          init-db:
-            image:
-              repository: ghcr.io/home-operations/postgres-init
-              tag: "17.4"
-              pullPolicy: IfNotPresent
-            envFrom: &envFrom
-              - secretRef:
-                  name: lidarr-secret
         containers:
           app:
             image:
-              repository: ghcr.io/onedr0p/lidarr-develop
-              tag: 2.3.1.4171@sha256:664508bdfae57c6e8460351095b18d2e72419bf11523528e20fb624bd907864c
+              repository: ghcr.io/home-operations/lidarr
+              tag: 2.13
             env:
+              LIDARR__APP__INSTANCENAME: Lidarr
+              LIDARR__APP__THEME: dark
+              LIDARR__LOG__DBENABLED: "False"
+              LIDARR__LOG__LEVEL: info
+              LIDARR__SERVER__PORT: &port 80
+              LIDARR__UPDATE__BRANCH: develop
               TZ: "${TIMEZONE}"
-              LIDARR__INSTANCE_NAME: Lidarr
-              LIDARR__PORT: &port 8080
-              LIDARR__LOG_LEVEL: info
-              PUSHOVER_APP_URL: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
-              PUSHOVER_PRIORITY: "0"
             envFrom:
               - secretRef:
                   name: lidarr-secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /ping
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
             resources:
               requests:
                 cpu: 10m
-                memory: 250Mi
+                memory: 256M
               limits:
-                memory: 2000Mi
+                memory: 1Gi
+
     service:
       app:
         controller: *app
         ports:
           http:
             port: *port
+
     ingress:
       app:
         enabled: true
-        className: nginx
+        className: internal
         annotations:
-          nginx.ingress.kubernetes.io/auth-method: GET
-          nginx.ingress.kubernetes.io/auth-url: http://authelia.media.svc.cluster.local.:8888/api/verify
-          nginx.ingress.kubernetes.io/auth-signin: https://auth.${SECRET_DOMAIN}?rm=$request_method
-          nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
-          nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Method $request_method;
           hajimari.io/icon: mdi:headphones
         hosts:
-          - host: *host
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
@@ -96,29 +99,26 @@ spec:
         tls:
           - hosts:
               - *host
+
     persistence:
       config:
         enabled: true
         existingClaim: *app
         globalMounts:
           - path: /config
-      music:
-        type: nfs
-        server: 192.168.9.10
-        path: /var/mnt/vol1/music
-        globalMounts:
-          - path: /mnt/storage/music
       downloads:
+        enabled: true
         type: nfs
-        server: 192.168.9.10
-        path: /var/mnt/vol1/downloads
+        server: 10.20.0.3
+        path: /volume1/Downloads/
         globalMounts:
           - path: /mnt/storage/downloads
-      scripts:
-        type: configMap
-        name: lidarr-pushover
-        mediaMode: 0775
+      music:
+        enabled: true
+        type: nfs
+        server: 10.20.0.3
+        path: /volume1/Music
         globalMounts:
-          - path: /scripts/pushover-notify.sh
-            subPath: pushover-notify.sh
-            readOnly: true
+          - path: /mnt/storage/music
+      tmp:
+        type: emptyDir

@@ -5,6 +5,7 @@ kind: Kustomization
 #   - ../../components/common
 resources:
   - ./namespace.yaml
+  - ./lidarr/ks.yaml
   # - ./miniflux/ks.yaml
   - ./photoprism/ks.yaml
   - ./plex/ks.yaml
