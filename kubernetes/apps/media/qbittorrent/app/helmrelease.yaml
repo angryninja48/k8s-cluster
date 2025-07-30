@@ -123,7 +123,7 @@ spec:
         existingClaim: qbittorrent
       config-file:
         type: configMap
-        name: qbittorrent-config
+        name: qbittorrent
         globalMounts:
           - path: /config/.qbt.toml
             subPath: .qbt.toml
