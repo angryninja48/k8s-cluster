@@ -35,6 +35,9 @@ spec:
               TZ: ${TIMEZONE}
               QBT_WEBUI_PORT: &port 80
               QBT_TORRENTING_PORT: &torrentPort 50413
+              QBT_Preferences__WebUI__AuthSubnetWhitelistEnabled: true
+              QBT_Preferences__WebUI__AuthSubnetWhitelist: |-
+                10.69.0.0/16, 127.0.0.0/8
             probes:
               # liveness:
               #   enabled: false
