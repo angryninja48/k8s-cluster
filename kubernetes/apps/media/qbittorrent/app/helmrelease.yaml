@@ -24,6 +24,8 @@ spec:
   values:
     controllers:
       qbittorrent:
+        annotations:
+          reloader.stakater.com/auto: "true"
         containers:
           app:
             image:
@@ -34,36 +36,28 @@ spec:
               QBT_WEBUI_PORT: &port 80
               QBT_TORRENTING_PORT: &torrentPort 50413
               QBT_Preferences__WebUI__AuthSubnetWhitelistEnabled: true
-              QBT_Preferences__WebUI__AuthSubnetWhitelist: |-
-                10.69.0.0/16, 127.0.0.0/8
+              QBT_Preferences__WebUI__AuthSubnetWhitelist: '0.0.0.0/0'
+              QBT_Preferences__WebUI__LocalHostAuth: false
+
             probes:
+              # liveness:
+              #   enabled: false
+              # readiness:
+              #   enabled: false
+              # startup:
+              #   enabled: false
               liveness: &probes
                 enabled: true
                 custom: true
                 spec:
-                  exec:
-                    command:
-                      - curl
-                      - -f
-                      - http://localhost:80/api/v2/app/version
-                  initialDelaySeconds: 30
-                  periodSeconds: 30
-                  timeoutSeconds: 10
-                  failureThreshold: 3
-              readiness: *probes
-              startup:
-                enabled: true
-                custom: true
-                spec:
-                  exec:
-                    command:
-                      - curl
-                      - -f
-                      - http://localhost:80/api/v2/app/version
+                  httpGet:
+                    path: /api/v2/app/version
+                    port: *port
                   initialDelaySeconds: 0
-                  periodSeconds: 10
                   timeoutSeconds: 10
-                  failureThreshold: 30
+                  periodSeconds: 5
+                  failureThreshold: 5
+              readiness: *probes
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -73,7 +67,8 @@ spec:
                 cpu: 100m
                 memory: 512Mi
               limits:
-                memory: 4Gi
+                cpu: 2000m
+                memory: 2Gi
 
     defaultPodOptions:
       securityContext:
@@ -86,14 +81,17 @@ spec:
     service:
       app:
         controller: *app
+        primary: true
+        ports:
+          http:
+            port: *port
+      bittorrent:
+        controller: *app
         type: LoadBalancer
         annotations:
           io.cilium/lb-ipam-ips: ${SVC_QBITTORRENT_ADDR}
         ports:
-          http:
-            port: *port
-          bittorrent:
-            enabled: true
+          bittorrent-tcp:
             port: *torrentPort
             protocol: TCP
 
@@ -112,9 +110,23 @@ spec:
           - hosts:
               - *host
 
+    configMaps:
+      config:
+        data:
+          .qbt.toml: |
+            [qbittorrent]
+            addr = "http://localhost:80"
+
     persistence:
       config:
         existingClaim: qbittorrent
+      config-file:
+        type: configMap
+        name: qbittorrent
+        globalMounts:
+          - path: /config/.qbt.toml
+            subPath: .qbt.toml
+            readOnly: true
       media:
         type: nfs
         server: 10.20.0.3
