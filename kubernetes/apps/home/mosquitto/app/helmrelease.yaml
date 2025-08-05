@@ -46,7 +46,7 @@ spec:
             #   capabilities: { drop: ["ALL"] }
             resources:
               limits: &resources
-                memory: 16Mi
+                memory: 128Mi
               requests:
                 <<: *resources
                 cpu: 10m
