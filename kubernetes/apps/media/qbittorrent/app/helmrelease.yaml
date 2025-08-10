@@ -36,7 +36,13 @@ spec:
               QBT_TORRENTING_PORT: &torrentPort 50413
               QBT_Preferences__WebUI__AuthSubnetWhitelistEnabled: true
               QBT_Preferences__WebUI__AuthSubnetWhitelist: '0.0.0.0/0'
-              QBT_Preferences__WebUI__LocalHostAuth: false
+              QBT_Preferences__WebUI__LocalHostAuth: true
+              QBT_Preferences__WebUI__BypassLocalAuth: true
+              QBT_Preferences__Downloads__SavePath: "/media/Downloads/qbittorrent/completed"
+              QBT_Preferences__Downloads__TempPath: "/media/Downloads/qbittorrent/incomplete"
+              QBT_BitTorrent__Session__DefaultSavePath: "/media/Downloads/qbittorrent/completed"
+              QBT_BitTorrent__Session__TempPath: "/media/Downloads/qbittorrent/incomplete"
+              QBT_BitTorrent__Session__TempPathEnabled: "true"
             probes:
               liveness: &probes
                 enabled: true
@@ -121,7 +127,6 @@ spec:
         server: 10.20.0.3
         path: /volume1/Downloads/
         globalMounts:
-          - path: /media/Downloads/qbittorrent
-            subPath: Downloads/qbittorrent
+          - path: /media/Downloads
       tmp:
         type: emptyDir
