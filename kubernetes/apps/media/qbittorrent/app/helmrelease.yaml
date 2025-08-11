@@ -34,8 +34,8 @@ spec:
               TZ: ${TIMEZONE}
               QBT_WEBUI_PORT: &port 80
               QBT_TORRENTING_PORT: &torrentPort 50413
-              QBT_Preferences__WebUI__AuthSubnetWhitelistEnabled: true
-              QBT_Preferences__WebUI__AuthSubnetWhitelist: '0.0.0.0/0'
+              QBT_Preferences__WebUI__AuthSubnetWhitelist: "10.0.0.0/8"
+              QBT_Preferences__WebUI__AuthSubnetWhitelistEnabled: "true"
               QBT_Preferences__WebUI__LocalHostAuth: true
               QBT_Preferences__WebUI__BypassLocalAuth: true
               QBT_Preferences__Downloads__SavePath: "/media/Downloads/qbittorrent/completed"
