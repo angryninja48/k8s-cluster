@@ -99,10 +99,8 @@ spec:
                 memory: 512Mi
                 squat.ai/tun: "1"
             securityContext:
-              capabilities:
-                add: ["NET_ADMIN"]
-              allowPrivilegeEscalation: false
-              runAsUser: 0      # Still need root for OpenVPN
+              privileged: true  # Required for VPN and firewall management
+              runAsUser: 0
               runAsGroup: 0
     defaultPodOptions:
       securityContext:
