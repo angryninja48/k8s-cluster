@@ -81,7 +81,7 @@ spec:
               tag: v3.40.0@sha256:2b42bfa046757145a5155acece417b65b4443c8033fb88661a8e9dcf7fda5a00
             env:
               DOT: "off"
-              DNS_ADDRESS: "127.0.0.2"
+              DNS_ADDRESS: "1.1.1.1"
               VPN_SERVICE_PROVIDER: expressvpn
               VPN_TYPE: openvpn
               SERVER_COUNTRIES: Australia
