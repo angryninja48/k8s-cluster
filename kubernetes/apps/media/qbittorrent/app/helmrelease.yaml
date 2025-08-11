@@ -1,4 +1,3 @@
----
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -38,11 +37,6 @@ spec:
               QBT_Preferences__WebUI__AuthSubnetWhitelistEnabled: "true"
               QBT_Preferences__WebUI__LocalHostAuth: true
               QBT_Preferences__WebUI__BypassLocalAuth: true
-              QBT_Preferences__Downloads__SavePath: "/media/Downloads/qbittorrent/completed"
-              QBT_Preferences__Downloads__TempPath: "/media/Downloads/qbittorrent/incomplete"
-              QBT_BitTorrent__Session__DefaultSavePath: "/media/Downloads/qbittorrent/completed"
-              QBT_BitTorrent__Session__TempPath: "/media/Downloads/qbittorrent/incomplete"
-              QBT_BitTorrent__Session__TempPathEnabled: "true"
             probes:
               liveness: &probes
                 enabled: true
@@ -81,7 +75,32 @@ spec:
                 memory: 512Mi
               limits:
                 memory: 4Gi
-
+          gluetun:
+            image:
+              repository: ghcr.io/qdm12/gluetun
+              tag: v3.40.0@sha256:2b42bfa046757145a5155acece417b65b4443c8033fb88661a8e9dcf7fda5a00
+            env:
+              BLOCK_MALICIOUS: "off"
+              TZ: ${TIMEZONE}
+              VPN_SERVICE_PROVIDER: expressvpn
+              VPN_TYPE: openvpn
+              SERVER_COUNTRIES: Australia
+              FIREWALL_INPUT_PORTS: *port
+              FIREWALL_OUTBOUND_SUBNETS: 10.69.0.0/16,10.96.0.0/12,10.20.0.0/24
+              UPDATER_PERIOD: 24h
+            envFrom:
+              - secretRef:
+                  name: qbittorrent-secrets
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+                squat.ai/tun: "1"  # Required for TUN device access
+            securityContext:
+              capabilities: {add: ["NET_ADMIN"]}
+              allowPrivilegeEscalation: false
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -103,6 +122,10 @@ spec:
             enabled: true
             port: *torrentPort
             protocol: TCP
+          bittorrent-udp:
+            enabled: true
+            port: *torrentPort
+            protocol: UDP
 
     ingress:
       app:
