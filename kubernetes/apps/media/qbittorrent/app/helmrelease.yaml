@@ -96,15 +96,14 @@ spec:
                 memory: 128Mi
               limits:
                 memory: 512Mi
-                squat.ai/tun: "1"  # Required for TUN device access
             securityContext:
               capabilities:
                 add: ["NET_ADMIN"]
               allowPrivilegeEscalation: false
     defaultPodOptions:
       securityContext:
-        runAsNonRoot: false  # Allow root for Gluetun
-        runAsUser: 1000     # This applies only to qBittorrent container
+        runAsNonRoot: true
+        runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
@@ -153,3 +152,12 @@ spec:
           - path: /media/Downloads
       tmp:
         type: emptyDir
+      gluetun-device:
+        enabled: true
+        type: hostPath
+        hostPath: /dev/net/tun
+        hostPathType: "CharDevice"
+        advancedMounts:
+          qbittorrent:
+            gluetun:
+              - path: /dev/net/tun
