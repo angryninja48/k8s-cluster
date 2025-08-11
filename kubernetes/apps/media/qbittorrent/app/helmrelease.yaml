@@ -80,12 +80,12 @@ spec:
               repository: ghcr.io/qdm12/gluetun
               tag: v3.40.0@sha256:2b42bfa046757145a5155acece417b65b4443c8033fb88661a8e9dcf7fda5a00
             env:
-              BLOCK_MALICIOUS: "off" # save 300MB of RAM
+              BLOCK_MALICIOUS: "off"
               TZ: ${TIMEZONE}
               VPN_SERVICE_PROVIDER: expressvpn
               VPN_TYPE: openvpn
               SERVER_COUNTRIES: Australia
-              FIREWALL: "off"  # Disable built-in firewall to avoid iptables issues
+              FIREWALL: "off"
               UPDATER_PERIOD: 24h
             envFrom:
               - secretRef:
@@ -94,16 +94,20 @@ spec:
               requests:
                 cpu: 100m
                 memory: 128Mi
+                squat.ai/tun: "1"
               limits:
                 memory: 512Mi
+                squat.ai/tun: "1"
             securityContext:
               capabilities:
                 add: ["NET_ADMIN"]
               allowPrivilegeEscalation: false
+              runAsUser: 0      # Still need root for OpenVPN
+              runAsGroup: 0
     defaultPodOptions:
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
+        runAsNonRoot: false  # Allow root for gluetun container
+        runAsUser: 1000      # Default for qbittorrent, overridden by gluetun
         runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
@@ -152,12 +156,3 @@ spec:
           - path: /media/Downloads
       tmp:
         type: emptyDir
-      gluetun-device:
-        enabled: true
-        type: hostPath
-        hostPath: /dev/net/tun
-        hostPathType: "CharDevice"
-        advancedMounts:
-          qbittorrent:
-            gluetun:
-              - path: /dev/net/tun
