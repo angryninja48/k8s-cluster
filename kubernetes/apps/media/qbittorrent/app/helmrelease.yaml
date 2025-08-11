@@ -80,13 +80,12 @@ spec:
               repository: ghcr.io/qdm12/gluetun
               tag: v3.40.0@sha256:2b42bfa046757145a5155acece417b65b4443c8033fb88661a8e9dcf7fda5a00
             env:
-              BLOCK_MALICIOUS: "off"
+              BLOCK_MALICIOUS: "off" # save 300MB of RAM
               TZ: ${TIMEZONE}
               VPN_SERVICE_PROVIDER: expressvpn
               VPN_TYPE: openvpn
               SERVER_COUNTRIES: Australia
-              FIREWALL_INPUT_PORTS: *port
-              FIREWALL_OUTBOUND_SUBNETS: 10.69.0.0/16,10.96.0.0/12,10.20.0.0/24
+              FIREWALL: "off"  # Disable built-in firewall to avoid iptables issues
               UPDATER_PERIOD: 24h
             envFrom:
               - secretRef:
@@ -99,12 +98,13 @@ spec:
                 memory: 512Mi
                 squat.ai/tun: "1"  # Required for TUN device access
             securityContext:
-              capabilities: {add: ["NET_ADMIN"]}
+              capabilities:
+                add: ["NET_ADMIN"]
               allowPrivilegeEscalation: false
     defaultPodOptions:
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
+        runAsNonRoot: false  # Allow root for Gluetun
+        runAsUser: 1000     # This applies only to qBittorrent container
         runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
