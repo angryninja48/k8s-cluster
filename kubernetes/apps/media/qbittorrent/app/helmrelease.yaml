@@ -95,7 +95,7 @@ spec:
               # FIREWALL_OUTBOUND_SUBNETS: 10.69.0.0/16,10.96.0.0/16
               VPN_SERVICE_PROVIDER: expressvpn
               VPN_TYPE: openvpn
-              SERVER_COUNTRIES: Australia
+              SERVER_COUNTRIES: Singapore
               FIREWALL_INPUT_PORTS: *port
               FIREWALL_OUTBOUND_SUBNETS: 10.69.0.0/16,10.96.0.0/16
             envFrom:
