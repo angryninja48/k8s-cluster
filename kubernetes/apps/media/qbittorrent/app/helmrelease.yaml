@@ -66,6 +66,9 @@ spec:
                   timeoutSeconds: 10
                   failureThreshold: 30
             securityContext:
+              runAsUser: 568
+              runAsGroup: 568
+              runAsNonRoot: true
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
@@ -102,22 +105,9 @@ spec:
                 memory: 512Mi
                 squat.ai/tun: "1"
             securityContext:
-              capabilities:
-                add:
-                  - NET_ADMIN
-              privileged: true  # Required for VPN and firewall management
-              runAsUser: 0
-              runAsGroup: 0
-
-    defaultPodOptions:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
-        fsGroupChangePolicy: OnRootMismatch
-        supplementalGroups: [10000]
-        seccompProfile: { type: RuntimeDefault }
+              capabilities: { add: ["NET_ADMIN"] }
+              allowPrivilegeEscalation: true
+              privileged: true
 
     service:
       app:
