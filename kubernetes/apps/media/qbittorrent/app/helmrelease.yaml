@@ -31,7 +31,7 @@ spec:
               tag: 5.1.2@sha256:9dd0164cc23e9c937e0af27fd7c3f627d1df30c182cf62ed34d3f129c55dc0e8
             env:
               TZ: ${TIMEZONE}
-              QBT_WEBUI_PORT: &port 80
+              QBT_WEBUI_PORT: &port 8080
               QBT_TORRENTING_PORT: &torrentPort 50413
               QBT_Preferences__WebUI__AuthSubnetWhitelist: "10.0.0.0/8"
               QBT_Preferences__WebUI__AuthSubnetWhitelistEnabled: "true"
@@ -75,33 +75,62 @@ spec:
                 memory: 512Mi
               limits:
                 memory: 4Gi
+          # gluetun:
+          #   image:
+          #     repository: ghcr.io/qdm12/gluetun
+          #     tag: v3.40.0@sha256:2b42bfa046757145a5155acece417b65b4443c8033fb88661a8e9dcf7fda5a00
+          #   env:
+          #     DOT: "off"
+          #     DNS_ADDRESS: "1.1.1.1"
+          #     VPN_SERVICE_PROVIDER: expressvpn
+          #     VPN_TYPE: openvpn
+          #     SERVER_COUNTRIES: Australia
+          #     FIREWALL_INPUT_PORTS: 80
+          #     FIREWALL_OUTBOUND_SUBNETS: 10.69.0.0/16
+          #   envFrom:
+          #     - secretRef:
+          #         name: qbittorrent-secrets
+          #   resources:
+          #     requests:
+          #       cpu: 100m
+          #       memory: 128Mi
+          #       squat.ai/tun: "1"
+          #     limits:
+          #       memory: 512Mi
+          #       squat.ai/tun: "1"
+          #   securityContext:
+          #     privileged: true  # Required for VPN and firewall management
+          #     runAsUser: 0
+          #     runAsGroup: 0
           gluetun:
+            dependsOn:
+              - dnsdist
             image:
               repository: ghcr.io/qdm12/gluetun
-              tag: v3.40.0@sha256:2b42bfa046757145a5155acece417b65b4443c8033fb88661a8e9dcf7fda5a00
+              tag: v3.40.0
             env:
               DOT: "off"
-              DNS_ADDRESS: "1.1.1.1"
-              VPN_SERVICE_PROVIDER: expressvpn
-              VPN_TYPE: openvpn
-              SERVER_COUNTRIES: Australia
-              FIREWALL_INPUT_PORTS: 80
-              FIREWALL_OUTBOUND_SUBNETS: 10.69.0.0/16
+              DNS_ADDRESS: "127.0.0.2"
+              VPN_SERVICE_PROVIDER: custom
+              VPN_TYPE: wireguard
+              VPN_INTERFACE: wg0
+              WIREGUARD_ENDPOINT_PORT: 51820
+              VPN_PORT_FORWARDING: on
+              VPN_PORT_FORWARDING_PROVIDER: protonvpn
+              FIREWALL_INPUT_PORTS: *port
+              FIREWALL_OUTBOUND_SUBNETS: 10.69.0.0/16,10.96.0.0/16 # Allow access to k8s subnets
             envFrom:
               - secretRef:
-                  name: qbittorrent-secrets
+                  name: qbittorrent
             resources:
-              requests:
-                cpu: 100m
-                memory: 128Mi
-                squat.ai/tun: "1"
               limits:
-                memory: 512Mi
                 squat.ai/tun: "1"
+            restartPolicy: Always
             securityContext:
-              privileged: true  # Required for VPN and firewall management
-              runAsUser: 0
-              runAsGroup: 0
+              capabilities:
+                add:
+                  - NET_ADMIN
+              allowPrivilegeEscalation: false
     defaultPodOptions:
       securityContext:
         runAsNonRoot: false  # Allow root for gluetun container
