@@ -105,9 +105,7 @@ spec:
                 memory: 512Mi
                 squat.ai/tun: "1"
             securityContext:
-              runAsUser: 568
-              runAsGroup: 568
-              runAsNonRoot: true
+              runAsUser: 0
               capabilities: { add: ["NET_ADMIN"] }
               allowPrivilegeEscalation: true
               privileged: true
