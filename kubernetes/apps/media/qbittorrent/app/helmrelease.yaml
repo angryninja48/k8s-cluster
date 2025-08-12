@@ -105,14 +105,19 @@ spec:
               capabilities:
                 add:
                   - NET_ADMIN
+              privileged: true  # Required for VPN and firewall management
+              runAsUser: 0
+              runAsGroup: 0
 
     defaultPodOptions:
       securityContext:
-        runAsNonRoot: false  # Allow root for gluetun container
-        runAsUser: 1000      # Default for qbittorrent, overridden by gluetun
+        runAsNonRoot: true
+        runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups: [10000]
+        seccompProfile: { type: RuntimeDefault }
 
     service:
       app:
