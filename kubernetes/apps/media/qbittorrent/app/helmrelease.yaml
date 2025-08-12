@@ -75,39 +75,10 @@ spec:
                 memory: 512Mi
               limits:
                 memory: 4Gi
-          # gluetun:
-          #   image:
-          #     repository: ghcr.io/qdm12/gluetun
-          #     tag: v3.40.0@sha256:2b42bfa046757145a5155acece417b65b4443c8033fb88661a8e9dcf7fda5a00
-          #   env:
-          #     DOT: "off"
-          #     DNS_ADDRESS: "1.1.1.1"
-          #     VPN_SERVICE_PROVIDER: expressvpn
-          #     VPN_TYPE: openvpn
-          #     SERVER_COUNTRIES: Australia
-          #     FIREWALL_INPUT_PORTS: 80
-          #     FIREWALL_OUTBOUND_SUBNETS: 10.69.0.0/16
-          #   envFrom:
-          #     - secretRef:
-          #         name: qbittorrent-secrets
-          #   resources:
-          #     requests:
-          #       cpu: 100m
-          #       memory: 128Mi
-          #       squat.ai/tun: "1"
-          #     limits:
-          #       memory: 512Mi
-          #       squat.ai/tun: "1"
-          #   securityContext:
-          #     privileged: true  # Required for VPN and firewall management
-          #     runAsUser: 0
-          #     runAsGroup: 0
           gluetun:
-            # dependsOn:
-            #   - dnsdist
             image:
               repository: ghcr.io/qdm12/gluetun
-              tag: v3.40.0
+              tag: v3.40.0@sha256:2b42bfa046757145a5155acece417b65b4443c8033fb88661a8e9dcf7fda5a00
             env:
               DOT: "off"
               DNS_ADDRESS: "10.96.0.10"
@@ -123,14 +94,18 @@ spec:
               - secretRef:
                   name: qbittorrent-secrets
             resources:
-              limits:
+              requests:
+                cpu: 100m
+                memory: 128Mi
                 squat.ai/tun: "1"
-            restartPolicy: Always
+              limits:
+                memory: 512Mi
+                squat.ai/tun: "1"
             securityContext:
               capabilities:
                 add:
                   - NET_ADMIN
-              allowPrivilegeEscalation: false
+
     defaultPodOptions:
       securityContext:
         runAsNonRoot: false  # Allow root for gluetun container
