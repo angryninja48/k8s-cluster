@@ -78,42 +78,42 @@ spec:
                 memory: 512Mi
               limits:
                 memory: 4Gi
-          gluetun:
-            image:
-              repository: ghcr.io/qdm12/gluetun
-              tag: v3.40.0@sha256:2b42bfa046757145a5155acece417b65b4443c8033fb88661a8e9dcf7fda5a00
-            env:
-              DOT: "off"
-              DNS_ADDRESS: "10.96.0.10"
-              # VPN_SERVICE_PROVIDER: custom
-              # VPN_TYPE: wireguard
-              # VPN_INTERFACE: wg0
-              # WIREGUARD_ENDPOINT_PORT: 51820
-              # VPN_PORT_FORWARDING: on
-              # VPN_PORT_FORWARDING_PROVIDER: protonvpn
-              # FIREWALL_INPUT_PORTS: *port
-              # FIREWALL_OUTBOUND_SUBNETS: 10.69.0.0/16,10.96.0.0/16
-              VPN_SERVICE_PROVIDER: expressvpn
-              VPN_TYPE: openvpn
-              # SERVER_COUNTRIES: Singapore
-              FIREWALL_INPUT_PORTS: *port
-              FIREWALL_OUTBOUND_SUBNETS: 10.69.0.0/16,10.96.0.0/16
-            envFrom:
-              - secretRef:
-                  name: qbittorrent-secrets
-            resources:
-              requests:
-                cpu: 100m
-                memory: 128Mi
-                squat.ai/tun: "1"
-              limits:
-                memory: 512Mi
-                squat.ai/tun: "1"
-            securityContext:
-              runAsUser: 0
-              capabilities: { add: ["NET_ADMIN"] }
-              allowPrivilegeEscalation: true
-              privileged: true
+          # gluetun:
+          #   image:
+          #     repository: ghcr.io/qdm12/gluetun
+          #     tag: v3.40.0@sha256:2b42bfa046757145a5155acece417b65b4443c8033fb88661a8e9dcf7fda5a00
+          #   env:
+          #     DOT: "off"
+          #     DNS_ADDRESS: "10.96.0.10"
+          #     # VPN_SERVICE_PROVIDER: custom
+          #     # VPN_TYPE: wireguard
+          #     # VPN_INTERFACE: wg0
+          #     # WIREGUARD_ENDPOINT_PORT: 51820
+          #     # VPN_PORT_FORWARDING: on
+          #     # VPN_PORT_FORWARDING_PROVIDER: protonvpn
+          #     # FIREWALL_INPUT_PORTS: *port
+          #     # FIREWALL_OUTBOUND_SUBNETS: 10.69.0.0/16,10.96.0.0/16
+          #     VPN_SERVICE_PROVIDER: expressvpn
+          #     VPN_TYPE: openvpn
+          #     # SERVER_COUNTRIES: Singapore
+          #     FIREWALL_INPUT_PORTS: *port
+          #     FIREWALL_OUTBOUND_SUBNETS: 10.69.0.0/16,10.96.0.0/16
+          #   envFrom:
+          #     - secretRef:
+          #         name: qbittorrent-secrets
+          #   resources:
+          #     requests:
+          #       cpu: 100m
+          #       memory: 128Mi
+          #       squat.ai/tun: "1"
+          #     limits:
+          #       memory: 512Mi
+          #       squat.ai/tun: "1"
+          #   securityContext:
+          #     runAsUser: 0
+          #     capabilities: { add: ["NET_ADMIN"] }
+          #     allowPrivilegeEscalation: true
+          #     privileged: true
 
     service:
       app:
