@@ -47,11 +47,8 @@ spec:
               tag: 1.33.2
             env:
               LOG_LEVEL: info
-              PORT: &port 80
+              PORT: &port 8080
               TZ: "${TIMEZONE}"
-            envFrom:
-              - secretRef:
-                  name: overseerr-secret
             probes:
               liveness: &probes
                 enabled: true
