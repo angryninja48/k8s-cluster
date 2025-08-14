@@ -5,6 +5,7 @@ kind: Kustomization
 #   - ../../components/common
 resources:
   - ./namespace.yaml
+  - ./bazarr/ks.yaml
   - ./lidarr/ks.yaml
   # - ./miniflux/ks.yaml
   - ./overseerr/ks.yaml
