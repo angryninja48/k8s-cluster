@@ -73,7 +73,7 @@ spec:
             ]
             envFrom:
               - secretRef:
-                  name: code-server-dev-secrets
+                  name: code-server-secrets
             resources:
               requests:
                 cpu: 10m
@@ -145,7 +145,7 @@ spec:
           - path: /tmp
       deploy-key:
         type: secret
-        name: code-server-dev-secrets
+        name: code-server-secrets
         defaultMode: 420
         advancedMounts:
           home-assistant-dev:
