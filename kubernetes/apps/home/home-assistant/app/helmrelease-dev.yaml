@@ -1,0 +1,159 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app home-assistant-dev
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.7.3
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+  values:
+    controllers:
+      home-assistant-dev:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            enabled: true
+            image:
+              repository: ghcr.io/home-operations/postgres-init
+              tag: "17.4"
+            envFrom: &envFrom
+              - secretRef:
+                  name: home-assistant-dev-secrets
+          app:
+            image:
+              repository: ghcr.io/home-operations/home-assistant
+              tag: 2025.7.4@sha256:0f7f057d1817c7bed5632ce510ffcc921799ff34e75c6a53346994ba6c7b14ab
+            env:
+              # Point to different database to avoid conflicts
+              - name: POSTGRES_DB
+                value: "homeassistant_dev"
+              # Enable init container for dev database
+              - name: INIT_POSTGRES_DBNAME
+                valueFrom:
+                  secretKeyRef:
+                    name: home-assistant-dev-secrets
+                    key: INIT_POSTGRES_DBNAME
+            envFrom:
+              - secretRef:
+                  name: home-assistant-dev-secrets
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 2Gi
+          code:
+            image:
+              repository: ghcr.io/coder/code-server
+              tag: 4.96.4@sha256:f93810f7f6636b3af3b1a750faf612349cddb89fbb6d28d69123a214fc75ee9e
+            args: [
+              "--auth", "none",
+              "--user-data-dir", "/config/.vscode",
+              "--extensions-dir", "/config/.vscode",
+              "--port", "8081",
+              "/config"
+            ]
+            envFrom:
+              - secretRef:
+                  name: home-assistant-dev-secrets
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 512Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+    service:
+      app:
+        controller: *app
+        type: LoadBalancer
+        annotations:
+          io.cilium/lb-ipam-ips: ${SVC_HASS_DEV_ADDR}
+        externalTrafficPolicy: Local
+        ports:
+          http:
+            port: 8123
+      code:
+        type: ClusterIP
+        controller: *app
+        ports:
+          http:
+            port: 8081
+    ingress:
+      app:
+        className: internal
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+        hosts:
+          - host: &host "hass-dev.${SECRET_DOMAIN}"  # Different subdomain
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - hosts:
+              - *host
+      code:
+        className: internal
+        hosts:
+          - host: &host "hass-dev-code.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: code
+                  port: http
+        tls:
+          - hosts:
+              - *host
+    persistence:
+      config:
+        existingClaim: home-assistant-dev  # Different PVC
+        globalMounts:
+          - path: /config
+      logs:
+        type: emptyDir
+        globalMounts:
+          - path: /config/logs
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+      deploy-key:
+        type: secret
+        name: home-assistant-dev-secrets
+        defaultMode: 420
+        advancedMounts:
+          home-assistant-dev:
+            code:
+              - path: /home/coder/.ssh/id_rsa
+                subPath: GIT_DEPLOY_KEY
