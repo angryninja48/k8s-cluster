@@ -43,16 +43,6 @@ spec:
             image:
               repository: ghcr.io/home-operations/home-assistant
               tag: 2025.7.4@sha256:0f7f057d1817c7bed5632ce510ffcc921799ff34e75c6a53346994ba6c7b14ab
-            env:
-              # Point to different database to avoid conflicts
-              - name: POSTGRES_DB
-                value: "homeassistant_dev"
-              # Enable init container for dev database
-              - name: INIT_POSTGRES_DBNAME
-                valueFrom:
-                  secretKeyRef:
-                    name: home-assistant-dev-secrets
-                    key: INIT_POSTGRES_DBNAME
             envFrom:
               - secretRef:
                   name: home-assistant-dev-secrets
@@ -78,7 +68,7 @@ spec:
             ]
             envFrom:
               - secretRef:
-                  name: home-assistant-dev-secrets
+                  name: code-server-secrets
             resources:
               requests:
                 cpu: 10m
