@@ -1,11 +1,12 @@
+---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app qbittorrent
-  namespace: media
+  name: &app home-assistant-dev
+  namespace: home
 spec:
-  interval: 1h
+  interval: 30m
   chart:
     spec:
       chart: app-template
@@ -16,129 +17,97 @@ spec:
         namespace: flux-system
   install:
     remediation:
-      retries: -1
+      retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   values:
     controllers:
-      qbittorrent:
+      home-assistant-dev:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/home-operations/postgres-init
+              tag: "17.4"
+            envFrom: &envFrom
+              - secretRef:
+                  name: home-assistant-dev-secrets
         containers:
           app:
             image:
-              repository: ghcr.io/home-operations/qbittorrent
-              tag: 5.1.2@sha256:9dd0164cc23e9c937e0af27fd7c3f627d1df30c182cf62ed34d3f129c55dc0e8
+              repository: ghcr.io/home-operations/home-assistant
+              tag: 2025.7.4@sha256:0f7f057d1817c7bed5632ce510ffcc921799ff34e75c6a53346994ba6c7b14ab
             env:
-              TZ: ${TIMEZONE}
-              QBT_WEBUI_PORT: &port 8080
-              QBT_TORRENTING_PORT: &torrentPort 50413
-              QBT_Preferences__WebUI__AuthSubnetWhitelist: "10.0.0.0/8"
-              QBT_Preferences__WebUI__AuthSubnetWhitelistEnabled: "true"
-              QBT_Preferences__WebUI__LocalHostAuth: true
-              QBT_Preferences__WebUI__BypassLocalAuth: true
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  exec:
-                    command:
-                      - curl
-                      - -f
-                      - http://localhost:8080/api/v2/app/version
-                  initialDelaySeconds: 30
-                  periodSeconds: 30
-                  timeoutSeconds: 10
-                  failureThreshold: 3
-              readiness: *probes
-              startup:
-                enabled: true
-                custom: true
-                spec:
-                  exec:
-                    command:
-                      - curl
-                      - -f
-                      - http://localhost:8080/api/v2/app/version
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
-                  timeoutSeconds: 10
-                  failureThreshold: 30
+              TZ: Australia/Sydney
+            envFrom: *envFrom
             securityContext:
-              runAsUser: 568
-              runAsGroup: 568
-              runAsNonRoot: true
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
+              runAsNonRoot: true
+              runAsUser: 1000
+              runAsGroup: 1000
             resources:
               requests:
-                cpu: 100m
+                cpu: 10m
                 memory: 512Mi
               limits:
-                memory: 4Gi
-          gluetun:
+                memory: 2Gi
+          code:
             image:
-              repository: ghcr.io/qdm12/gluetun
-              tag: v3.40.0@sha256:2b42bfa046757145a5155acece417b65b4443c8033fb88661a8e9dcf7fda5a00
-            env:
-              DOT: "off"
-              DNS_ADDRESS: "10.96.0.10"
-              # VPN_SERVICE_PROVIDER: custom
-              # VPN_TYPE: wireguard
-              # VPN_INTERFACE: wg0
-              # WIREGUARD_ENDPOINT_PORT: 51820
-              # VPN_PORT_FORWARDING: on
-              # VPN_PORT_FORWARDING_PROVIDER: protonvpn
-              # FIREWALL_INPUT_PORTS: *port
-              # FIREWALL_OUTBOUND_SUBNETS: 10.69.0.0/16,10.96.0.0/16
-              VPN_SERVICE_PROVIDER: expressvpn
-              VPN_TYPE: openvpn
-              # SERVER_COUNTRIES: Singapore
-              FIREWALL_INPUT_PORTS: *port
-              FIREWALL_OUTBOUND_SUBNETS: 10.69.0.0/16,10.96.0.0/16
+              repository: ghcr.io/coder/code-server
+              tag: 4.96.4@sha256:f93810f7f6636b3af3b1a750faf612349cddb89fbb6d28d69123a214fc75ee9e
+            args: [
+              "--auth", "none",
+              "--user-data-dir", "/config/.vscode",
+              "--extensions-dir", "/config/.vscode",
+              "--port", "8081",
+              "/config"
+            ]
             envFrom:
               - secretRef:
-                  name: qbittorrent-secrets
+                  name: code-server-dev-secrets
             resources:
               requests:
-                cpu: 100m
+                cpu: 10m
                 memory: 128Mi
-                squat.ai/tun: "1"
               limits:
                 memory: 512Mi
-                squat.ai/tun: "1"
-            securityContext:
-              runAsUser: 0
-              capabilities: { add: ["NET_ADMIN"] }
-              allowPrivilegeEscalation: true
-              privileged: true
+
+    defaultPodOptions:
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
 
     service:
       app:
         controller: *app
         type: LoadBalancer
         annotations:
-          io.cilium/lb-ipam-ips: ${SVC_QBITTORRENT_ADDR}
+          io.cilium/lb-ipam-ips: ${SVC_HASS_DEV_ADDR}
         ports:
           http:
-            port: *port
-          bittorrent:
-            enabled: true
-            port: *torrentPort
-            protocol: TCP
-          bittorrent-udp:
-            enabled: true
-            port: *torrentPort
-            protocol: UDP
+            port: 8123
+      code:
+        controller: *app
+        ports:
+          http:
+            port: 8081
 
     ingress:
       app:
         enabled: true
         className: internal
         hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+          - host: &host "hass-dev.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
@@ -147,15 +116,39 @@ spec:
         tls:
           - hosts:
               - *host
+      code:
+        enabled: true
+        className: internal
+        hosts:
+          - host: &codeHost "hass-dev-code.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: code
+                  port: http
+        tls:
+          - hosts:
+              - *codeHost
 
     persistence:
       config:
-        existingClaim: qbittorrent
-      media:
-        type: nfs
-        server: 10.20.0.3
-        path: /volume1/Downloads/
+        existingClaim: home-assistant-dev
         globalMounts:
-          - path: /media/Downloads
+          - path: /config
+      logs:
+        type: emptyDir
+        globalMounts:
+          - path: /config/logs
       tmp:
         type: emptyDir
+        globalMounts:
+          - path: /tmp
+      deploy-key:
+        type: secret
+        name: code-server-dev-secrets
+        defaultMode: 420
+        advancedMounts:
+          home-assistant-dev:
+            code:
+              - path: /home/coder/.ssh/id_rsa
+                subPath: GIT_DEPLOY_KEY
