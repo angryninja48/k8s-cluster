@@ -4,12 +4,13 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: &app home-assistant-dev
+  namespace: home
 spec:
   interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 3.7.3
+      version: 4.1.2
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -32,27 +33,31 @@ spec:
           reloader.stakater.com/auto: "true"
         initContainers:
           init-db:
-            enabled: true
             image:
               repository: ghcr.io/home-operations/postgres-init
               tag: "17.4"
             envFrom: &envFrom
               - secretRef:
                   name: home-assistant-dev-secrets
+        containers:
           app:
             image:
               repository: ghcr.io/home-operations/home-assistant
               tag: 2025.7.4@sha256:0f7f057d1817c7bed5632ce510ffcc921799ff34e75c6a53346994ba6c7b14ab
-            envFrom:
-              - secretRef:
-                  name: home-assistant-dev-secrets
+            env:
+              TZ: Australia/Sydney
+            envFrom: *envFrom
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
+              runAsNonRoot: true
+              runAsUser: 1000
+              runAsGroup: 1000
             resources:
               requests:
                 cpu: 10m
+                memory: 512Mi
               limits:
                 memory: 2Gi
           code:
@@ -68,43 +73,41 @@ spec:
             ]
             envFrom:
               - secretRef:
-                  name: code-server-secrets
+                  name: code-server-dev-secrets
             resources:
               requests:
                 cpu: 10m
+                memory: 128Mi
               limits:
                 memory: 512Mi
+
     defaultPodOptions:
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
         seccompProfile: { type: RuntimeDefault }
+
     service:
       app:
         controller: *app
         type: LoadBalancer
         annotations:
           io.cilium/lb-ipam-ips: ${SVC_HASS_DEV_ADDR}
-        externalTrafficPolicy: Local
         ports:
           http:
             port: 8123
       code:
-        type: ClusterIP
         controller: *app
         ports:
           http:
             port: 8081
+
     ingress:
       app:
+        enabled: true
         className: internal
-        annotations:
-          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
         hosts:
-          - host: &host "hass-dev.${SECRET_DOMAIN}"  # Different subdomain
+          - host: &host "hass-dev.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
@@ -114,9 +117,10 @@ spec:
           - hosts:
               - *host
       code:
+        enabled: true
         className: internal
         hosts:
-          - host: &host "hass-dev-code.${SECRET_DOMAIN}"
+          - host: &codeHost "hass-dev-code.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
@@ -124,10 +128,11 @@ spec:
                   port: http
         tls:
           - hosts:
-              - *host
+              - *codeHost
+
     persistence:
       config:
-        existingClaim: home-assistant-dev  # Different PVC
+        existingClaim: home-assistant-dev
         globalMounts:
           - path: /config
       logs:
@@ -140,7 +145,7 @@ spec:
           - path: /tmp
       deploy-key:
         type: secret
-        name: home-assistant-dev-secrets
+        name: code-server-dev-secrets
         defaultMode: 420
         advancedMounts:
           home-assistant-dev:
