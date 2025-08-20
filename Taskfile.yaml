@@ -34,3 +34,29 @@ tasks:
     preconditions:
       - test -f {{.KUBECONFIG}}
       - which flux
+
+  validate:
+    desc: Validate repository consistency and YAML syntax
+    cmd: '{{.SCRIPTS_DIR}}/validate-consistency.sh'
+    silent: false
+
+  validate:yaml:
+    desc: Validate YAML syntax using yamllint
+    cmd: yamllint kubernetes/
+    preconditions:
+      - which yamllint
+
+  validate:kustomize:
+    desc: Validate Kustomize manifests
+    cmd: |
+      find kubernetes/apps -name kustomization.yaml -execdir kustomize build . \; > /dev/null
+      echo "✅ All Kustomize manifests are valid"
+
+  validate:flux:
+    desc: Validate Flux Kustomizations
+    cmd: |
+      flux diff kustomization flux-system --path ./kubernetes/flux
+      echo "✅ Flux validation complete"
+    preconditions:
+      - test -f {{.KUBECONFIG}}
+      - which flux
