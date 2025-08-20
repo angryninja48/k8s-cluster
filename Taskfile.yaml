@@ -60,3 +60,45 @@ tasks:
     preconditions:
       - test -f {{.KUBECONFIG}}
       - which flux
+
+  # ===== Repository Consistency Tasks =====
+  validate:consistency:
+    desc: Run comprehensive repository consistency checks
+    cmd: ./scripts/validate-consistency.sh
+
+  validate:schemas:
+    desc: Check schema compliance across all files
+    cmd: |
+      echo "🔍 Checking schema compliance..."
+      {{.SCRIPTS_DIR}}/validate-consistency.sh --schemas-only || true
+      echo "ℹ️  Schema validation complete"
+
+  validate:all:
+    desc: Run all validation checks
+    deps:
+      - validate:yaml
+      - validate:kustomize
+      - validate:consistency
+    cmd: echo "🎉 All validation checks completed successfully!"
+
+  fix:schemas:
+    desc: Automatically fix common schema issues
+    cmd: |
+      echo "🔧 Running schema fixes..."
+      test -f {{.SCRIPTS_DIR}}/fix-schemas.sh && {{.SCRIPTS_DIR}}/fix-schemas.sh || echo "Schema fix script not found"
+      echo "✅ Schema fixes applied"
+
+  fix:formatting:
+    desc: Fix YAML formatting issues
+    cmd: |
+      echo "🔧 Fixing YAML formatting..."
+      {{.SCRIPTS_DIR}}/fix-timeout-format.sh
+      echo "✅ YAML formatting fixes applied"
+
+  maintain:consistency:
+    desc: Maintain repository consistency (run all fixes and validation)
+    deps:
+      - fix:formatting
+      - fix:schemas
+      - validate:all
+    cmd: echo "🎉 Repository consistency maintenance complete!"
