@@ -83,17 +83,15 @@ spec:
           ssh:
             image:
               repository: lscr.io/linuxserver/openssh-server
-              tag: latest
+              tag: 9.11.1-r0
             env:
               PUID: "1000"
               PGID: "1000"
-              PASSWORD_ACCESS: "true"
+              PASSWORD_ACCESS: "false"
+              PUBLIC_KEY_DIR: "/config/.ssh"
               USER_NAME: "coder"
               TZ: Australia/Sydney
               SUDO_ACCESS: "false"
-            envFrom:
-              - secretRef:
-                  name: code-server-secrets
             resources:
               requests:
                 cpu: 10m
@@ -126,6 +124,7 @@ spec:
         ports:
           ssh:
             port: 2222
+            targetPort: 2222
 
     ingress:
       app:
@@ -177,7 +176,13 @@ spec:
             code:
               - path: /home/coder/.ssh/id_rsa
                 subPath: GIT_DEPLOY_KEY
+      ssh-keys:
+        type: secret
+        name: ssh-keys
+        defaultMode: 600
+        advancedMounts:
+          home-assistant-dev:
             ssh:
-              - path: /home/coder/.ssh/authorized_keys
-                subPath: SSH_PUBLIC_KEY
+              - path: /config/.ssh/authorized_keys
+                subPath: authorized_keys
                 readOnly: true

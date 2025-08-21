@@ -3,14 +3,13 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app home-assistant-dev
-  namespace: home
+  name: &app home-assistant
 spec:
   interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 4.1.2
+      version: 3.7.3
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -28,36 +27,31 @@ spec:
       namespace: rook-ceph
   values:
     controllers:
-      home-assistant-dev:
+      home-assistant:
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
           init-db:
+            enabled: false
             image:
               repository: ghcr.io/home-operations/postgres-init
               tag: "17.4"
             envFrom: &envFrom
               - secretRef:
-                  name: home-assistant-dev-secrets
+                  name: home-assistant-secrets
         containers:
           app:
             image:
               repository: ghcr.io/home-operations/home-assistant
-              tag: 2025.7.4@sha256:0f7f057d1817c7bed5632ce510ffcc921799ff34e75c6a53346994ba6c7b14ab
-            env:
-              TZ: Australia/Sydney
+              tag: 2025.8.2@sha256:285c0e289127e85a31e71b20b3529195cd859a19e34b8a05189ffb1ff391c345
             envFrom: *envFrom
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
-              runAsNonRoot: true
-              runAsUser: 1000
-              runAsGroup: 1000
             resources:
               requests:
                 cpu: 10m
-                memory: 512Mi
               limits:
                 memory: 2Gi
           code:
@@ -77,61 +71,38 @@ spec:
             resources:
               requests:
                 cpu: 10m
-                memory: 128Mi
               limits:
                 memory: 512Mi
-          ssh:
-            image:
-              repository: lscr.io/linuxserver/openssh-server
-              tag: 9.11.1-r0
-            env:
-              PUID: "1000"
-              PGID: "1000"
-              PASSWORD_ACCESS: "false"
-              PUBLIC_KEY_DIR: "/config/.ssh"
-              USER_NAME: "coder"
-              TZ: Australia/Sydney
-              SUDO_ACCESS: "false"
-            resources:
-              requests:
-                cpu: 10m
-                memory: 64Mi
-              limits:
-                memory: 128Mi
-
     defaultPodOptions:
       securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
         seccompProfile: { type: RuntimeDefault }
-
     service:
       app:
         controller: *app
         type: LoadBalancer
-        annotations:
-          io.cilium/lb-ipam-ips: ${SVC_HASS_DEV_ADDR}
+        loadBalancerIP: ${SVC_HASS_ADDR}
+        externalTrafficPolicy: Local
         ports:
           http:
             port: 8123
       code:
+        type: ClusterIP
         controller: *app
         ports:
           http:
             port: 8081
-      ssh:
-        controller: *app
-        ports:
-          ssh:
-            port: 2222
-            targetPort: 2222
-
     ingress:
       app:
-        enabled: true
-        className: internal
+        className: external
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
         hosts:
-          - host: &host "hass-dev.${SECRET_DOMAIN}"
+          - host: &host "hass.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
@@ -141,10 +112,9 @@ spec:
           - hosts:
               - *host
       code:
-        enabled: true
         className: internal
         hosts:
-          - host: &codeHost "hass-dev-code.${SECRET_DOMAIN}"
+          - host: &host "hass-code.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
@@ -152,11 +122,10 @@ spec:
                   port: http
         tls:
           - hosts:
-              - *codeHost
-
+              - *host
     persistence:
       config:
-        existingClaim: home-assistant-dev
+        existingClaim: *app
         globalMounts:
           - path: /config
       logs:
@@ -170,19 +139,18 @@ spec:
       deploy-key:
         type: secret
         name: code-server-secrets
-        defaultMode: 420
+        defaultMode: 420  # 644 (octal) in decimal
         advancedMounts:
-          home-assistant-dev:
+          home-assistant:
             code:
               - path: /home/coder/.ssh/id_rsa
                 subPath: GIT_DEPLOY_KEY
-      ssh-keys:
-        type: secret
-        name: ssh-keys
-        defaultMode: 600
-        advancedMounts:
-          home-assistant-dev:
-            ssh:
-              - path: /config/.ssh/authorized_keys
-                subPath: authorized_keys
-                readOnly: true
+    metrics:
+      enabled: true
+      serviceMonitor:
+        bearerTokenSecret:
+          name: "home-assistant-secrets"
+          key: "SECRET_PROM_TOKEN"
+      prometheusRule:
+        enabled: true
+        rules: []
