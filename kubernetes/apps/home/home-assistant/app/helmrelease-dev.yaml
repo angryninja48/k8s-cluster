@@ -83,7 +83,7 @@ spec:
           ssh:
             image:
               repository: lscr.io/linuxserver/openssh-server
-              tag: 9.11.1-r0
+              tag: latest
             env:
               PUID: "1000"
               PGID: "1000"
