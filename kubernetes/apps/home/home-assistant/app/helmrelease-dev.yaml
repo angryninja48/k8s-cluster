@@ -80,6 +80,28 @@ spec:
                 memory: 128Mi
               limits:
                 memory: 512Mi
+          ssh:
+            image:
+              repository: lscr.io/linuxserver/openssh-server
+              tag: 9.11.1-r0
+            env:
+              PUID: "1000"
+              PGID: "1000"
+              PASSWORD_ACCESS: "true"
+              USER_PASSWORD_FILE: "/run/secrets/ssh-password"
+              USER_NAME: "coder"
+              TZ: Australia/Sydney
+              SUDO_ACCESS: "false"
+              PUBLIC_KEY_FILE: "/run/secrets/ssh-pubkey"
+            envFrom:
+              - secretRef:
+                  name: code-server-secrets
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 128Mi
 
     defaultPodOptions:
       securityContext:
@@ -101,6 +123,11 @@ spec:
         ports:
           http:
             port: 8081
+      ssh:
+        controller: *app
+        ports:
+          ssh:
+            port: 2222
 
     ingress:
       app:
@@ -152,3 +179,8 @@ spec:
             code:
               - path: /home/coder/.ssh/id_rsa
                 subPath: GIT_DEPLOY_KEY
+            ssh:
+              - path: /run/secrets/ssh-password
+                subPath: SSH_PASSWORD
+              - path: /run/secrets/ssh-pubkey
+                subPath: SSH_PUBLIC_KEY
