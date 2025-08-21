@@ -87,7 +87,7 @@ spec:
             env:
               PUID: "1000"
               PGID: "1000"
-              PASSWORD_ACCESS: "false"
+              PASSWORD_ACCESS: "true"
               USER_NAME: "coder"
               TZ: Australia/Sydney
               SUDO_ACCESS: "false"
