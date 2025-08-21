@@ -87,12 +87,10 @@ spec:
             env:
               PUID: "1000"
               PGID: "1000"
-              PASSWORD_ACCESS: "true"
-              USER_PASSWORD_FILE: "/run/secrets/ssh-password"
+              PASSWORD_ACCESS: "false"
               USER_NAME: "coder"
               TZ: Australia/Sydney
               SUDO_ACCESS: "false"
-              PUBLIC_KEY_FILE: "/run/secrets/ssh-pubkey"
             envFrom:
               - secretRef:
                   name: code-server-secrets
@@ -180,7 +178,6 @@ spec:
               - path: /home/coder/.ssh/id_rsa
                 subPath: GIT_DEPLOY_KEY
             ssh:
-              - path: /run/secrets/ssh-password
-                subPath: SSH_PASSWORD
-              - path: /run/secrets/ssh-pubkey
+              - path: /home/coder/.ssh/authorized_keys
                 subPath: SSH_PUBLIC_KEY
+                readOnly: true
