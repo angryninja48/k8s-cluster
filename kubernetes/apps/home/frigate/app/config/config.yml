@@ -79,9 +79,9 @@ go2rtc:
     # dining_room_substream:
     #   - rtsp://{FRIGATE_TAPO_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_DINING_ROOM_CAMERA_HOST}:554/stream2
     driveway_main:
-      - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_driveway_CAMERA_HOST}:554/h264Preview_01_main
+      - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_GARAGE_DOOR_CAMERA_HOST}:554/h264Preview_01_main
     driveway_substream:
-      - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_driveway_CAMERA_HOST}:554/h264Preview_01_sub
+      - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_GARAGE_DOOR_CAMERA_HOST}:554/h264Preview_01_sub
     garage_main:
       - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_GARAGE_CAMERA_HOST}:554/h264Preview_01_main
     garage_substream:
