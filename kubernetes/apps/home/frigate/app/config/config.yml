@@ -95,7 +95,7 @@ cameras:
   zara_room:
     ffmpeg:
       output_args:
-        record: preset-record-generic-audio-copy
+        record: preset-record-generic-audio-aac
       inputs:
         - path: rtsp://127.0.0.1:8554/zara_main
           input_args: preset-rtsp-restream
@@ -109,11 +109,16 @@ cameras:
       width: 640
       height: 360
       fps: 5
+    record:
+      enabled: true
+      retain:
+        days: 1
+        mode: all  # Test with 'all' instead of 'motion'
 
   max_room:
     ffmpeg:
       output_args:
-        record: preset-record-generic-audio-copy
+        record: preset-record-generic-audio-aac
       inputs:
         - path: rtsp://127.0.0.1:8554/max_main
           input_args: preset-rtsp-restream
@@ -131,7 +136,7 @@ cameras:
   # dining_room:
   #   ffmpeg:
   #     output_args:
-  #       record: preset-record-generic-audio-copy
+  #       record: preset-record-generic-audio-aac
   #     inputs:
   #       - path: rtsp://127.0.0.1:8554/dining_room_main
   #         input_args: preset-rtsp-restream
@@ -154,7 +159,7 @@ cameras:
   playroom:
     ffmpeg:
       output_args:
-        record: preset-record-generic-audio-copy
+        record: preset-record-generic-audio-aac
       inputs:
         - path: rtsp://127.0.0.1:8554/playroom_main
           input_args: preset-rtsp-restream
@@ -172,7 +177,7 @@ cameras:
   driveway:
     ffmpeg:
       output_args:
-        record: preset-record-generic-audio-copy
+        record: preset-record-generic-audio-aac
       inputs:
         - path: rtsp://127.0.0.1:8554/driveway_main
           input_args: preset-rtsp-restream
@@ -194,7 +199,7 @@ cameras:
   garage:
     ffmpeg:
       output_args:
-        record: preset-record-generic-audio-copy
+        record: preset-record-generic-audio-aac
       inputs:
         - path: rtsp://127.0.0.1:8554/garage_main
           input_args: preset-rtsp-restream
@@ -217,7 +222,7 @@ cameras:
   doorbell:
     ffmpeg:
       output_args:
-        record: preset-record-generic-audio-copy
+        record: preset-record-generic-audio-aac
       inputs:
         - path: rtsp://127.0.0.1:8554/doorbell_main
           input_args: preset-rtsp-restream
