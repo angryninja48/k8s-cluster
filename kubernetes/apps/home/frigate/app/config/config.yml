@@ -42,7 +42,7 @@ record:
     mode: motion
 
 detect:
-  enabled: true  # Added this line to fix detection in 0.16
+  enabled: true
 
 # Global objects configuration
 objects:
@@ -54,6 +54,19 @@ objects:
       min_area: 5000
       max_area: 100000
       threshold: 0.7
+
+# Optional: Review configuration for new alert/detection system
+review:
+  alerts:
+    labels:
+      - person
+      - dog
+      - car
+  detections:
+    labels:
+      - person
+      - dog
+      - car
 
 # Specify camera's
 go2rtc:
@@ -92,7 +105,7 @@ go2rtc:
       - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_DOORBELL_HOST}:554/h264Preview_01_sub
     # Reolink Duo 2 Backyard Camera
     backyard_main:
-      - "rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_BACKYARD_CAMERA_HOST}:554/Preview_01_main"
+      - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_BACKYARD_CAMERA_HOST}:554/Preview_01_main
     backyard_substream:
       - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_BACKYARD_CAMERA_HOST}:554/Preview_01_sub
 
@@ -201,6 +214,7 @@ cameras:
         - person
         - dog
         - car
+
   garage:
     ffmpeg:
       output_args:
@@ -273,3 +287,15 @@ cameras:
         mode: motion
     snapshots:
       enabled: true
+    # Optional: Motion detection improvements for outdoor camera
+    motion:
+      improve_contrast: true
+      contour_area: 30  # Medium sensitivity for outdoor use
+    # Optional: Add zones if you want to focus detection on specific areas
+    # zones:
+    #   backyard_activity_zone:
+    #     coordinates: 0.1,0.1,0.9,0.1,0.9,0.9,0.1,0.9  # Adjust coordinates as needed
+    #     objects:
+    #       - person
+    #       - dog
+    #       - car
