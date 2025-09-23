@@ -38,3 +38,5 @@ wiki
 /node_modules
 
 .codegpt
+
+/template
