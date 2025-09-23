@@ -92,10 +92,9 @@ go2rtc:
       - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_DOORBELL_HOST}:554/h264Preview_01_sub
     # Reolink Duo 2 Backyard Camera
     backyard_main:
-      - "rtsp://{FRIGATE_REOLINK_USERNAME}:{FRIGATE_REOLINK_PASSWORD}@{FRIGATE_BACKYARD_CAMERA_HOST}:554/Preview_01_main"
-      - "ffmpeg:backyard_main#audio=aac"
+      - "rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_BACKYARD_CAMERA_HOST}:554/Preview_01_main"
     backyard_substream:
-      - rtsp://{FRIGATE_REOLINK_USERNAME}:{FRIGATE_REOLINK_PASSWORD}@{FRIGATE_BACKYARD_CAMERA_HOST}:554/Preview_01_sub
+      - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_BACKYARD_CAMERA_HOST}:554/Preview_01_sub
 
 cameras:
   zara_room:
