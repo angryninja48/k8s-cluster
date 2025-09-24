@@ -207,8 +207,8 @@ cameras:
             - detect
     detect:
       width: 640
-      height: 480
-      fps: 5
+      height: 360
+      fps: 7
     objects:
       track:
         - person
