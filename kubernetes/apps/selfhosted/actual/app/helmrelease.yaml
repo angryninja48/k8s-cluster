@@ -26,7 +26,7 @@ spec:
               ACTUAL_PORT: 5006
             image:
               repository: ghcr.io/actualbudget/actual-server
-              tag: 25.6.1
+              tag: 25.10.0
             probes:
               liveness:
                 enabled: true
