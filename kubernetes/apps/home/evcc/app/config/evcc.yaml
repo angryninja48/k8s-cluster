@@ -6,6 +6,8 @@ site:
     grid: my_grid
     pv:
       - my_pv
+    battery:
+      - my_battery # battery meter reference
     # residualPower: 0 # set to 0 to disable residual power
 
 # define your loadpoints according your needs
@@ -36,6 +38,14 @@ meters:
     host: {{ .EVCC_ENPHASE_IP }}
     token: {{ .EVCC_ENPHASE_ACCESS_TOKEN }}
 
+  - name: my_battery
+    type: template
+    template: sigenergy
+    usage: battery
+    host: {{ .EVCC_SIGEN_IP }}
+    port: 502 # Port, optional
+    capacity: 24
+
 # charger definitions
 # name can be freely chosen and is used as reference when assigning chargers to loadpoints
 # for documentation see https://docs.evcc.io/docs/devices/chargers
@@ -63,23 +73,17 @@ vehicles:
 # see https://docs.evcc.io/docs/devices/tariffs
 tariffs:
   grid:
-    type: custom
-    forecast:
-      source: http
-      uri: https://hass.angryninja.cloud/api/states/sensor.evcc_tariff_data
-      jq: '.state | fromjson'
-      headers:
-        Authorization: "Bearer {{ .EVCC_HASS_TOKEN }}"
+    type: template
+    template: amber
+    token: {{ .EVCC_AMBER_TOKEN }}
+    siteid: {{ .EVCC_AMBER_SITE_ID }}
+    channel: [general, feedIn]
 
   co2:
     type: template
     template: electricitymaps-free
     token: {{ .EVCC_CO2_TOKEN }}
     zone: AU # see https://api.electricitymap.org/v3/zones
-
-  feedin:
-    type: fixed
-    price: 0.05 # Feed-in tariff
 
 # mqtt message broker
 mqtt:
