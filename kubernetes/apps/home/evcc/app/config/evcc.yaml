@@ -77,7 +77,7 @@ tariffs:
     template: amber
     token: {{ .EVCC_AMBER_TOKEN }}
     siteid: {{ .EVCC_AMBER_SITE_ID }}
-    # channel: [general, feedIn]
+    channel: [general, feedIn, controlledLoad]
 
   co2:
     type: template
