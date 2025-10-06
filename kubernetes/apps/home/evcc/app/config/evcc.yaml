@@ -79,6 +79,13 @@ tariffs:
     siteid: {{ .EVCC_AMBER_SITE_ID }}
     channel: general
 
+  feedin:
+    type: template
+    template: amber
+    token: {{ .EVCC_AMBER_TOKEN }}
+    siteid: {{ .EVCC_AMBER_SITE_ID }}
+    channel: feedIn
+
   co2:
     type: template
     template: electricitymaps-free
