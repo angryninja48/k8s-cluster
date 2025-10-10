@@ -24,12 +24,20 @@ loadpoints:
 # name can be freely chosen and is used as reference when assigning meters to site and loadpoints
 # for documentation see https://docs.evcc.io/docs/devices/meters
 meters:
-  - name: my_grid
-    type: template
-    template: enphase
-    usage: grid
-    host: {{ .EVCC_ENPHASE_IP }}
-    token: {{ .EVCC_ENPHASE_ACCESS_TOKEN }}
+  # - name: my_grid
+  #   type: template
+  #   template: enphase
+  #   usage: grid
+  #   host: {{ .EVCC_ENPHASE_IP }}
+  #   token: {{ .EVCC_ENPHASE_ACCESS_TOKEN }}
+
+  - name: my_battery
+    type: grid
+    template: sigenergy
+    usage: battery
+    host: {{ .EVCC_SIGEN_IP }}
+    port: 502 # Port, optional
+    capacity: 24
 
   - name: my_pv
     type: template
