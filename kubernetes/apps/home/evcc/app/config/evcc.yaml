@@ -31,7 +31,7 @@ meters:
   #   host: {{ .EVCC_ENPHASE_IP }}
   #   token: {{ .EVCC_ENPHASE_ACCESS_TOKEN }}
 
-  - name: my_battery
+  - name: my_grid
     type: grid
     template: sigenergy
     usage: battery
