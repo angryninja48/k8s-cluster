@@ -32,11 +32,12 @@ meters:
   #   token: {{ .EVCC_ENPHASE_ACCESS_TOKEN }}
 
   - name: my_grid
-    type: grid
+    type: template
     template: sigenergy
     usage: grid
     host: {{ .EVCC_SIGEN_IP }}
     port: 502 # Port, optional
+    id: 1 # ID, optional
 
   - name: my_pv
     type: template
