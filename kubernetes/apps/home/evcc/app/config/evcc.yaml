@@ -34,10 +34,9 @@ meters:
   - name: my_grid
     type: grid
     template: sigenergy
-    usage: battery
+    usage: grid
     host: {{ .EVCC_SIGEN_IP }}
     port: 502 # Port, optional
-    capacity: 24
 
   - name: my_pv
     type: template
