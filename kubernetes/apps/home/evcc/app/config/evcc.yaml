@@ -80,6 +80,7 @@ vehicles:
 # enter your real grid tariff and feed-in price
 # see https://docs.evcc.io/docs/devices/tariffs
 tariffs:
+  currency: AUD
   grid:
     type: template
     template: amber
