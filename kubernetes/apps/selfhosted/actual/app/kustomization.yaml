@@ -5,6 +5,7 @@ kind: Kustomization
 namespace: selfhosted
 resources:
   - ./helmrelease.yaml
+  - ./ocirepository.yaml
   - ../../../../templates/volsync
 labels:
   - pairs:

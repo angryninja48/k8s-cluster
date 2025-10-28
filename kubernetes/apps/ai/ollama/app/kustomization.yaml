@@ -5,6 +5,7 @@ kind: Kustomization
 namespace: ai
 resources:
   - ./helmrelease.yaml
+  - ./ocirepository.yaml
   - ../../../../templates/volsync
 generatorOptions:
   disableNameSuffixHash: true
