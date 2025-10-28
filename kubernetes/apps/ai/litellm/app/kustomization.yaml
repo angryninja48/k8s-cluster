@@ -5,6 +5,7 @@ kind: Kustomization
 namespace: ai
 resources:
   - ./helmrelease.yaml
+  - ./ocirepository.yaml
   - ./externalsecret.yaml
 configMapGenerator:
   - name: litellm-configmap

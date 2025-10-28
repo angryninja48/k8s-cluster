@@ -5,15 +5,10 @@ kind: HelmRelease
 metadata:
   name: speedtest-exporter
 spec:
-  interval: 2h
-  chart:
-    spec:
-      chart: app-template
-      version: 3.7.3
-      sourceRef:
-        kind: HelmRepository
-        name: bjw-s
-        namespace: flux-system
+  chartRef:
+    kind: OCIRepository
+    name: speedtest-exporter
+  interval: 1h
   maxHistory: 2
   install:
     remediation:

@@ -6,79 +6,8 @@ metadata:
   name: actual
   namespace: selfhosted
 spec:
-  chart:
-    spec:
-      chart: app-template
-      version: 4.1.2  # Upgraded version
-      sourceRef:
-        kind: HelmRepository
-        name: bjw-s
-        namespace: flux-system
-  interval: 30m
-  values:
-    controllers:
-      actual:
-        annotations:
-          reloader.stakater.com/auto: "true"
-        containers:
-          app:
-            env:
-              ACTUAL_PORT: 5006
-            image:
-              repository: ghcr.io/actualbudget/actual-server
-              tag: 25.6.1
-            probes:
-              liveness:
-                enabled: true
-              readiness:
-                custom: true
-                enabled: true
-                spec:
-                  failureThreshold: 3
-                  httpGet:
-                    path: /
-                    port: 5006
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-            resources:
-              limits:
-                memory: 512M
-              requests:
-                cpu: 12m
-                memory: 128M
-        pod:
-          securityContext:
-            fsGroup: 2000
-            fsGroupChangePolicy: OnRootMismatch
-            runAsGroup: 2000
-            runAsUser: 2000
-
-    persistence:
-      data:
-        advancedMounts:
-          actual:
-            app:
-            - path: /data
-        existingClaim: actual
-
-    service:
-      app:
-        controller: actual
-        ports:
-          http:
-            port: 5006
-
-    ingress:  # Changed from 'route' to 'ingress'
-      app:
-        className: internal
-        hosts:
-        - host: "actual.${SECRET_DOMAIN}"
-          paths:
-          - path: /
-            service:
-              identifier: app
-              port: http
-        tls:
-        - hosts:
-          - "actual.${SECRET_DOMAIN}"
+  chartRef:
+    kind: OCIRepository
+    name: actual
+  interval: 1h
+  install:
