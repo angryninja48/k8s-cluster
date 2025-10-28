@@ -7,8 +7,6 @@ resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
   - ../../../../templates/volsync
-  - ./helmrelease-dev.yaml
-  - ./pvc-dev.yaml
 labels:
   - pairs:
       app.kubernetes.io/name: home-assistant
