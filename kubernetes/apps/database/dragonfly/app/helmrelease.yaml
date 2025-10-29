@@ -22,6 +22,8 @@ spec:
       dragonfly-operator:
         replicas: 1
         strategy: RollingUpdate
+        serviceAccount:
+          identifier: dragonfly-operator
         containers:
           app:
             image:
@@ -93,5 +95,4 @@ spec:
             interval: 1m
             scrapeTimeout: 10s
     serviceAccount:
-      create: true
-      name: *app
+      dragonfly-operator: {}
