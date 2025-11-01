@@ -25,7 +25,7 @@ spec:
   values:
     image:
       repository: ghcr.io/k8snetworkplumbingwg/multus-cni
-      tag: v4.2.2@sha256:9ff248dab2bbc7962b8774a444ea5a307154c6b721b07cc951ab06d0a0144be8
+      tag: v4.2.3@sha256:573819ee9788552fbfcb478304321900cef0ef6481c6799c3c2ab8daa17e7795
     cni:
       version: "1.2.0"
       type: multus
