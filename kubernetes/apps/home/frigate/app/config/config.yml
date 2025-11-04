@@ -217,6 +217,12 @@ cameras:
       width: 640
       height: 360
       fps: 7
+      stationary:
+        max_frames:
+          # default: 3000
+            # Optional: Object specific values
+          objects:
+            bottle: 100
     objects:
       track:
         - person
