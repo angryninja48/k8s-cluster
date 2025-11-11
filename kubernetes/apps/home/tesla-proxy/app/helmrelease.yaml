@@ -105,6 +105,7 @@ spec:
         className: external
         annotations:
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+          external-dns.home.arpa/enabled: "true"
         hosts:
           - host: &host "tesla-proxy.${SECRET_DOMAIN}"
             paths:

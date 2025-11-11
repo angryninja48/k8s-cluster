@@ -37,6 +37,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS" # Use HTTPS for backend
     external-dns.alpha.kubernetes.io/target: external.${SECRET_DOMAIN}
+    external-dns.home.arpa/enabled: "true"
 spec:
   ingressClassName: external
   rules:
