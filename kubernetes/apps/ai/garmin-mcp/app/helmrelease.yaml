@@ -108,3 +108,7 @@ spec:
         existingClaim: *app
         globalMounts:
           - path: /data
+      cache:
+        type: emptyDir
+        globalMounts:
+          - path: /.local
