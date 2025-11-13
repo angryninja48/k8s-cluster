@@ -92,6 +92,6 @@ spec:
           - path: /app/secrets_emhass.yaml
             subPath: config.json
       data:
-        existingClaim: emhass-data
+        existingClaim: emhass
         globalMounts:
           - path: /data
