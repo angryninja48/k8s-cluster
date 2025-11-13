@@ -88,7 +88,7 @@ spec:
         type: secret
         name: emhass-secret
         globalMounts:
-          - path: /app/secrets_emhass.yaml
+          - path: /app/config.json
             subPath: config.json
       data:
         existingClaim: emhass

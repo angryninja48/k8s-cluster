@@ -42,11 +42,11 @@ record:
     mode: all
   alerts:
     retain:
-      days: 7  # Changed from 30 to 7 to match base retention
+      days: 14
       mode: motion
   detections:
     retain:
-      days: 7  # Changed from 30 to 7 to match base retention
+      days: 14
       mode: motion
 
 detect:
@@ -135,6 +135,10 @@ cameras:
       width: 640
       height: 360
       fps: 5
+    record:
+      retain:
+        days: 7
+        mode: all
 
   max_room:
     ffmpeg:

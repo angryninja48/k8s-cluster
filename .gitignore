@@ -37,6 +37,6 @@ wiki
 /dist
 /node_modules
 
-.codegpt
+.kilocode/
 
 /template
