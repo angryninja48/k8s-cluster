@@ -37,9 +37,8 @@ spec:
               readOnlyRootFilesystem: false
               capabilities:
                 drop: ["ALL"]
-              runAsNonRoot: true
-              runAsUser: 1000
-              runAsGroup: 1000
+              runAsUser: 0
+              runAsNonRoot: false
             resources:
               requests:
                 cpu: 10m
