@@ -33,7 +33,9 @@ spec:
               repository: ghcr.io/open-webui/mcpo
               tag: latest
             env:
-              UV_CACHE_DIR: /.cache
+              UV_TOOL_DIR: /.local/share/uv/tools
+              UV_CACHE_DIR: /.local/cache/uv
+              UV_PYTHON_INSTALL_DIR: /.local/python
               TZ: ${TIMEZONE}
             envFrom:
               - secretRef:
@@ -120,10 +122,10 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /.npm
-      uv-cache:
+      uv-data:
         type: emptyDir
         globalMounts:
-          - path: /.cache
+          - path: /.local
 
     networkpolicy:
       app:
