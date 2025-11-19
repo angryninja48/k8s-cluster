@@ -1,0 +1,136 @@
+# EMHASS Integration for Home Assistant
+# Add this to your Home Assistant configuration.yaml
+
+shell_command:
+  emhass_optimize: >
+    curl -i -H "Content-Type: application/json" -X POST -d '{
+      "load_cost_forecast": [
+        {% set current = states("sensor.teal_close_general_price") | float(0) %}
+        {% set forecasts = state_attr("sensor.teal_close_general_forecast", "forecasts") | map(attribute="per_kwh") | list %}
+        {{ [current] + forecasts[:47] | tojson }}
+      ],
+      "prod_price_forecast": [
+        {% set current = states("sensor.teal_close_feed_in_price") | float(0) %}
+        {% set forecasts = state_attr("sensor.teal_close_feed_in_forecast", "forecasts") | map(attribute="per_kwh") | list %}
+        {{ [current] + forecasts[:47] | tojson }}
+      ],
+      "prediction_horizon": 48,
+      "soc_init": {{ (states("sensor.sigen_plant_battery_state_of_charge") | float(0)) / 100 }},
+      "soc_final": 0.05,
+      "operating_hours_of_each_deferrable_load": [3, 2],
+      "start_timesteps_of_each_deferrable_load": [0, 0],
+      "end_timesteps_of_each_deferrable_load": [47, 47]
+    }' http://emhass.home.svc.cluster.local:5000/action/naive-mpc-optim
+
+  emhass_publish: >
+    curl -i -H "Content-Type: application/json" -X POST -d '{}' http://emhass.home.svc.cluster.local:5000/action/publish-data
+
+automation:
+  - alias: EMHASS Daily Optimization
+    trigger:
+      - platform: time
+        at: '05:30:00'
+    action:
+      - service: shell_command.emhass_optimize
+      - delay: 30
+      - service: shell_command.emhass_publish
+
+  - alias: EMHASS Hourly Re-optimization
+    trigger:
+      - platform: time_pattern
+        minutes: '0'
+    condition:
+      - condition: time
+        after: '06:00:00'
+        before: '22:00:00'
+    action:
+      - service: shell_command.emhass_optimize
+      - delay: 30
+      - service: shell_command.emhass_publish
+
+  - alias: Apply EMHASS Battery Control
+    trigger:
+      - platform: state
+        entity_id: sensor.p_batt
+    condition:
+      - condition: template
+        value_template: "{{ states('input_boolean.energy_auto_control') == 'on' }}"
+    action:
+      - choose:
+          - conditions:
+              - condition: template
+                value_template: "{{ (states('sensor.p_batt') | float(0)) > 1000 }}"
+            sequence:
+              - service: select.select_option
+                target:
+                  entity_id: select.sigen_plant_remote_ems_control_mode
+                data:
+                  option: Command Discharging (ESS First)
+          - conditions:
+              - condition: template
+                value_template: "{{ (states('sensor.p_batt') | float(0)) < -1000 }}"
+            sequence:
+              - service: select.select_option
+                target:
+                  entity_id: select.sigen_plant_remote_ems_control_mode
+                data:
+                  option: Command Charging (Grid First)
+          - conditions:
+              - condition: template
+                value_template: "{{ (states('sensor.p_batt') | float(0)) > -1000 and (states('sensor.p_batt') | float(0)) < 1000 }}"
+            sequence:
+              - service: select.select_option
+                target:
+                  entity_id: select.sigen_plant_remote_ems_control_mode
+                data:
+                  option: Maximum Self Consumption
+
+  - alias: Apply EMHASS Deferrable Load 0 (EV Charging)
+    trigger:
+      - platform: state
+        entity_id: sensor.p_deferrable0
+    condition:
+      - condition: template
+        value_template: "{{ states('input_boolean.energy_auto_control') == 'on' }}"
+    action:
+      - choose:
+          - conditions:
+              - condition: template
+                value_template: "{{ (states('sensor.p_deferrable0') | float(0)) > 100 }}"
+            sequence:
+              - service: select.select_option
+                target:
+                  entity_id: select.evcc_garage_mode
+                data:
+                  option: pv
+          - conditions:
+              - condition: template
+                value_template: "{{ (states('sensor.p_deferrable0') | float(0)) < 100 }}"
+            sequence:
+              - service: select.select_option
+                target:
+                  entity_id: select.evcc_garage_mode
+                data:
+                  option: off
+
+  - alias: Apply EMHASS Deferrable Load 1 (Hot Water)
+    trigger:
+      - platform: state
+        entity_id: sensor.p_deferrable1
+    condition:
+      - condition: template
+        value_template: "{{ states('input_boolean.energy_auto_control') == 'on' }}"
+    action:
+      - choose:
+          - conditions:
+              - condition: template
+                value_template: "{{ (states('sensor.p_deferrable1') | float(0)) > 100 }}"
+            sequence:
+              - service: switch.turn_on
+                entity_id: switch.hotwater
+          - conditions:
+              - condition: template
+                value_template: "{{ (states('sensor.p_deferrable1') | float(0)) < 100 }}"
+            sequence:
+              - service: switch.turn_off
+                entity_id: switch.hotwater
