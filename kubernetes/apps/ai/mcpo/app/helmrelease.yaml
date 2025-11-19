@@ -126,23 +126,3 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /.local
-
-    networkpolicy:
-      app:
-        enabled: true
-        ingress:
-          - from:
-              - namespaceSelector:
-                  matchLabels:
-                    name: ai
-              - namespaceSelector:
-                  matchLabels:
-                    name: network
-            ports:
-              - protocol: TCP
-                port: *port
-        egress:
-          - to: []
-            ports:
-              - protocol: TCP
-                port: 443
