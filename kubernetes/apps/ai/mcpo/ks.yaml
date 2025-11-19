@@ -26,4 +26,3 @@ spec:
       APP: *app
   dependsOn:
     - name: external-secrets
-    - name: postgres
