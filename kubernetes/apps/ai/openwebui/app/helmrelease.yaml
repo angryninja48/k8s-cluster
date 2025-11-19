@@ -46,16 +46,16 @@ spec:
               tag: v0.6.36@sha256:dfe43b30a5474164b1a81e1cce298a6769bb22144f74df556beefee4ccca5394
             env:
               OLLAMA_BASE_URL: http://ollama.ai.svc:11434
-              # MCPO Integration
-              MCPO_BASE_URL: http://mcpo.ai.svc:8080
-              ENABLE_MCP_INTEGRATION: "true"
-              MCP_TIMEOUT: "30"
-              MCP_RETRY_ATTEMPTS: "3"
-              MCP_SERVER_NAME: "mcpo"
-              # Additional MCP Configuration
-              ENABLE_MCP_TOOLS: "true"
-              ENABLE_MCP_RESOURCES: "true"
-              ENABLE_MCP_PROMPTS: "true"
+              # # MCPO Integration
+              # MCPO_BASE_URL: http://mcpo.ai.svc:8080
+              # ENABLE_MCP_INTEGRATION: "true"
+              # MCP_TIMEOUT: "30"
+              # MCP_RETRY_ATTEMPTS: "3"
+              # MCP_SERVER_NAME: "mcpo"
+              # # Additional MCP Configuration
+              # ENABLE_MCP_TOOLS: "true"
+              # ENABLE_MCP_RESOURCES: "true"
+              # ENABLE_MCP_PROMPTS: "true"
               # ENABLE_RAG_WEB_SEARCH:
               # RAG_WEB_SEARCH_ENGINE:
               # SEARXNG_QUERY_URL:
