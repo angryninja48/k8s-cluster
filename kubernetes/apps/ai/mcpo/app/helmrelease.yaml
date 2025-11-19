@@ -33,6 +33,7 @@ spec:
               repository: ghcr.io/open-webui/mcpo
               tag: latest
             env:
+              UV_CACHE_DIR: /.cache
               TZ: ${TIMEZONE}
             envFrom:
               - secretRef:
