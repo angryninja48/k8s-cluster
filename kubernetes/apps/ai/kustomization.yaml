@@ -6,5 +6,6 @@ resources:
   - ./namespace.yaml
   - ./garmin-mcp/ks.yaml
   - ./litellm/ks.yaml
+  - ./mcpo/ks.yaml
   - ./ollama/ks.yaml
   - ./openwebui/ks.yaml
