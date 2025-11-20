@@ -81,19 +81,19 @@ vehicles:
 # see https://docs.evcc.io/docs/devices/tariffs
 tariffs:
   currency: AUD
-  grid:
-    type: template
-    template: amber
-    token: {{ .EVCC_AMBER_TOKEN }}
-    siteid: {{ .EVCC_AMBER_SITE_ID }}
-    channel: general
+  # grid:
+  #   type: template
+  #   template: amber
+  #   token: {{ .AMBER_TOKEN }}
+  #   siteid: {{ .AMBER_SITE_ID }}
+  #   channel: general
 
-  feedin:
-    type: template
-    template: amber
-    token: {{ .EVCC_AMBER_TOKEN }}
-    siteid: {{ .EVCC_AMBER_SITE_ID }}
-    channel: feedIn
+  # feedin:
+  #   type: template
+  #   template: amber
+  #   token: {{ .AMBER_TOKEN }}
+  #   siteid: {{ .AMBER_SITE_ID }}
+  #   channel: feedIn
 
   co2:
     type: template
