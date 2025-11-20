@@ -26,6 +26,8 @@ spec:
             image:
               repository: ghcr.io/cabberley/amber2mqtt
               tag: 2025.7.1
+            env:
+              TZ: Australia/Sydney
             resources:
               limits:
                 memory: 256Mi
