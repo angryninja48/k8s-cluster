@@ -1,6 +1,6 @@
 ---
 # https://docs.cilium.io/en/latest/network/bgp-control-plane/
-apiVersion: cilium.io/v2alpha1
+apiVersion: cilium.io/v2
 kind: CiliumBGPPeeringPolicy
 metadata:
   name: l3-policy
@@ -18,7 +18,7 @@ spec:
         matchExpressions:
           - {key: somekey, operator: NotIn, values: ['never-used-value']}
 ---
-apiVersion: cilium.io/v2alpha1
+apiVersion: cilium.io/v2
 kind: CiliumLoadBalancerIPPool
 metadata:
   name: l3-pool
