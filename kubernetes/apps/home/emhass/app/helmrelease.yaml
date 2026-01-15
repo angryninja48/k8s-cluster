@@ -80,16 +80,12 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /.cache/uv
-      config-share:
-        type: emptyDir
-        globalMounts:
-          - path: /share
       config-secret:
         type: secret
         name: emhass-secret
         globalMounts:
-          - path: /share/config.json
-            subPath: config.json
+          - path: /app/secrets_emhass.yaml
+            subPath: secrets_emhass.yaml
       data:
         existingClaim: emhass
         globalMounts:
