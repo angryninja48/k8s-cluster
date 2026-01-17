@@ -9,3 +9,4 @@ resources:
   - ./descheduler/ks.yaml
   - ./generic-device-plugin/ks.yaml
   - ./intel-device-plugin/ks.yaml
+  - ./node-feature-discovery/ks.yaml
