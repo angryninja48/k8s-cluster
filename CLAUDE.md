@@ -44,6 +44,16 @@ task talos:upgrade-k8s        # Upgrade Kubernetes version
 task talos:reset              # Reset cluster nodes to maintenance mode
 ```
 
+### VolSync Backup & Restore
+```bash
+task volsync:snapshot NS=media APP=plex              # Create manual backup snapshot
+task volsync:restore NS=media APP=plex PREVIOUS=3    # Restore from 3rd previous snapshot
+task volsync:unlock                                  # Unlock all restic repositories
+task volsync:unlock-local NS=media APP=plex          # Unlock specific repo from local machine
+task volsync:state-suspend                           # Suspend VolSync (before maintenance)
+task volsync:state-resume                            # Resume VolSync
+```
+
 ### Talos & Kubernetes Management
 ```bash
 kubectl get nodes -o wide     # View cluster nodes
@@ -68,6 +78,7 @@ talosctl get machineconfig    # Check Talos configuration
 - **`apps/`** - Application deployments organized by namespace
   - Each namespace (e.g., `home/`, `database/`, `media/`) contains apps
   - Each app follows structure: `<app-name>/ks.yaml` (Flux Kustomization) + `<app-name>/app/` (resources)
+  - Namespaces: ai, cert-manager, database, default, external-secrets, flux-system, home, kube-system, media, network, observability, openebs-system, rook-ceph, security, selfhosted, tools, volsync-system
 - **`components/`** - Shared Kustomize components (e.g., app-template repository definitions)
 - **`templates/`** - Reusable templates (volsync, helmrelease examples)
 
@@ -114,6 +125,12 @@ kubernetes/apps/<namespace>/<app-name>/
     └── pvc.yaml            # Optional: persistent volumes
 ```
 
+Key points:
+- The `ks.yaml` file at the app root is a Flux Kustomization that points to the `app/` directory
+- It defines metadata like targetNamespace, dependencies, and app-specific variable substitutions
+- The `app/kustomization.yaml` is a standard Kustomize file listing resources to apply
+- Most apps use bjw-s/app-template HelmRelease with specific schema validation
+
 ### Schema Validation
 Every YAML file must have a schema declaration header for IDE support:
 - **Flux Kustomization (ks.yaml)**: `https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json`
@@ -133,9 +150,20 @@ The consistency validation script enforces these schemas across the repository.
 
 ### Talos Linux Specifics
 - Configuration via `talconfig.yaml` + `talenv.yaml` in `kubernetes/bootstrap/talos/`
-- talhelper generates machine configurations and bootstrap commands
+  - `talconfig.yaml` contains cluster topology, node details, patches, and network configuration
+  - `talenv.yaml` contains version overrides (Talos version, Kubernetes version)
+  - When both files exist, talenv.yaml values take precedence
+- talhelper generates machine configurations and bootstrap commands from these files
 - talosctl manages the OS layer (separate from kubectl)
 - Cilium is the CNI (Flannel disabled in Talos config)
+
+### Bootstrap Sequence
+The cluster bootstrap follows a strict 3-step sequence:
+1. **`task bootstrap:talos`** - Generates configs, applies to nodes, bootstraps etcd, generates kubeconfig
+2. **`task bootstrap:apps`** - Deploys essential system components via Helmfile (Cilium, CoreDNS, Kubelet CSR Approver)
+3. **`task bootstrap:flux`** - Installs Flux CD, applies sops-age secret, deploys cluster-settings and cluster-secrets
+
+Each step depends on the previous step completing successfully.
 
 ### Repository Consistency
 - Pre-commit hooks run `validate-consistency.sh` on every commit
@@ -152,6 +180,35 @@ The consistency validation script enforces these schemas across the repository.
 - Secrets in `kubernetes/flux/vars/cluster-secrets.sops.yaml` are decrypted and substituted
 - Variables referenced as `${VAR_NAME}` in manifests
 - Post-build substitution happens after Kustomization but before deployment
+
+## Common Workflows
+
+### Making Changes to the Cluster
+All changes follow GitOps workflow:
+1. Edit YAML files in the repository
+2. Run `task validate:all` to ensure changes are valid
+3. Commit and push to Git
+4. Run `task reconcile` to force Flux to pull changes immediately (or wait for 30m interval)
+5. Monitor with `flux get kustomizations -A` and `kubectl get pods -A`
+
+### Upgrading Talos or Kubernetes
+For Talos version upgrades:
+1. Update `talosVersion` in `kubernetes/bootstrap/talos/talconfig.yaml`
+2. Run `task talos:generate-config` to generate new configs
+3. Apply to each node: `task talos:upgrade-node IP=10.20.0.14` (repeat for all nodes)
+4. Verify: `talosctl version` and `kubectl get nodes`
+
+For Kubernetes version upgrades:
+1. Update `kubernetesVersion` in `kubernetes/bootstrap/talos/talconfig.yaml`
+2. Run `task talos:upgrade-k8s`
+3. Monitor upgrade progress: `kubectl get nodes` and watch version change
+
+### Troubleshooting a Failing Application
+1. Check Flux Kustomization status: `flux get kustomizations -A | grep <app-name>`
+2. Check HelmRelease status: `flux get helmreleases -n <namespace> <app-name>`
+3. View pod logs: `kubectl logs -n <namespace> <pod-name>`
+4. Describe resources: `kubectl describe -n <namespace> pod/<pod-name>`
+5. Force reconciliation: `flux reconcile kustomization <app-name> -n flux-system`
 
 ## Development Patterns
 
@@ -174,6 +231,19 @@ The consistency validation script enforces these schemas across the repository.
 2. Store in `kubernetes/` and add to `.gitignore`
 3. Reference in ExternalSecret resources or directly in Flux vars
 4. Use `sops` command to encrypt/decrypt
+
+### Backing Up and Restoring Applications
+VolSync limitations and requirements:
+1. Kustomization, HelmRelease, PVC, and ReplicationSource must share the same name
+2. ReplicationSource and ReplicationDestination use Restic repositories
+3. Each application only has one PVC being replicated
+
+Restore workflow:
+1. Suspends the Flux Kustomization and HelmRelease
+2. Scales application to 0 replicas
+3. Creates temporary ReplicationDestination to restore data
+4. Resumes Flux resources and reconciles
+5. Application starts with restored data
 
 ## Common Validation Patterns
 
