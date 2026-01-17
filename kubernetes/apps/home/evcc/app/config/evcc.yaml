@@ -92,7 +92,7 @@ tariffs:
     type: custom
     price:
       source: mqtt
-      topic: ambermqtt/amber_5min_current_feedin_price/attributes  # Verify this topic name
+      topic: ambermqtt/amber_5min_current_feed_in_price/attributes
       timeout: 10m
       jq: .spot_per_kwh
 
