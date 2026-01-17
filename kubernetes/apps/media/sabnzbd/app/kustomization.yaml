@@ -7,5 +7,4 @@ resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
   - ./ocirepository.yaml
-  - ../../../../templates/gatus/guarded
   - ../../../../templates/volsync
