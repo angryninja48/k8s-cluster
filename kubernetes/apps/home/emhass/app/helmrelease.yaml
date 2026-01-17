@@ -29,7 +29,7 @@ spec:
           app:
             image:
               repository: ghcr.io/davidusb-geek/emhass
-              tag: v0.13.5
+              tag: v0.15.3
             env:
               TZ: Australia/Sydney
             securityContext:
@@ -80,16 +80,12 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /.cache/uv
-      config-share:
-        type: emptyDir
-        globalMounts:
-          - path: /share
       config-secret:
         type: secret
         name: emhass-secret
         globalMounts:
-          - path: /app/config.json
-            subPath: config.json
+          - path: /app/secrets_emhass.yaml
+            subPath: secrets_emhass.yaml
       data:
         existingClaim: emhass
         globalMounts:
