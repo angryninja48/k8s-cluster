@@ -82,18 +82,19 @@ vehicles:
 tariffs:
   currency: AUD
   grid:
-    type: template
-    template: amber
-    token: {{ .AMBER_ACCESS_TOKEN }}
-    siteid: {{ .AMBER_ACCESS_TOKEN }}
-    channel: general
-
+    type: custom
+    price:
+      source: mqtt
+      topic: ambermqtt/amber_5min_current_general_price/attributes
+      timeout: 10m
+      jq: .spot_per_kwh
   feedin:
-    type: template
-    template: amber
-    token: {{ .AMBER_ACCESS_TOKEN }}
-    siteid: {{ .AMBER_ACCESS_TOKEN }}
-    channel: feedIn
+    type: custom
+    price:
+      source: mqtt
+      topic: ambermqtt/amber_5min_current_feedin_price/attributes  # Verify this topic name
+      timeout: 10m
+      jq: .spot_per_kwh
 
   co2:
     type: template
