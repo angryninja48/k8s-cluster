@@ -37,12 +37,32 @@ tasks:
     dir: '{{.KUBERNETES_DIR}}/bootstrap/talos'
     cmds:
       - until kubectl wait --for=condition=Ready=False nodes --all --timeout=600s; do sleep 10; done
+      # Apply privileged namespaces before helmfile to ensure pod-security labels exist
+      - task: namespaces
       - helmfile --file {{.KUBERNETES_DIR}}/bootstrap/helmfile.yaml apply --skip-diff-on-install --suppress-diff
       - until kubectl wait --for=condition=Ready nodes --all --timeout=600s; do sleep 10; done
     preconditions:
       - test -f {{.KUBECONFIG}}
       - test -f {{.KUBERNETES_DIR}}/bootstrap/helmfile.yaml
       - which helmfile kubectl talosctl
+
+  namespaces:
+    desc: Create privileged namespaces before Flux takes over
+    cmds:
+      - echo "Creating privileged namespaces..."
+      - kubectl apply --server-side --filename {{.KUBERNETES_DIR}}/apps/rook-ceph/namespace.yaml
+      - kubectl apply --server-side --filename {{.KUBERNETES_DIR}}/apps/observability/namespace.yaml
+      - kubectl apply --server-side --filename {{.KUBERNETES_DIR}}/apps/network/namespace.yaml
+      - kubectl apply --server-side --filename {{.KUBERNETES_DIR}}/apps/openebs-system/namespace.yaml
+      - kubectl apply --server-side --filename {{.KUBERNETES_DIR}}/apps/volsync-system/namespace.yaml
+      - kubectl apply --server-side --filename {{.KUBERNETES_DIR}}/apps/tools/namespace.yaml
+      - kubectl apply --server-side --filename {{.KUBERNETES_DIR}}/apps/database/namespace.yaml
+      - kubectl apply --server-side --filename {{.KUBERNETES_DIR}}/apps/home/namespace.yaml
+      - kubectl apply --server-side --filename {{.KUBERNETES_DIR}}/apps/media/namespace.yaml
+      - echo "✅ Privileged namespaces created"
+    preconditions:
+      - test -f {{.KUBECONFIG}}
+      - which kubectl
 
   flux:
     desc: Bootstrap Flux into the Talos cluster

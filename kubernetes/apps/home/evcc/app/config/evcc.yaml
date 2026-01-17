@@ -81,21 +81,32 @@ vehicles:
 # see https://docs.evcc.io/docs/devices/tariffs
 tariffs:
   currency: AUD
+  # grid:
+  #   type: custom
+  #   price:
+  #     source: mqtt
+  #     topic: ambermqtt/amber_5min_current_general_price/attributes
+  #     timeout: 10m
+  #     jq: .spot_per_kwh
+  # feedin:
+  #   type: custom
+  #   price:
+  #     source: mqtt
+  #     topic: ambermqtt/amber_5min_current_feed_in_price/attributes
+  #     timeout: 10m
+      # jq: .spot_per_kwh
   grid:
-    type: custom
-    price:
-      source: mqtt
-      topic: ambermqtt/amber_5min_current_general_price/attributes
-      timeout: 10m
-      jq: .spot_per_kwh
+    type: template
+    template: amber
+    token: {{ .AMBER_ACCESS_TOKEN }}
+    siteid: {{ .AMBER_SITE_ID }}      # Different from token - find in Amber app
+    channel: general
   feedin:
-    type: custom
-    price:
-      source: mqtt
-      topic: ambermqtt/amber_5min_current_feed_in_price/attributes
-      timeout: 10m
-      jq: .spot_per_kwh
-
+    type: template
+    template: amber
+    token: {{ .AMBER_ACCESS_TOKEN }}
+    siteid: {{ .AMBER_SITE_ID }}
+    channel: feedIn
   co2:
     type: template
     template: electricitymaps-free
