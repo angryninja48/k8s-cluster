@@ -84,15 +84,15 @@ tariffs:
   # grid:
   #   type: template
   #   template: amber
-  #   token: {{ .AMBER_TOKEN }}
-  #   siteid: {{ .AMBER_SITE_ID }}
+  #   token: {{ .AMBER_ACCESS_TOKEN }}
+  #   siteid: {{ .AMBER_ACCESS_TOKEN }}
   #   channel: general
 
   # feedin:
   #   type: template
   #   template: amber
-  #   token: {{ .AMBER_TOKEN }}
-  #   siteid: {{ .AMBER_SITE_ID }}
+  #   token: {{ .AMBER_ACCESS_TOKEN }}
+  #   siteid: {{ .AMBER_ACCESS_TOKEN }}
   #   channel: feedIn
 
   co2:
