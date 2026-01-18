@@ -3,28 +3,21 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app evcc
+  name: &app envoy-gateway
   namespace: flux-system
-  labels:
-    substitution.flux.home.arpa/enabled: "true"
 spec:
-  targetNamespace: home
+  targetNamespace: network
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./kubernetes/apps/home/evcc/app
+  dependsOn:
+    - name: ingress-nginx-certificates
+  path: ./kubernetes/apps/network/envoy-gateway/app
   prune: true
   sourceRef:
     kind: GitRepository
     name: home-kubernetes
-  dependsOn:
-    - name: envoy-gateway
-    - name: external-secrets-stores
-  wait: true
+  wait: false
   interval: 30m
   retryInterval: 1m
   timeout: 5m
-  postBuild:
-    substitute:
-      APP: *app
-      VOLSYNC_CAPACITY: 1Gi
