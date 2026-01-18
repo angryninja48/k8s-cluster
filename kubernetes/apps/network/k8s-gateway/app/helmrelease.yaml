@@ -43,6 +43,8 @@ spec:
       - Ingress
       - Service
 
+    gatewayAPI:
+      enabled: false
     rbac:
       extraRules:
         - apiGroups: [""]
