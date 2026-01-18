@@ -18,7 +18,7 @@ spec:
     kind: GitRepository
     name: home-kubernetes
   dependsOn:
-    - name: envoy-gateway
+    - name: envoy-gateway-config
     - name: external-secrets-stores
   wait: true
   interval: 30m
