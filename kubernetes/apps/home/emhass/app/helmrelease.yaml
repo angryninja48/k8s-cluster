@@ -75,6 +75,16 @@ spec:
           - hosts:
               - *host
 
+    route:
+      app:
+        enabled: true
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+        hostnames:
+          - *host
+
     persistence:
       config-cache:
         type: emptyDir

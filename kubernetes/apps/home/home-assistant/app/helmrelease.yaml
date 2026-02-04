@@ -93,12 +93,13 @@ spec:
             port: 8081
     ingress:
       app:
+        enabled: true
         className: external
         annotations:
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
           external-dns.home.arpa/enabled: "true"
         hosts:
-          - host: &host "hass.${SECRET_DOMAIN}"
+          - host: &hostApp "hass.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
@@ -106,11 +107,12 @@ spec:
                   port: http
         tls:
           - hosts:
-              - *host
+              - *hostApp
       code:
+        enabled: true
         className: internal
         hosts:
-          - host: &host "hass-code.${SECRET_DOMAIN}"
+          - host: &hostCode "hass-code.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
@@ -118,7 +120,29 @@ spec:
                   port: http
         tls:
           - hosts:
-              - *host
+              - *hostCode
+
+    route:
+      app:
+        enabled: true
+        annotations:
+          external-dns.alpha.kubernetes.io/target: external.${SECRET_DOMAIN}
+          external-dns.home.arpa/enabled: "true"
+        parentRefs:
+          - name: envoy-external
+            namespace: network
+            sectionName: https
+        hostnames:
+          - *hostApp
+      code:
+        enabled: true
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+        hostnames:
+          - *hostCode
+
     persistence:
       config:
         existingClaim: *app
