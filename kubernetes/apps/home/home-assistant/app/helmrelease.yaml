@@ -137,7 +137,7 @@ spec:
         rules:
           - backendRefs:
               - identifier: app
-                port: http
+                port: 8123
       code:
         enabled: true
         parentRefs:
@@ -149,7 +149,7 @@ spec:
         rules:
           - backendRefs:
               - identifier: code
-                port: http
+                port: 8081
 
     persistence:
       config:
