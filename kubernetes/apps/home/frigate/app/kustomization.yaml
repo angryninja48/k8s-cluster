@@ -8,7 +8,6 @@ resources:
   - ./nodefeaturerule.yaml
   - ./nfs-pvc.yaml
   - ./helmrelease.yaml
-  - ./httproute.yaml
   - ./ocirepository.yaml
   - ../../../../templates/volsync
 configMapGenerator:
