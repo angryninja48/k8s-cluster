@@ -134,6 +134,10 @@ spec:
             sectionName: https
         hostnames:
           - *hostApp
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: http
       code:
         enabled: true
         parentRefs:
@@ -142,6 +146,10 @@ spec:
             sectionName: https
         hostnames:
           - *hostCode
+        rules:
+          - backendRefs:
+              - identifier: code
+                port: http
 
     persistence:
       config:
