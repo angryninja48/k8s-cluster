@@ -107,7 +107,7 @@ spec:
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
           external-dns.home.arpa/enabled: "true"
         hosts:
-          - host: &host "tesla-proxy.${SECRET_DOMAIN}"
+          - host: &hostApp "tesla-proxy.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
@@ -115,13 +115,13 @@ spec:
                   port: http
         tls:
           - hosts:
-              - *host
+              - *hostApp
 
       code:
         enabled: true
         className: internal
         hosts:
-          - host: &host "tesla-code.${SECRET_DOMAIN}"
+          - host: &hostCode "tesla-code.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
@@ -129,4 +129,33 @@ spec:
                   port: http
         tls:
           - hosts:
-              - *host
+              - *hostCode
+
+    route:
+      app:
+        enabled: true
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+          external-dns.home.arpa/enabled: "true"
+        parentRefs:
+          - name: envoy-external
+            namespace: network
+            sectionName: https
+        hostnames:
+          - *hostApp
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: 8081
+      code:
+        enabled: true
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+            sectionName: https
+        hostnames:
+          - *hostCode
+        rules:
+          - backendRefs:
+              - identifier: code
+                port: 8080
