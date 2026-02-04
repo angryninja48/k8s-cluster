@@ -17,6 +17,7 @@ spec:
   values:
     sources:
       - ingress
+      - gateway-httproute
     provider:
       name: cloudflare
     env:
