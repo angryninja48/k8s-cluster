@@ -121,9 +121,13 @@ spec:
     retryOn:
       triggers:
         - reset
-  targetSelectors:
+  targetRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
+      name: envoy-external
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: envoy-internal
   tcpKeepalive: {}
   timeout:
     http:
@@ -142,9 +146,13 @@ spec:
   http2:
     onInvalidMessage: TerminateStream
   http3: {}
-  targetSelectors:
+  targetRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
+      name: envoy-external
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: envoy-internal
   tcpKeepalive: {}
   tls:
     minVersion: "1.2"
