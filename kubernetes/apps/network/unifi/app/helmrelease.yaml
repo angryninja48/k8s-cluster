@@ -56,6 +56,7 @@ spec:
           http:
             port: 8443
             protocol: HTTPS
+            appProtocol: kubernetes.io/ws
           controller:
             enabled: true
             port: 8080
@@ -86,7 +87,7 @@ spec:
             protocol: UDP
     ingress:
       app:
-        enabled: true
+        enabled: false
         className: internal
         annotations:
           nginx.ingress.kubernetes.io/backend-protocol: HTTPS

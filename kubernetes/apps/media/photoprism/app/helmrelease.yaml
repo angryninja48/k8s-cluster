@@ -54,10 +54,11 @@ spec:
         ports:
           http:
             port: 2342
+            appProtocol: kubernetes.io/ws
 
     ingress:
       app:
-        enabled: true
+        enabled: false
         className: internal
         hosts:
           - host: &host "photos.${SECRET_DOMAIN}"

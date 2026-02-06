@@ -53,9 +53,10 @@ spec:
         ports:
           http:
             port: 4000
+            appProtocol: kubernetes.io/ws
     ingress:
       main:
-        enabled: true
+        enabled: false
         className: internal
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
