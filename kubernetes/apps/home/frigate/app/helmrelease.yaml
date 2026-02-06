@@ -80,11 +80,12 @@ spec:
         ports:
           http:
             port: *port
+            appProtocol: kubernetes.io/ws
           rtsp:
             port: 8554
     ingress:
       app:
-        enabled: true
+        enabled: false
         className: internal
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"

@@ -119,6 +119,7 @@ spec:
         ports:
           http:
             port: *port
+            appProtocol: kubernetes.io/ws
           bittorrent:
             enabled: true
             port: *torrentPort
@@ -130,7 +131,7 @@ spec:
 
     ingress:
       app:
-        enabled: true
+        enabled: false
         className: internal
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"

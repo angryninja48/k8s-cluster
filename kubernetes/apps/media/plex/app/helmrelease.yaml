@@ -101,8 +101,10 @@ spec:
         ports:
           http:
             port: 32400
+            appProtocol: kubernetes.io/ws
     ingress:
       app:
+        enabled: false
         # annotations:
           # nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         className: internal

@@ -82,10 +82,11 @@ spec:
         ports:
           http:
             port: &port 8080
+            appProtocol: kubernetes.io/ws
 
     ingress:
       app:
-        enabled: true
+        enabled: false
         className: internal
         hosts:
           - host: &host "chat.${SECRET_DOMAIN}"
