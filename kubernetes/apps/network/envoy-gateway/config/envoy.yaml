@@ -26,7 +26,9 @@ spec:
   telemetry:
     metrics:
       prometheus:
-        disable: false
+        compression:
+          type: Gzip
+          gzip: {}
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/gateway.networking.k8s.io/gatewayclass_v1.json
 apiVersion: gateway.networking.k8s.io/v1
@@ -109,9 +111,11 @@ kind: BackendTrafficPolicy
 metadata:
   name: envoy
 spec:
-  compressor:
+  compression:
     - type: Gzip
       gzip: {}
+    - type: Brotli
+      brotli: {}
   retry:
     numRetries: 2
     retryOn:
