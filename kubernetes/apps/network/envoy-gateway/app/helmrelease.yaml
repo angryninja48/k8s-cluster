@@ -26,4 +26,4 @@ spec:
           type: Kubernetes
           kubernetes:
             deploy:
-              type: GatewayNamespace
+              type: Namespaced
