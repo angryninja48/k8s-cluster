@@ -6,4 +6,4 @@ namespace: monitoring
 resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
-  - ./httproute.yaml
+  - ./ingress.yaml
