@@ -110,7 +110,7 @@ kind: BackendTrafficPolicy
 metadata:
   name: envoy
 spec:
-  compressor:
+  compression:
     - type: Zstd
       zstd: {}
     - type: Brotli
