@@ -85,9 +85,6 @@ spec:
     service:
       app:
         controller: *app
-        type: LoadBalancer
-        loadBalancerIP: ${SVC_HASS_ADDR}
-        externalTrafficPolicy: Local
         ports:
           http:
             appProtocol: kubernetes.io/ws
@@ -124,7 +121,6 @@ spec:
         parentRefs:
           - name: envoy-external
             namespace: network
-            sectionName: https
         hostnames:
           - &hostApp "hass.${SECRET_DOMAIN}"
         rules:
