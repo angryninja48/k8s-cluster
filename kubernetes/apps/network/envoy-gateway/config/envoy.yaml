@@ -128,10 +128,14 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: envoy-internal
-  tcpKeepalive: {}
+  tcpKeepalive:
+    idleTime: 600s
+    interval: 30s
+    probes: 3
   timeout:
     http:
       requestTimeout: 0s
+      connectionIdleTimeout: 3600s
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/gateway.envoyproxy.io/clienttrafficpolicy_v1alpha1.json
 apiVersion: gateway.envoyproxy.io/v1alpha1
@@ -142,7 +146,9 @@ spec:
   clientIPDetection:
     xForwardedFor:
       trustedCIDRs:
-        - 10.42.0.0/16
+        - 10.69.0.0/16  # CLUSTER_CIDR - pod network
+        - 10.96.0.0/16  # SERVICE_CIDR - service network
+        - 10.20.0.0/24  # NODE_CIDR - node network
   http2:
     onInvalidMessage: TerminateStream
   http3: {}
@@ -153,7 +159,10 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: envoy-internal
-  tcpKeepalive: {}
+  tcpKeepalive:
+    idleTime: 600s
+    interval: 30s
+    probes: 3
   tls:
     minVersion: "1.2"
     alpnProtocols:
