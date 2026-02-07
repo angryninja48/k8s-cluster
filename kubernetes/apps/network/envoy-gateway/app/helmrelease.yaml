@@ -9,9 +9,17 @@ spec:
     kind: OCIRepository
     name: envoy-gateway
   interval: 1h
+  install:
+    crds: CreateReplace
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    crds: CreateReplace
+    remediation:
+      strategy: uninstall
+      retries: 3
   values:
-    global:
-      imageRegistry: mirror.gcr.io
     config:
       envoyGateway:
         provider:
