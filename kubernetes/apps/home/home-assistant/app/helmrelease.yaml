@@ -97,7 +97,15 @@ spec:
             port: 8081
     ingress:
       app:
-        enabled: false
+        enabled: true
+        className: external
+        hosts:
+          - host: &hostCode "hass.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: code
+                  port: http
       code:
         enabled: true
         className: internal
