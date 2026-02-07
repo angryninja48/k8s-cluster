@@ -104,7 +104,7 @@ spec:
             appProtocol: kubernetes.io/ws
     ingress:
       app:
-        enabled: false
+        enabled: true
         # annotations:
           # nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         className: internal
