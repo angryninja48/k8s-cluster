@@ -18,7 +18,7 @@ spec:
             requests:
               cpu: 100m
             limits:
-              memory: 1Gi
+              memory: 2Gi
       envoyService:
         externalTrafficPolicy: Local
   shutdown:
@@ -27,8 +27,7 @@ spec:
     metrics:
       prometheus:
         compression:
-          type: Gzip
-          gzip: {}
+          type: Zstd
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/gateway.networking.k8s.io/gatewayclass_v1.json
 apiVersion: gateway.networking.k8s.io/v1
@@ -111,31 +110,25 @@ kind: BackendTrafficPolicy
 metadata:
   name: envoy
 spec:
-  compression:
-    - type: Gzip
-      gzip: {}
+  compressor:
+    - type: Zstd
+      zstd: {}
     - type: Brotli
       brotli: {}
+    - type: Gzip
+      gzip: {}
   retry:
     numRetries: 2
     retryOn:
       triggers:
         - reset
-  targetRefs:
+  targetSelectors:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: envoy-external
-    - group: gateway.networking.k8s.io
-      kind: Gateway
-      name: envoy-internal
-  tcpKeepalive:
-    idleTime: 600s
-    interval: 30s
-    probes: 3
+  tcpKeepalive: {}
   timeout:
     http:
       requestTimeout: 0s
-      connectionIdleTimeout: 3600s
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/gateway.envoyproxy.io/clienttrafficpolicy_v1alpha1.json
 apiVersion: gateway.envoyproxy.io/v1alpha1
@@ -152,17 +145,10 @@ spec:
   http2:
     onInvalidMessage: TerminateStream
   http3: {}
-  targetRefs:
+  targetSelectors:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: envoy-external
-    - group: gateway.networking.k8s.io
-      kind: Gateway
-      name: envoy-internal
-  tcpKeepalive:
-    idleTime: 600s
-    interval: 30s
-    probes: 3
+  tcpKeepalive: {}
   tls:
     minVersion: "1.2"
     alpnProtocols:
@@ -175,7 +161,7 @@ kind: HTTPRoute
 metadata:
   name: https-redirect
   annotations:
-    external-dns.alpha.kubernetes.io/exclude: "true"
+    external-dns.alpha.kubernetes.io/controller: none
 spec:
   parentRefs:
     - name: envoy-external
