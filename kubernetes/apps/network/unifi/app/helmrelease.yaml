@@ -87,7 +87,7 @@ spec:
             protocol: UDP
     ingress:
       app:
-        enabled: false
+        enabled: true
         className: internal
         annotations:
           nginx.ingress.kubernetes.io/backend-protocol: HTTPS
