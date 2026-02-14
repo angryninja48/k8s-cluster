@@ -34,6 +34,25 @@ spec:
             envFrom: &envFrom
               - secretRef:
                   name: home-assistant-secrets
+          git-sync:
+            image:
+              repository: alpine/git
+              tag: latest
+            command:
+              - sh
+              - -c
+              - |
+                if [ -d /config/.git ]; then
+                  echo "Git repository found, pulling latest changes..."
+                  cd /config
+                  git config --global --add safe.directory /config
+                  git pull
+                else
+                  echo "No git repository found, cloning..."
+                  git clone git@github.com:angryninja48/home-assistant-config.git /tmp/repo
+                  cp -r /tmp/repo/. /config/
+                  rm -rf /tmp/repo
+                fi
         containers:
           app:
             image:
@@ -79,38 +98,6 @@ spec:
                 cpu: 10m
               limits:
                 memory: 512Mi
-          git-sync:
-            image:
-              repository: registry.k8s.io/git-sync/git-sync
-              tag: v4.6.0
-            args:
-              - --repo=git@github.com:angryninja48/home-assistant-config.git
-              - --ref=main
-              - --root=/git-sync-root
-              - --link=home-assistant-config
-              - --period=30s
-              - --depth=1
-              - --max-failures=-1
-              - --ssh-key-file=/secrets/ssh-key
-              - --ssh-known-hosts=false
-              - --exechook-command=/scripts/sync-to-config.sh
-            env:
-              HOME: /tmp
-              GITSYNC_ONE_TIME: "false"
-              GITSYNC_ROOT: /git-sync-root
-              GITSYNC_LINK: /git-sync-root/home-assistant-config
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
-              runAsUser: 65534  # nobody user (exists in git-sync image)
-              runAsGroup: 65534
-              capabilities: { drop: ["ALL"] }
-            resources:
-              requests:
-                cpu: 10m
-                memory: 64Mi
-              limits:
-                memory: 128Mi
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -203,52 +190,26 @@ spec:
               - path: /config
             git-sync:
               - path: /config
-      logs:
-        type: emptyDir
-        advancedMounts:
-          home-assistant:
-            app:
-              - path: /config/logs
-      tmp:
-        type: emptyDir
-        advancedMounts:
-          home-assistant:
-            app:
-              - path: /tmp
-      git-ssh:
+      ssh-config:
         type: emptyDir
         medium: Memory
         advancedMounts:
           home-assistant:
             git-sync:
-              - path: /tmp
+              - path: /root/.ssh
       deploy-key:
         type: secret
         name: code-server-secrets
-        defaultMode: 420
+        defaultMode: 0600
         advancedMounts:
           home-assistant:
             code:
               - path: /home/coder/.ssh/id_rsa
                 subPath: GIT_DEPLOY_KEY
             git-sync:
-              - path: /secrets/ssh-key
+              - path: /root/.ssh/id_rsa
                 subPath: GIT_DEPLOY_KEY
                 readOnly: true
-      git-sync-root:
-        type: emptyDir
-        advancedMounts:
-          home-assistant:
-            git-sync:
-              - path: /git-sync-root
-      git-sync-scripts:
-        type: configMap
-        name: git-sync-scripts
-        defaultMode: 0755
-        advancedMounts:
-          home-assistant:
-            git-sync:
-              - path: /scripts
     metrics:
       enabled: true
       serviceMonitor:
