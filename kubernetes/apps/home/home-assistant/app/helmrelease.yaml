@@ -42,19 +42,26 @@ spec:
               - sh
               - -c
               - |
+                set -e
                 export HOME=/tmp
+                export GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+
+                # Configure git for this user
+                git config --global safe.directory '*'
+                git config --global user.name "Home Assistant GitSync"
+                git config --global user.email "gitops@home-assistant"
+
                 if [ -d /config/.git ]; then
                   echo "Git repository found, pulling latest changes..."
                   cd /config
-                  git config --global --add safe.directory '*'
-                  git pull || echo "Git pull failed, but continuing..."
+                  git pull origin main
                 else
                   echo "No git repository found, cloning..."
-                  git config --global --add safe.directory '*'
                   git clone git@github.com:angryninja48/home-assistant-config.git /tmp/repo
                   cp -r /tmp/repo/. /config/
                   rm -rf /tmp/repo
                 fi
+                echo "Git sync complete"
         containers:
           app:
             image:
