@@ -52,9 +52,16 @@ spec:
                 git config --global user.email "gitops@home-assistant"
 
                 if [ -d /config/.git ]; then
-                  echo "Git repository found, pulling latest changes..."
+                  echo "Git repository found, attempting to pull..."
                   cd /config
-                  git pull origin main
+                  if ! git pull origin main 2>/dev/null; then
+                    echo "Pull failed (likely permission issues), removing and recloning..."
+                    cd /
+                    rm -rf /config/.git /config/*
+                    git clone git@github.com:angryninja48/home-assistant-config.git /tmp/repo
+                    cp -r /tmp/repo/. /config/
+                    rm -rf /tmp/repo
+                  fi
                 else
                   echo "No git repository found, cloning..."
                   git clone git@github.com:angryninja48/home-assistant-config.git /tmp/repo
