@@ -34,41 +34,41 @@ spec:
             envFrom: &envFrom
               - secretRef:
                   name: home-assistant-secrets
-          git-sync:
-            image:
-              repository: alpine/git
-              tag: latest
-            command:
-              - sh
-              - -c
-              - |
-                set -e
-                export HOME=/tmp
-                export GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+          # git-sync:
+          #   image:
+          #     repository: alpine/git
+          #     tag: latest
+          #   command:
+          #     - sh
+          #     - -c
+          #     - |
+          #       set -e
+          #       export HOME=/tmp
+          #       export GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 
-                # Configure git for this user
-                git config --global safe.directory '*'
-                git config --global user.name "Home Assistant GitSync"
-                git config --global user.email "gitops@home-assistant"
+          #       # Configure git for this user
+          #       git config --global safe.directory '*'
+          #       git config --global user.name "Home Assistant GitSync"
+          #       git config --global user.email "gitops@home-assistant"
 
-                if [ -d /config/.git ]; then
-                  echo "Git repository found, attempting to pull..."
-                  cd /config
-                  if ! git pull origin main 2>/dev/null; then
-                    echo "Pull failed (likely permission issues), removing and recloning..."
-                    cd /
-                    rm -rf /config/.git /config/*
-                    git clone git@github.com:angryninja48/home-assistant-config.git /tmp/repo
-                    cp -r /tmp/repo/. /config/
-                    rm -rf /tmp/repo
-                  fi
-                else
-                  echo "No git repository found, cloning..."
-                  git clone git@github.com:angryninja48/home-assistant-config.git /tmp/repo
-                  cp -r /tmp/repo/. /config/
-                  rm -rf /tmp/repo
-                fi
-                echo "Git sync complete"
+          #       if [ -d /config/.git ]; then
+          #         echo "Git repository found, attempting to pull..."
+          #         cd /config
+          #         if ! git pull origin main 2>/dev/null; then
+          #           echo "Pull failed (likely permission issues), removing and recloning..."
+          #           cd /
+          #           rm -rf /config/.git /config/*
+          #           git clone git@github.com:angryninja48/home-assistant-config.git /tmp/repo
+          #           cp -r /tmp/repo/. /config/
+          #           rm -rf /tmp/repo
+          #         fi
+          #       else
+          #         echo "No git repository found, cloning..."
+          #         git clone git@github.com:angryninja48/home-assistant-config.git /tmp/repo
+          #         cp -r /tmp/repo/. /config/
+          #         rm -rf /tmp/repo
+          #       fi
+          #       echo "Git sync complete"
         containers:
           app:
             image:
