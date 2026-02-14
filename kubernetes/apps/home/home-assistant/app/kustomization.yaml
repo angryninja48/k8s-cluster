@@ -6,7 +6,6 @@ namespace: home
 resources:
   - ./externalsecret.yaml
   - ./ocirepository.yaml
-  - ./configmap.yaml
   - ./helmrelease.yaml
   - ../../../../templates/volsync
 labels:
