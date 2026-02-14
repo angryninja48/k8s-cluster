@@ -93,6 +93,8 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
+              runAsUser: 65534  # nobody user (exists in git-sync image)
+              runAsGroup: 65534
               capabilities: { drop: ["ALL"] }
             resources:
               requests:
