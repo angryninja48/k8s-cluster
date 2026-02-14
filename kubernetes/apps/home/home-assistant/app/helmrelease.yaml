@@ -79,7 +79,7 @@ spec:
           git-sync:
             image:
               repository: registry.k8s.io/git-sync/git-sync
-              tag: v4.2.1
+              tag: v4.6.0
             args:
               - --repo=git@github.com:angryninja48/home-assistant-config.git
               - --branch=main
@@ -99,9 +99,9 @@ spec:
             resources:
               requests:
                 cpu: 10m
-                memory: 256Mi
+                memory: 64Mi
               limits:
-                memory: 512Mi
+                memory: 128Mi
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
