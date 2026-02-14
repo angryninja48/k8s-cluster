@@ -42,13 +42,15 @@ spec:
               - sh
               - -c
               - |
+                export HOME=/tmp
                 if [ -d /config/.git ]; then
                   echo "Git repository found, pulling latest changes..."
                   cd /config
-                  git config --global --add safe.directory /config
-                  git pull
+                  git config --global --add safe.directory '*'
+                  git pull || echo "Git pull failed, but continuing..."
                 else
                   echo "No git repository found, cloning..."
+                  git config --global --add safe.directory '*'
                   git clone git@github.com:angryninja48/home-assistant-config.git /tmp/repo
                   cp -r /tmp/repo/. /config/
                   rm -rf /tmp/repo
