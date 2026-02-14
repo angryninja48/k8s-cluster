@@ -12,8 +12,8 @@ data:
     # This script is called by git-sync's --exechook-command after each successful sync
     # It copies files from the git-sync worktree to /config/ where Home Assistant expects them
 
-    SYNC_ROOT="${GIT_SYNC_ROOT:-/git-sync-root}"
-    SYNC_LINK="${GIT_SYNC_LINK:-/git-sync-root/home-assistant-config}"
+    SYNC_ROOT="${GITSYNC_ROOT:-/git-sync-root}"
+    SYNC_LINK="${GITSYNC_LINK:-/git-sync-root/home-assistant-config}"
     TARGET_DIR="/config"
 
     echo "$(date): Starting sync from git-sync worktree to ${TARGET_DIR}"
@@ -24,30 +24,31 @@ data:
       exit 1
     fi
 
-    # Use rsync to atomically update /config with git repository contents
-    # --archive: preserve permissions, timestamps, etc.
-    # --delete: remove files in dest that don't exist in source
-    # --delay-updates: apply all changes atomically at the end
-    # --exclude: don't overwrite HA runtime files
-    rsync -av --delete --delay-updates \
-      --exclude='.storage/' \
-      --exclude='home-assistant_v2.db*' \
-      --exclude='home-assistant.log*' \
-      --exclude='*.log' \
-      --exclude='*.db-shm' \
-      --exclude='*.db-wal' \
-      --exclude='.git-sync-root/' \
-      --exclude='.HA_VERSION' \
-      --exclude='deps/' \
-      --exclude='tts/' \
-      --exclude='*.conf' \
-      "${SYNC_LINK}/" "${TARGET_DIR}/"
+    # Create temp marker to track what we're syncing
+    MARKER_FILE="${TARGET_DIR}/.git-sync-marker"
 
-    RSYNC_EXIT=$?
+    # Copy all files from source to destination using cp (available in Debian base)
+    # Using find + cp to handle exclusions without needing rsync
+    cd "${SYNC_LINK}"
 
-    if [ $RSYNC_EXIT -eq 0 ]; then
-      echo "$(date): Sync completed successfully"
-    else
-      echo "$(date): ERROR: rsync failed with exit code $RSYNC_EXIT"
-      exit $RSYNC_EXIT
-    fi
+    find . -type f \
+      ! -path './.storage/*' \
+      ! -path './home-assistant_v2.db*' \
+      ! -path './*.log' \
+      ! -path './*.db-shm' \
+      ! -path './*.db-wal' \
+      ! -path './.HA_VERSION' \
+      ! -path './deps/*' \
+      ! -path './tts/*' \
+      ! -path './*.conf' \
+      -print0 | while IFS= read -r -d '' file; do
+        # Create parent directory if needed
+        mkdir -p "${TARGET_DIR}/$(dirname "$file")"
+        # Copy file
+        cp -f "$file" "${TARGET_DIR}/$file"
+    done
+
+    # Write marker with current sync time
+    date > "${MARKER_FILE}"
+
+    echo "$(date): Sync completed successfully"

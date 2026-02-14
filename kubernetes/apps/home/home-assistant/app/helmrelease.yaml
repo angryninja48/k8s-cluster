@@ -83,14 +83,6 @@ spec:
             image:
               repository: registry.k8s.io/git-sync/git-sync
               tag: v4.6.0
-            command:
-              - /bin/sh
-              - -c
-              - |
-                # Install rsync (required by exechook script)
-                apk add --no-cache rsync
-                # Run git-sync with original entrypoint
-                exec /git-sync "$@"
             args:
               - --repo=git@github.com:angryninja48/home-assistant-config.git
               - --ref=main
@@ -104,9 +96,9 @@ spec:
               - --exechook-command=/scripts/sync-to-config.sh
             env:
               HOME: /tmp
-              GIT_SYNC_ONE_TIME: "false"
-              GIT_SYNC_ROOT: /git-sync-root
-              GIT_SYNC_LINK: /git-sync-root/home-assistant-config
+              GITSYNC_ONE_TIME: "false"
+              GITSYNC_ROOT: /git-sync-root
+              GITSYNC_LINK: /git-sync-root/home-assistant-config
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
