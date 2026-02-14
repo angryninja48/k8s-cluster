@@ -88,6 +88,7 @@ spec:
               - --ssh-key-file=/secrets/ssh-key
               - --ssh-known-hosts=false
             env:
+              HOME: /tmp
               GIT_SYNC_ONE_TIME: "false"
             securityContext:
               allowPrivilegeEscalation: false
