@@ -79,11 +79,12 @@ spec:
           git-sync:
             image:
               repository: registry.k8s.io/git-sync/git-sync
-              tag: v4.6.0
+              tag: v4.2.1
             args:
               - --repo=git@github.com:angryninja48/home-assistant-config.git
-              - --branch=main
+              - --ref=main
               - --root=/config
+              - --dest=.
               - --period=30s
               - --ssh-key-file=/secrets/ssh-key
               - --ssh-known-hosts=false
