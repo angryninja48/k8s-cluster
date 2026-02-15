@@ -141,6 +141,8 @@ spec:
         type: emptyDir
         advancedMounts:
           home-assistant-v2:
+            app:
+              - path: /tmp
             git-sync:
               - path: /tmp
       config:
