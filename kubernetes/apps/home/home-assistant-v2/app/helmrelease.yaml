@@ -43,7 +43,7 @@ spec:
                 export GIT_SSH_COMMAND="ssh -i /tmp/ssh-key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 
                 # Clean up stale lock files from previous root-owned runs
-                rm -f /config/.ha_run.lock
+                rm -f /config/.ha_run.lock /config/.HA_VERSION
 
                 if [ -d /config/.git ]; then
                   echo "Git repository found, pulling latest changes..."
