@@ -29,7 +29,7 @@ spec:
           git-sync-init:
             image:
               repository: registry.k8s.io/git-sync/git-sync
-              tag: v4.4.0
+              tag: v4.6.0
             args:
               - --repo=git@github.com:angryninja48/home-assistant-config.git
               - --ref=ha-v2-config
@@ -69,7 +69,7 @@ spec:
           git-sync:
             image:
               repository: registry.k8s.io/git-sync/git-sync
-              tag: v4.4.0
+              tag: v4.6.0
             args:
               - --repo=git@github.com:angryninja48/home-assistant-config.git
               - --ref=ha-v2-config
