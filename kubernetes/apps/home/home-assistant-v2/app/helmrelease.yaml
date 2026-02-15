@@ -36,16 +36,9 @@ spec:
               - -c
               - |
                 set -e
-                # Create user for UID 1000 if not exists
-                if ! id -u 1000 > /dev/null 2>&1; then
-                  adduser -D -u 1000 hass
-                fi
-
-                # Fix SSH key permissions
                 cp /secrets/ssh-key /tmp/ssh-key
                 chmod 600 /tmp/ssh-key
 
-                # Setup git environment
                 export HOME=/tmp
                 export GIT_SSH_COMMAND="ssh -i /tmp/ssh-key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 
@@ -53,28 +46,15 @@ spec:
                   echo "Git repository found, pulling latest changes..."
                   cd /config
                   git config --global --add safe.directory /config
-
-                  # Preserve .venv directory (created by HA on first run)
-                  if [ -d /config/.venv ]; then
-                    echo "Preserving .venv directory..."
-                    mv /config/.venv /tmp/.venv-backup
-                  fi
-
                   git pull origin ha-v2-config
-                  git reset --hard origin/ha-v2-config
-
-                  # Restore .venv
-                  if [ -d /tmp/.venv-backup ]; then
-                    echo "Restoring .venv directory..."
-                    mv /tmp/.venv-backup /config/.venv
-                  fi
+                  echo "Git sync complete"
                 else
-                  echo "No git repository found, cloning..."
-                  git clone -b ha-v2-config git@github.com:angryninja48/home-assistant-config.git /tmp/repo
-                  cp -r /tmp/repo/. /config/
-                  rm -rf /tmp/repo
+                  echo "No git repository found in /config"
+                  echo "Please initialize your git repository first"
+                  echo "Example: kubectl exec -it <pod> -c app -- bash"
+                  echo "Then: cd /config && git clone -b ha-v2-config git@github.com:angryninja48/home-assistant-config.git ."
+                  exit 0
                 fi
-                echo "Git sync complete"
             securityContext:
               runAsUser: 0
               runAsGroup: 0
