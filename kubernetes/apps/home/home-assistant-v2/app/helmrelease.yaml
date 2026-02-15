@@ -78,6 +78,10 @@ spec:
               HASS_HTTP_TRUSTED_PROXY_3: ${CLUSTER_CIDR}
               HASS_HTTP_TRUSTED_PROXY_4: ${SERVICE_CIDR}
               HASS_HTTP_TRUSTED_PROXY_5: ${NODE_CIDR}
+              # Config compatibility - matches trusted_proxies in configuration.yaml
+              SECRET_TRUSTED_PROXIES_1: ${SVC_EXTERNAL_GW_ADDR}/32
+              SECRET_TRUSTED_PROXIES_2: ${SVC_INTERNAL_GW_ADDR}/32
+              SECRET_TRUSTED_PROXIES_3: ${CLUSTER_CIDR}
             envFrom:
               - secretRef:
                   name: home-assistant-v2-secrets
