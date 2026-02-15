@@ -30,8 +30,6 @@ spec:
             image:
               repository: registry.k8s.io/git-sync/git-sync
               tag: v4.4.0
-            env:
-              GIT_SSH_COMMAND: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
             args:
               - --repo=git@github.com:angryninja48/home-assistant-config.git
               - --ref=ha-v2-config
@@ -40,6 +38,7 @@ spec:
               - --depth=1
               - --ssh-key-file=/secrets/ssh-key
               - --ssh-known-hosts=false
+              - --add-user
             securityContext:
               runAsUser: 1000
               runAsGroup: 1000
@@ -72,8 +71,6 @@ spec:
             image:
               repository: registry.k8s.io/git-sync/git-sync
               tag: v4.4.0
-            env:
-              GIT_SSH_COMMAND: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
             args:
               - --repo=git@github.com:angryninja48/home-assistant-config.git
               - --ref=ha-v2-config
@@ -81,6 +78,7 @@ spec:
               - --period=30s
               - --ssh-key-file=/secrets/ssh-key
               - --ssh-known-hosts=false
+              - --add-user
             securityContext:
               runAsUser: 1000
               runAsGroup: 1000
