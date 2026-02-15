@@ -1,0 +1,14 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization.json
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: home
+resources:
+  - ./externalsecret.yaml
+  - ./ocirepository.yaml
+  - ./helmrelease.yaml
+  - ../../../../templates/volsync
+labels:
+  - pairs:
+      app.kubernetes.io/name: home-assistant-v2
+      app.kubernetes.io/instance: home-assistant-v2
