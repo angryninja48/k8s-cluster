@@ -36,6 +36,12 @@ spec:
               - -c
               - |
                 set -e
+                # Create user for UID 1000 if not exists
+                if ! id -u 1000 > /dev/null 2>&1; then
+                  adduser -D -u 1000 hass
+                fi
+
+                # Setup git environment
                 export HOME=/tmp
                 export GIT_SSH_COMMAND="ssh -i /secrets/ssh-key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 
@@ -52,8 +58,9 @@ spec:
                 fi
                 echo "Git sync complete"
             securityContext:
-              runAsUser: 1000
-              runAsGroup: 1000
+              runAsUser: 0
+              runAsGroup: 0
+              allowPrivilegeEscalation: false
         containers:
           app:
             image:
@@ -81,7 +88,6 @@ spec:
                 memory: 2Gi
     defaultPodOptions:
       securityContext:
-        runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
