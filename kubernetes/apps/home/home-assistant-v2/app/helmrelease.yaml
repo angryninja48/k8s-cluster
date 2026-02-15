@@ -41,9 +41,13 @@ spec:
                   adduser -D -u 1000 hass
                 fi
 
+                # Fix SSH key permissions
+                cp /secrets/ssh-key /tmp/ssh-key
+                chmod 600 /tmp/ssh-key
+
                 # Setup git environment
                 export HOME=/tmp
-                export GIT_SSH_COMMAND="ssh -i /secrets/ssh-key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+                export GIT_SSH_COMMAND="ssh -i /tmp/ssh-key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 
                 if [ -d /config/.git ]; then
                   echo "Git repository found, pulling latest changes..."
