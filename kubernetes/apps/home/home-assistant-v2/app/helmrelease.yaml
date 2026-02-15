@@ -65,11 +65,11 @@ spec:
               repository: ghcr.io/home-operations/home-assistant
               tag: 2026.1.3@sha256:9f094e0531e5784d1df9bcb817d95830d1da9d4a03c914f8fd1b3cc6168c4e65
             command:
-              - /bin/bash
-              - -c
-              - |
-                ln -sf /proc/self/fd/1 /config/home-assistant.log || true
-                exec python3 -m homeassistant --config /config
+              - python3
+              - -m
+              - homeassistant
+              - --config
+              - /config
             env:
               HASS_HTTP_TRUSTED_PROXY_1: ${SVC_EXTERNAL_GW_ADDR}/32
               HASS_HTTP_TRUSTED_PROXY_2: ${SVC_INTERNAL_GW_ADDR}/32
