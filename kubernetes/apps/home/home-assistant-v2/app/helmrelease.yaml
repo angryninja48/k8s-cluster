@@ -53,9 +53,21 @@ spec:
                   echo "Git repository found, pulling latest changes..."
                   cd /config
                   git config --global --add safe.directory /config
+
+                  # Preserve .venv directory (created by HA on first run)
+                  if [ -d /config/.venv ]; then
+                    echo "Preserving .venv directory..."
+                    mv /config/.venv /tmp/.venv-backup
+                  fi
+
                   git pull origin ha-v2-config
-                  # Force checkout to overwrite any local changes
                   git reset --hard origin/ha-v2-config
+
+                  # Restore .venv
+                  if [ -d /tmp/.venv-backup ]; then
+                    echo "Restoring .venv directory..."
+                    mv /tmp/.venv-backup /config/.venv
+                  fi
                 else
                   echo "No git repository found, cloning..."
                   git clone -b ha-v2-config git@github.com:angryninja48/home-assistant-config.git /tmp/repo
