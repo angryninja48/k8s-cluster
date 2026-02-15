@@ -54,6 +54,8 @@ spec:
                   cd /config
                   git config --global --add safe.directory /config
                   git pull origin ha-v2-config
+                  # Force checkout to overwrite any local changes
+                  git reset --hard origin/ha-v2-config
                 else
                   echo "No git repository found, cloning..."
                   git clone -b ha-v2-config git@github.com:angryninja48/home-assistant-config.git /tmp/repo
