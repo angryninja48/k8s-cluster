@@ -33,8 +33,8 @@ spec:
             args:
               - --repo=git@github.com:angryninja48/home-assistant-config.git
               - --ref=ha-v2-config
-              - --root=/tmp/git
-              - --link=/config
+              - --root=/config
+              - --dest=config-git
               - --one-time
               - --depth=1
               - --ssh-key-file=/secrets/ssh-key
@@ -49,6 +49,7 @@ spec:
               repository: ghcr.io/home-operations/home-assistant
               tag: 2026.1.3@sha256:9f094e0531e5784d1df9bcb817d95830d1da9d4a03c914f8fd1b3cc6168c4e65
             env:
+              HASS_CONFIG: /config/config-git
               HASS_HTTP_TRUSTED_PROXY_1: ${SVC_EXTERNAL_GW_ADDR}/32
               HASS_HTTP_TRUSTED_PROXY_2: ${SVC_INTERNAL_GW_ADDR}/32
               HASS_HTTP_TRUSTED_PROXY_3: ${CLUSTER_CIDR}
@@ -75,8 +76,8 @@ spec:
             args:
               - --repo=git@github.com:angryninja48/home-assistant-config.git
               - --ref=ha-v2-config
-              - --root=/tmp/git
-              - --link=/config
+              - --root=/config
+              - --dest=config-git
               - --period=30s
               - --ssh-key-file=/secrets/ssh-key
               - --ssh-known-hosts=false
@@ -142,14 +143,6 @@ spec:
               - path: /config
             git-sync:
               - path: /config
-      tmp:
-        type: emptyDir
-        advancedMounts:
-          home-assistant-v2:
-            git-sync-init:
-              - path: /tmp
-            git-sync:
-              - path: /tmp
       deploy-key:
         type: secret
         name: home-assistant-v2-git-secrets
