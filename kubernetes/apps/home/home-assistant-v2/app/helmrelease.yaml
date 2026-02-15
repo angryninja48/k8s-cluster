@@ -26,20 +26,30 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
-          git-sync-init:
+          git-sync:
             image:
-              repository: registry.k8s.io/git-sync/git-sync
-              tag: v4.4.0
-            args:
-              - --repo=git@github.com:angryninja48/home-assistant-config.git
-              - --ref=ha-v2-config
-              - --root=/config
-              - --dest=config-git
-              - --one-time
-              - --depth=1
-              - --ssh-key-file=/secrets/ssh-key
-              - --ssh-known-hosts=false
-              - --add-user
+              repository: alpine/git
+              tag: latest
+            command:
+              - sh
+              - -c
+              - |
+                set -e
+                export HOME=/tmp
+                export GIT_SSH_COMMAND="ssh -i /secrets/ssh-key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+
+                if [ -d /config/.git ]; then
+                  echo "Git repository found, pulling latest changes..."
+                  cd /config
+                  git config --global --add safe.directory /config
+                  git pull origin ha-v2-config
+                else
+                  echo "No git repository found, cloning..."
+                  git clone -b ha-v2-config git@github.com:angryninja48/home-assistant-config.git /tmp/repo
+                  cp -r /tmp/repo/. /config/
+                  rm -rf /tmp/repo
+                fi
+                echo "Git sync complete"
             securityContext:
               runAsUser: 1000
               runAsGroup: 1000
@@ -49,7 +59,6 @@ spec:
               repository: ghcr.io/home-operations/home-assistant
               tag: 2026.1.3@sha256:9f094e0531e5784d1df9bcb817d95830d1da9d4a03c914f8fd1b3cc6168c4e65
             env:
-              HASS_CONFIG: /config/config-git
               HASS_HTTP_TRUSTED_PROXY_1: ${SVC_EXTERNAL_GW_ADDR}/32
               HASS_HTTP_TRUSTED_PROXY_2: ${SVC_INTERNAL_GW_ADDR}/32
               HASS_HTTP_TRUSTED_PROXY_3: ${CLUSTER_CIDR}
@@ -69,28 +78,6 @@ spec:
               limits:
                 cpu: 500m
                 memory: 2Gi
-          git-sync:
-            image:
-              repository: registry.k8s.io/git-sync/git-sync
-              tag: v4.4.0
-            args:
-              - --repo=git@github.com:angryninja48/home-assistant-config.git
-              - --ref=ha-v2-config
-              - --root=/config
-              - --dest=config-git
-              - --period=30s
-              - --ssh-key-file=/secrets/ssh-key
-              - --ssh-known-hosts=false
-              - --add-user
-            securityContext:
-              runAsUser: 1000
-              runAsGroup: 1000
-            resources:
-              requests:
-                cpu: 10m
-                memory: 64Mi
-              limits:
-                memory: 128Mi
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -133,13 +120,17 @@ spec:
                 - identifier: app
                   port: 8123
     persistence:
+      tmp:
+        type: emptyDir
+        advancedMounts:
+          home-assistant-v2:
+            git-sync:
+              - path: /tmp
       config:
         existingClaim: *app
         advancedMounts:
           home-assistant-v2:
             app:
-              - path: /config
-            git-sync-init:
               - path: /config
             git-sync:
               - path: /config
@@ -149,10 +140,6 @@ spec:
         defaultMode: 0400
         advancedMounts:
           home-assistant-v2:
-            git-sync-init:
-              - path: /secrets/ssh-key
-                subPath: GIT_DEPLOY_KEY
-                readOnly: true
             git-sync:
               - path: /secrets/ssh-key
                 subPath: GIT_DEPLOY_KEY
