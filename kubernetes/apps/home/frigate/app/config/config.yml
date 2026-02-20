@@ -111,11 +111,11 @@ go2rtc:
       - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_DOORBELL_HOST}:554/h264Preview_01_main
     doorbell_substream:
       - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_DOORBELL_HOST}:554/h264Preview_01_sub
-    # Reolink Duo 2 Backyard Camera
-    backyard_main:
-      - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_BACKYARD_CAMERA_HOST}:554/Preview_01_main
-    backyard_substream:
-      - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_BACKYARD_CAMERA_HOST}:554/Preview_01_sub
+    # Reolink Duo 2 Backyard Camera (DISABLED - Camera offline)
+    # backyard_main:
+    #   - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_BACKYARD_CAMERA_HOST}:554/Preview_01_main
+    # backyard_substream:
+    #   - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_BACKYARD_CAMERA_HOST}:554/Preview_01_sub
 
 cameras:
   zara_room:
@@ -269,42 +269,42 @@ cameras:
       height: 480
       fps: 5
 
-  backyard:
-    ffmpeg:
-      output_args:
-        record: preset-record-generic-audio-aac
-      inputs:
-        - path: rtsp://127.0.0.1:8554/backyard_main
-          input_args: preset-rtsp-restream
-          roles:
-            - record
-        - path: rtsp://127.0.0.1:8554/backyard_substream
-          input_args: preset-rtsp-restream
-          roles:
-            - detect
-    detect:
-      width: 1536
-      height: 576
-      fps: 4
-    objects:
-      track:
-        - person
-        - dog
-        - car
-        - cat
-        - bird
-    # Removed camera-specific record retention - will use global 7-day setting
-    snapshots:
-      enabled: true
-    # Optional: Motion detection improvements for outdoor camera
-    motion:
-      improve_contrast: true
-      contour_area: 30  # Medium sensitivity for outdoor use
-    # Optional: Add zones if you want to focus detection on specific areas
-    # zones:
-    #   backyard_activity_zone:
-    #     coordinates: 0.1,0.1,0.9,0.1,0.9,0.9,0.1,0.9  # Adjust coordinates as needed
-    #     objects:
-    #       - person
-    #       - dog
-    #       - car
+  # backyard:
+  #   ffmpeg:
+  #     output_args:
+  #       record: preset-record-generic-audio-aac
+  #     inputs:
+  #       - path: rtsp://127.0.0.1:8554/backyard_main
+  #         input_args: preset-rtsp-restream
+  #         roles:
+  #           - record
+  #       - path: rtsp://127.0.0.1:8554/backyard_substream
+  #         input_args: preset-rtsp-restream
+  #         roles:
+  #           - detect
+  #   detect:
+  #     width: 1536
+  #     height: 576
+  #     fps: 4
+  #   objects:
+  #     track:
+  #       - person
+  #       - dog
+  #       - car
+  #       - cat
+  #       - bird
+  #   # Removed camera-specific record retention - will use global 7-day setting
+  #   snapshots:
+  #     enabled: true
+  #   # Optional: Motion detection improvements for outdoor camera
+  #   motion:
+  #     improve_contrast: true
+  #     contour_area: 30  # Medium sensitivity for outdoor use
+  #   # Optional: Add zones if you want to focus detection on specific areas
+  #   # zones:
+  #   #   backyard_activity_zone:
+  #   #     coordinates: 0.1,0.1,0.9,0.1,0.9,0.9,0.1,0.9  # Adjust coordinates as needed
+  #   #     objects:
+  #   #       - person
+  #   #       - dog
+  #   #       - car
