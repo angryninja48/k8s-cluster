@@ -83,7 +83,7 @@ spec:
               - severity = "warning"
             equal: ["alertname", "namespace"]
       ingress:
-        enabled: true
+        enabled: false
         pathType: Prefix
         ingressClassName: internal
         hosts:
@@ -118,7 +118,7 @@ spec:
       enabled: false
     prometheus:
       ingress:
-        enabled: true
+        enabled: false
         ingressClassName: internal
         hosts: ["prometheus.${SECRET_DOMAIN}"]
         pathType: Prefix
