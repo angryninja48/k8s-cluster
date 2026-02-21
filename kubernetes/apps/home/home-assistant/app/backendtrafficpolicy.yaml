@@ -12,5 +12,5 @@ spec:
       name: home-assistant-app
   timeout:
     http:
-      requestTimeout: 3600s
+      requestTimeout: 0s
       connectionIdleTimeout: 3600s
