@@ -113,6 +113,7 @@ spec:
             port: 8123
     ingress:
       app:
+        enabled: false
         className: internal
         hosts:
           - host: &host "hass-v2.${SECRET_DOMAIN}"
