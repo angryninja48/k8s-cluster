@@ -11,5 +11,6 @@ resources:
   - ./home-assistant/ks.yaml
   - ./home-assistant-v2/ks.yaml
   - ./mosquitto/ks.yaml
+  - ./tesla-proxy/ks.yaml
   - ./teslamate/ks.yaml
   - ./zigbee2mqtt/ks.yaml
