@@ -51,7 +51,7 @@ spec:
       crashCollector:
         disable: false
       dashboard:
-        enabled: false
+        enabled: true
         urlPrefix: /
         ssl: false
         prometheusEndpoint: http://prometheus-operated.observability.svc.cluster.local:9090
