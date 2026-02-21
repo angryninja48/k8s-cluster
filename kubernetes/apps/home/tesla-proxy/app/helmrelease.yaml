@@ -133,29 +133,6 @@ spec:
 
     route:
       app:
-        enabled: true
-        annotations:
-          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
-          external-dns.home.arpa/enabled: "true"
-        parentRefs:
-          - name: envoy-external
-            namespace: network
-            sectionName: https
-        hostnames:
-          - *hostApp
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: 8081
+        enabled: false
       code:
-        enabled: true
-        parentRefs:
-          - name: envoy-internal
-            namespace: network
-            sectionName: https
-        hostnames:
-          - *hostCode
-        rules:
-          - backendRefs:
-              - identifier: code
-                port: 8080
+        enabled: false
