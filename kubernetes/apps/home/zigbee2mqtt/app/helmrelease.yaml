@@ -91,7 +91,7 @@ spec:
             appProtocol: kubernetes.io/ws
     ingress:
       app:
-        enabled: true
+        enabled: false
         className: internal
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
