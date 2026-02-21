@@ -90,7 +90,7 @@ spec:
 
     ingress:
       app:
-        enabled: true
+        enabled: false
         className: internal
         hosts:
           - host: &host "litellm.${SECRET_DOMAIN}"
