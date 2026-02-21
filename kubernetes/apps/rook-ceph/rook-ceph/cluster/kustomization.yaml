@@ -5,7 +5,6 @@ kind: Kustomization
 namespace: rook-ceph
 resources:
   - ./helmrelease.yaml
-  - ./ingress.yaml
   - ./httproute.yaml
   - ./prometheusrule.yaml
 labels:
