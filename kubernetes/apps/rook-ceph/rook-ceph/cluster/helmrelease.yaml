@@ -36,6 +36,7 @@ spec:
       createPrometheusRules: false
     ingress:
       dashboard:
+        enabled: false
         ingressClassName: internal
         host:
           name: "rook.${SECRET_DOMAIN}"
