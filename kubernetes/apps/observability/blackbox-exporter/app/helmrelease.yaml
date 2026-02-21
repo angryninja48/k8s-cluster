@@ -25,7 +25,7 @@ spec:
   values:
     fullnameOverride: blackbox-exporter
     ingress:
-      enabled: true
+      enabled: false
       className: internal
       hosts:
         - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
