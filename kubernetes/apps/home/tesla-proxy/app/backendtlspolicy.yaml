@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/gateway.networking.k8s.io/backendtlspolicy_v1alpha3.json
+apiVersion: gateway.networking.k8s.io/v1alpha3
+kind: BackendTLSPolicy
+metadata:
+  name: tesla-proxy-backend-tls
+  namespace: home
+spec:
+  targetRefs:
+    - group: ""
+      kind: Service
+      name: tesla-proxy
+      sectionName: "4430"
+  validation:
+    wellKnownCACertificates: System
+    hostname: tesla-proxy.home.svc.cluster.local

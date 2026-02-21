@@ -7,6 +7,7 @@ resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
   - ./ocirepository.yaml
+  - ./securitypolicy.yaml
   - ../../../../templates/volsync
 generatorOptions:
   disableNameSuffixHash: true
