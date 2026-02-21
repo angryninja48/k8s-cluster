@@ -14,5 +14,5 @@ spec:
     - "rook.${SECRET_DOMAIN}"
   rules:
     - backendRefs:
-        - name: rook-ceph-mgr-dashboard
-          port: 7000
+        - name: rook-ceph-mgr
+          port: 9283

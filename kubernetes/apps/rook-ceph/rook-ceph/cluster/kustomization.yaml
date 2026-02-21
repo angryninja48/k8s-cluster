@@ -8,7 +8,6 @@ resources:
   - ./ingress.yaml
   - ./httproute.yaml
   - ./prometheusrule.yaml
-  - ./service.yaml
 labels:
   - pairs:
       app.kubernetes.io/name: rook-ceph-cluster
