@@ -104,13 +104,7 @@ spec:
               - *host
     route:
       app:
-        enabled: true
-        parentRefs:
-          - name: envoy-internal
-            namespace: network
-            sectionName: https
-        hostnames:
-          - *host
+        enabled: false
     persistence:
       config:
         enabled: true
