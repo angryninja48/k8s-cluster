@@ -139,6 +139,14 @@ spec:
             cpu: 100m
           limits:
             memory: 2000Mi
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: NotIn
+                    values:
+                      - talos02
         storageSpec:
           volumeClaimTemplate:
             spec:
