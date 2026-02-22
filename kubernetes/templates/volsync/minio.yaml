@@ -31,7 +31,7 @@ metadata:
 spec:
   sourcePVC: "${APP}"
   trigger:
-    schedule: "0 * * * *"
+    schedule: "${VOLSYNC_SCHEDULE:-0 * * * *}"
   restic:
     copyMethod: "${VOLSYNC_COPYMETHOD:-Snapshot}"
     pruneIntervalDays: 7
@@ -46,6 +46,7 @@ spec:
       runAsUser: 568
       runAsGroup: 568
       fsGroup: 568
+      fsGroupChangePolicy: OnRootMismatch
     retain:
       hourly: 24
       daily: 7
@@ -73,3 +74,4 @@ spec:
       runAsUser: 568
       runAsGroup: 568
       fsGroup: 568
+      fsGroupChangePolicy: OnRootMismatch
