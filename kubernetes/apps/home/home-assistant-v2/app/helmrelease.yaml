@@ -131,7 +131,6 @@ spec:
           home-assistant-v2:
             app:
               - path: /git
-                readOnly: true
             git-sync:
               - path: /git
       config:
