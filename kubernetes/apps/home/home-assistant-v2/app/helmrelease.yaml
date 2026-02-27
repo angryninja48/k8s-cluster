@@ -26,42 +26,6 @@ spec:
       home-assistant-v2:
         annotations:
           reloader.stakater.com/auto: "true"
-        initContainers:
-          git-sync:
-            image:
-              repository: alpine/git
-              tag: latest
-            command:
-              - sh
-              - -c
-              - |
-                set -e
-                cp /secrets/ssh-key /tmp/ssh-key
-                chmod 600 /tmp/ssh-key
-
-                export HOME=/tmp
-                export GIT_SSH_COMMAND="ssh -i /tmp/ssh-key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
-
-                # Clean up stale lock files from previous root-owned runs
-                rm -f /config/.ha_run.lock /config/.HA_VERSION
-
-                if [ -d /config/.git ]; then
-                  echo "Git repository found, pulling latest changes..."
-                  cd /config
-                  git config --global --add safe.directory /config
-                  git pull origin ha-v2-config
-                  echo "Git sync complete"
-                else
-                  echo "No git repository found in /config"
-                  echo "Please initialize your git repository first"
-                  echo "Example: kubectl exec -it <pod> -c app -- bash"
-                  echo "Then: cd /config && git clone -b ha-v2-config git@github.com:angryninja48/home-assistant-config.git ."
-                  exit 0
-                fi
-            securityContext:
-              runAsUser: 0
-              runAsGroup: 0
-              allowPrivilegeEscalation: false
         containers:
           app:
             image:
@@ -72,7 +36,7 @@ spec:
               - -m
               - homeassistant
               - --config
-              - /config
+              - /git/current
             env:
               HASS_HTTP_TRUSTED_PROXY_1: ${SVC_EXTERNAL_GW_ADDR}/32
               HASS_HTTP_TRUSTED_PROXY_2: ${SVC_INTERNAL_GW_ADDR}/32
@@ -97,6 +61,22 @@ spec:
               limits:
                 cpu: 500m
                 memory: 2Gi
+          git-sync:
+            image:
+              repository: registry.k8s.io/git-sync/git-sync
+              tag: v4.4.0
+            args:
+              - --repo=git@github.com:angryninja48/home-assistant-config.git
+              - --branch=ha-v2-config
+              - --root=/git
+              - --link=current
+              - --period=30s
+              - --ssh-key-file=/secrets/ssh-key
+              - --ssh-known-hosts=false
+              - --group-write
+            securityContext:
+              runAsUser: 65533
+              allowPrivilegeEscalation: false
     defaultPodOptions:
       securityContext:
         runAsUser: 1000
@@ -145,15 +125,20 @@ spec:
           home-assistant-v2:
             app:
               - path: /tmp
+      git:
+        type: emptyDir
+        advancedMounts:
+          home-assistant-v2:
+            app:
+              - path: /git
+                readOnly: true
             git-sync:
-              - path: /tmp
+              - path: /git
       config:
         existingClaim: *app
         advancedMounts:
           home-assistant-v2:
             app:
-              - path: /config
-            git-sync:
               - path: /config
       deploy-key:
         type: secret
