@@ -36,6 +36,7 @@ spec:
             volumeMounts:
               - name: kubectl-bin
                 mountPath: /usr/local/bin
+        serviceAccountName: ha-restarter
         containers:
           - name: runner
             image: ghcr.io/actions/actions-runner:latest
