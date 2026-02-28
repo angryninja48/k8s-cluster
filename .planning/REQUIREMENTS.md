@@ -90,6 +90,7 @@
 | SECR-02 | Phase 1 | Pending |
 | SECR-03 | Phase 1 | Pending |
 | SECR-04 | Phase 1 | Pending |
+| SEC-01 | Phase 1 | Pending |
 | FLUX-01 | Phase 2 | Pending |
 | FLUX-02 | Phase 2 | Pending |
 | FLUX-03 | Phase 2 | Pending |
@@ -99,6 +100,10 @@
 | FLUX-07 | Phase 2 | Pending |
 | FLUX-08 | Phase 2 | Pending |
 | FLUX-09 | Phase 2 | Pending |
+| SEC-02 | Phase 2 | Pending |
+| SEC-03 | Phase 2 | Pending |
+| SEC-04 | Phase 2 | Pending |
+| SEC-05 | Phase 2 | Pending |
 | HA-01 | Phase 3 | Pending |
 | HA-02 | Phase 3 | Pending |
 | HA-03 | Phase 3 | Pending |
@@ -108,17 +113,13 @@
 | HA-07 | Phase 3 | Pending |
 | HA-08 | Phase 3 | Pending |
 | HA-09 | Phase 3 | Pending |
-| SEC-01 | Phase 1 | Pending |
-| SEC-02 | Phase 2 | Pending |
-| SEC-03 | Phase 2 | Pending |
-| SEC-04 | Phase 2 | Pending |
-| SEC-05 | Phase 2 | Pending |
 
 **Coverage:**
 - v1 requirements: 30 total
 - Mapped to phases: 30
 - Unmapped: 0 ✓
+- Phase 4 (Persistence Validation): validates requirements FLUX-07, FLUX-08, HA-07, HA-08 in operation; no new v1 requirements
 
 ---
 *Requirements defined: 2026-03-01*
-*Last updated: 2026-03-01 after initial definition*
+*Last updated: 2026-03-01 after roadmap creation*
