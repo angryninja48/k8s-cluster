@@ -44,17 +44,7 @@ spec:
           - name: runner
             image: ghcr.io/actions/actions-runner:latest
             command:
-              - /bin/bash
-              - -c
-              - |
-                set -x
-                echo "=== DEBUG: env vars ==="
-                env | sort
-                echo "=== DEBUG: running run.sh ==="
-                /home/runner/run.sh 2>&1
-                EXIT_CODE=$?
-                echo "=== DEBUG: run.sh exited with code $EXIT_CODE, sleeping 60s for log capture ==="
-                sleep 60
+              - /home/runner/run.sh
             volumeMounts:
               - name: kubectl-bin
                 mountPath: /usr/local/bin
