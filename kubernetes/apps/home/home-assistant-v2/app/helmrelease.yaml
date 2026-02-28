@@ -76,6 +76,7 @@ spec:
               - --group-write
             securityContext:
               runAsUser: 65533
+              runAsGroup: 1000
               allowPrivilegeEscalation: false
     defaultPodOptions:
       securityContext:
@@ -131,6 +132,7 @@ spec:
           home-assistant-v2:
             app:
               - path: /git
+                readOnly: true
             git-sync:
               - path: /git
       config:
