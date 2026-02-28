@@ -27,17 +27,22 @@ spec:
     githubConfigSecret: arc-github-secret
     minRunners: 0
     maxRunners: 1
-    containerMode:
-      type: kubernetes
-      kubernetesModeWorkVolumeClaim:
-        accessModes:
-          - ReadWriteOnce
-        storageClassName: ""
-        resources:
-          requests:
-            storage: 1Gi
     template:
       spec:
+        initContainers:
+          - name: kube-inject
+            image: bitnami/kubectl:latest
+            command: ["cp", "/opt/bitnami/kubectl/bin/kubectl", "/usr/local/bin/kubectl"]
+            volumeMounts:
+              - name: kubectl-bin
+                mountPath: /usr/local/bin
         containers:
           - name: runner
-            image: bitnami/kubectl:latest
+            image: ghcr.io/actions/actions-runner:latest
+            volumeMounts:
+              - name: kubectl-bin
+                mountPath: /usr/local/bin
+                readOnly: false
+        volumes:
+          - name: kubectl-bin
+            emptyDir: {}
