@@ -1,0 +1,28 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ha-pod-restarter
+  namespace: home
+rules:
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "patch"]
+    resourceNames: ["home-assistant-v2"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: arc-runner-ha-restarter
+  namespace: home
+subjects:
+  - kind: ServiceAccount
+    name: ha-restarter
+    namespace: arc-runners
+roleRef:
+  kind: Role
+  name: ha-pod-restarter
+  apiGroup: rbac.authorization.k8s.io
