@@ -27,15 +27,6 @@ spec:
     githubConfigSecret: arc-github-secret
     minRunners: 0
     maxRunners: 1
-    containerMode:
-      type: kubernetes
-      kubernetesModeWorkVolumeClaim:
-        accessModes:
-          - ReadWriteOnce
-        storageClassName: ""
-        resources:
-          requests:
-            storage: 1Gi
     template:
       spec:
         containers:
