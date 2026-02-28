@@ -13,7 +13,7 @@ metadata:
 rules:
   - apiGroups: ["apps"]
     resources: ["deployments"]
-    verbs: ["get", "list", "patch"]
+    verbs: ["get", "list", "watch", "patch"]
     resourceNames: ["home-assistant-v2"]
   - apiGroups: [""]
     resources: ["pods"]
