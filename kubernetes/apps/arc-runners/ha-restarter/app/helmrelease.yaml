@@ -43,6 +43,9 @@ spec:
         containers:
           - name: runner
             image: ghcr.io/actions/actions-runner:latest
+            env:
+              - name: ACTIONS_RUNNER_PRINT_LOG_TO_STDOUT
+                value: "1"
             volumeMounts:
               - name: kubectl-bin
                 mountPath: /usr/local/bin
