@@ -123,13 +123,19 @@ spec:
     retryOn:
       triggers:
         - reset
+  connection:
+    bufferLimit: 1Mi
   targetSelectors:
     - group: gateway.networking.k8s.io
       kind: Gateway
-  tcpKeepalive: {}
+  tcpKeepalive:
+    idleTime: 600s
+    interval: 60s
+    probes: 3
   timeout:
     http:
       requestTimeout: 0s
+      connectionIdleTimeout: 3600s
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/gateway.envoyproxy.io/clienttrafficpolicy_v1alpha1.json
 apiVersion: gateway.envoyproxy.io/v1alpha1
