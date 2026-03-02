@@ -7,7 +7,6 @@ resources:
   - ./externalsecret.yaml
   - ./ocirepository.yaml
   - ./helmrelease.yaml
-  - ./backendtrafficpolicy.yaml
   - ../../../../templates/volsync
 labels:
   - pairs:
