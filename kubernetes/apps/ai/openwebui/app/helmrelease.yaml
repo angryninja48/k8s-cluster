@@ -43,7 +43,7 @@ spec:
           app:
             image:
               repository: ghcr.io/open-webui/open-webui
-              tag: 0.7.2@sha256:16d9a3615b45f14a0c89f7ad7a3bf151f923ed32c2e68f9204eb17d1ce40774b
+              tag: v0.8.8@sha256:b478adc66210c1effe147d3e4a0d8845c0418b136ca14c314b9d83a087ad1c1f
             env:
               OLLAMA_BASE_URL: http://ollama.ai.svc:11434
               # # MCPO Integration
