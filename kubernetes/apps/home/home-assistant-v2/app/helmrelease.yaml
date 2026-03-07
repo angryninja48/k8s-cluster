@@ -27,6 +27,23 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
+          deps-installer:
+            image:
+              repository: ghcr.io/home-operations/home-assistant
+              tag: 2026.2.3@sha256:d73c9c53a8562e12211f24fd7303c422051220636972485df291dbec885d8a3d
+            command:
+              - sh
+              - -c
+              - |
+                set -e
+                mkdir -p /config/deps
+                pip install --target=/config/deps --quiet \
+                  hass-web-proxy-lib==0.0.7 \
+                  pyairtouch==3.2.0
+                echo "Custom component deps installed OK"
+            securityContext:
+              runAsUser: 1000
+              runAsGroup: 1000
           git-sync:
             image:
               repository: alpine/git
