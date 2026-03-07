@@ -10,7 +10,7 @@ spec:
     - group: ""
       kind: Service
       name: unifi
-      sectionName: "8443"
+      sectionName: "http"
   validation:
     wellKnownCACertificates: System
     hostname: unifi.network.svc.cluster.local

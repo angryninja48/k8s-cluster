@@ -153,6 +153,10 @@ spec:
             sectionName: https
         hostnames:
           - *host
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
 
     persistence:
       config:
