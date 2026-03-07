@@ -5,6 +5,7 @@ kind: Kustomization
 namespace: network
 resources:
   - ./backendtlspolicy.yaml
+  - ./configmap.yaml
   - ./helmrelease.yaml
   - ./httproute.yaml
   - ./ocirepository.yaml

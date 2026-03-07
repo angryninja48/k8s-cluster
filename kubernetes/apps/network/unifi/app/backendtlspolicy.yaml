@@ -12,5 +12,11 @@ spec:
       name: unifi
       sectionName: "http"
   validation:
-    wellKnownCACertificates: System
+    caCertificateRefs:
+      - group: ""
+        kind: ConfigMap
+        name: unifi-ca
     hostname: unifi.network.svc.cluster.local
+    subjectAltNames:
+      - type: Hostname
+        hostname: UniFi
