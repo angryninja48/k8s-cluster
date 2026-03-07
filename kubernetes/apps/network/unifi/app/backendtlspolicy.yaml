@@ -16,7 +16,7 @@ spec:
       - group: ""
         kind: ConfigMap
         name: unifi-ca
-    hostname: unifi.network.svc.cluster.local
+    hostname: unifi
     subjectAltNames:
       - type: Hostname
-        hostname: UniFi
+        hostname: unifi
