@@ -63,12 +63,12 @@ spec:
             image:
               repository: ghcr.io/home-operations/home-assistant
               tag: 2026.2.3@sha256:d73c9c53a8562e12211f24fd7303c422051220636972485df291dbec885d8a3d
-            command:
-              - python3
-              - -m
-              - homeassistant
-              - --config
-              - /config
+            # command:
+            #   - python3
+            #   - -m
+            #   - homeassistant
+            #   - --config
+            #   - /config
             env:
               HASS_HTTP_TRUSTED_PROXY_1: ${SVC_EXTERNAL_GW_ADDR}/32
               HASS_HTTP_TRUSTED_PROXY_2: ${SVC_INTERNAL_GW_ADDR}/32
@@ -79,15 +79,12 @@ spec:
               SECRET_TRUSTED_PROXIES_1: ${SVC_EXTERNAL_GW_ADDR}/32
               SECRET_TRUSTED_PROXIES_2: ${SVC_INTERNAL_GW_ADDR}/32
               SECRET_TRUSTED_PROXIES_3: ${CLUSTER_CIDR}
-              # Allow uv to write its cache when readOnlyRootFilesystem=true
-              # https://github.com/home-assistant/core/issues/127812#issuecomment-2402211969
-              UV_CACHE_DIR: /config/.cache/uv
             envFrom:
               - secretRef:
                   name: home-assistant-v2-secrets
             securityContext:
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
+              readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
             resources:
               requests:
