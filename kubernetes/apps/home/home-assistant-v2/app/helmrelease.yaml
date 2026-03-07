@@ -79,6 +79,9 @@ spec:
               SECRET_TRUSTED_PROXIES_1: ${SVC_EXTERNAL_GW_ADDR}/32
               SECRET_TRUSTED_PROXIES_2: ${SVC_INTERNAL_GW_ADDR}/32
               SECRET_TRUSTED_PROXIES_3: ${CLUSTER_CIDR}
+              # Allow uv to write its cache when readOnlyRootFilesystem=true
+              # https://github.com/home-assistant/core/issues/127812#issuecomment-2402211969
+              UV_CACHE_DIR: /config/.cache/uv
             envFrom:
               - secretRef:
                   name: home-assistant-v2-secrets
