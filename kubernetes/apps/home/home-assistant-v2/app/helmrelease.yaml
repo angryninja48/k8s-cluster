@@ -105,7 +105,7 @@ spec:
         controller: *app
         ports:
           http:
-            appProtocol: kubernetes.io/ws
+            appProtocol: gateway.envoyproxy.io/ws
             port: 8123
     ingress:
       app:
