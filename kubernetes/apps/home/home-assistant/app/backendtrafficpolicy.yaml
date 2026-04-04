@@ -9,8 +9,13 @@ spec:
     - group: gateway.networking.k8s.io
       kind: HTTPRoute
       name: home-assistant-app
+  useClientProtocol: true
   httpUpgrade:
     - type: websocket
+  circuitBreaker:
+    maxConnections: 1024
+    maxPendingRequests: 1024
+    maxParallelRequests: 1024
   tcpKeepalive:
     idleTime: 60s
     interval: 30s
