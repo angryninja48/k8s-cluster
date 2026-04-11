@@ -37,11 +37,11 @@ spec:
               privileged: true
             resources:
               requests:
-                cpu: 600m
-                memory: 1000Mi
+                cpu: 800m
+                memory: 2Gi
                 gpu.intel.com/i915: "1"
               limits:
-                memory: 3Gi
+                memory: 6Gi
                 gpu.intel.com/i915: "1"
             envFrom:
               - secretRef:
