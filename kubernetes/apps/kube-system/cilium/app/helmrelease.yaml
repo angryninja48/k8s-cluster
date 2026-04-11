@@ -27,6 +27,7 @@ spec:
   values:
     hubble:
       enabled: true
+      eventQueueSize: 65536
       metrics:
         enabled:
           - dns:query

@@ -58,6 +58,12 @@ dashboards:
   enabled: true
   annotations:
     grafana_folder: Cilium
+resources:
+  requests:
+    cpu: 200m
+    memory: 256Mi
+  limits:
+    memory: 1Gi
 rollOutCiliumPods: true
 routingMode: native
 securityContext:

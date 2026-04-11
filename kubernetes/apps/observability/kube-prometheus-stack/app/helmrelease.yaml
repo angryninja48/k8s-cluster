@@ -157,6 +157,12 @@ spec:
                   storage: 50Gi
     prometheus-node-exporter:
       fullnameOverride: node-exporter
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          memory: 128Mi
       prometheus:
         monitor:
           enabled: true

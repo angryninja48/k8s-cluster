@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -26,5 +26,18 @@ spec:
     config:
       clients:
         - url: http://loki-headless.observability.svc.cluster.local:3100/loki/api/v1/push
+          batchwait: 1s
+          batchsize: 1048576
+          timeout: 10s
+          backoff_config:
+            min_period: 500ms
+            max_period: 5m
+            max_retries: 10
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        memory: 256Mi
     serviceMonitor:
       enabled: true
