@@ -102,9 +102,6 @@ controlPlane:
         - mitigations=off # Less security, more speed
         - security=none # Less security, more speed
         - net.ifnames=1 # Enable predictable NIC naming
-        - modprobe.blacklist=wdat_wdt # Blacklist wdat_wdt so iTCO_wdt can claim watchdog hardware
-        - iTCO_wdt.heartbeat=60 # Hardware watchdog timeout
-        - iTCO_wdt.nowayout=1 # Watchdog cannot be stopped once started
       systemExtensions:
         officialExtensions:
             - siderolabs/gasket-driver
@@ -120,9 +117,6 @@ controlPlane:
         kernel:
           modules:
             - name: ax88179_178a
-            - name: lpc_ich
-            - name: iTCO_wdt
-            - name: iTCO_vendor_support
     # Configure containerd
     - |-
       machine:
