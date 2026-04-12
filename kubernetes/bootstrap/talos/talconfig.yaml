@@ -120,6 +120,7 @@ controlPlane:
         kernel:
           modules:
             - name: ax88179_178a
+            - name: lpc_ich
             - name: iTCO_wdt
             - name: iTCO_vendor_support
     # Configure containerd
