@@ -102,6 +102,7 @@ controlPlane:
         - mitigations=off # Less security, more speed
         - security=none # Less security, more speed
         - net.ifnames=1 # Enable predictable NIC naming
+        - wdat_wdt.disable=1 # Prevent wdat_wdt from claiming hardware (fails with ENOMEM on NUC8)
         - iTCO_wdt.heartbeat=60 # Hardware watchdog timeout
         - iTCO_wdt.nowayout=1 # Watchdog cannot be stopped once started
       systemExtensions:
