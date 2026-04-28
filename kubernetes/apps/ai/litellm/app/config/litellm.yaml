@@ -1,82 +1,109 @@
 model_list:
-# -*= Paid models =*-
-# -------------------
+# -*= Tier 3 — Heavy thinking =*-
 
-  # Anthropic models
-  - model_name: "claude-3.5-sonnet-20240620"
+  - model_name: claude-opus-4-7
     litellm_params:
-      model: "claude-3-5-sonnet-20240620"
-      tags: ["paid"]
+      model: anthropic/claude-opus-4-7
       api_key: {{ .LITELLM_ANTHROPIC_API_KEY }}
 
-  # Bedrock models
-
-  - model_name: bedrock-claude-3.7
+  - model_name: gpt-5.5
     litellm_params:
-      model: bedrock/anthropic.claude-3-7-sonnet-20250219-v1:0
-      model_id: arn:aws:bedrock:{{ .LITELLM_BEDROCK_REGION }}:{{ .LITELLM_BEDROCK_ACCOUNT }}:inference-profile/us.anthropic.claude-3-7-sonnet-20250219-v1:0
-      aws_access_key_id: {{ .LITELLM_BEDROCK_ACCESS_KEY }}
-      aws_secret_access_key: {{ .LITELLM_BEDROCK_SECRET_KEY }}
-      aws_region_name: {{ .LITELLM_BEDROCK_REGION }}
-
-  # Openrouter
-
-  - model_name: gemini-3-pro-preview
-    litellm_params:
-      model: openrouter/google/gemini-3-pro-preview
+      model: openrouter/openai/gpt-5.5-20260423
       api_key: {{ .LITELLM_OPENROUTER_API_KEY }}
 
-# -*= Free models =*-
-# -------------------
-  - model_name: gpt-4o-mini
-    litellm_params:
-      model: openai/gpt-4o-mini
-      api_key: {{ .LITELLM_OPENAI_API_KEY }}
-      tags: ["free"]
+# -*= Tier 2 — Default brain =*-
 
-  - model_name: qwen2.5-coder-32b-instruct-free
+  - model_name: claude-sonnet-4-6
     litellm_params:
-      model: openrouter/qwen/qwen-2.5-coder-32b-instruct:free
+      model: anthropic/claude-sonnet-4-6
+      api_key: {{ .LITELLM_ANTHROPIC_API_KEY }}
+
+# -*= Tier 1 — Cheap / high-volume =*-
+
+  - model_name: minimax-free
+    litellm_params:
+      model: openrouter/minimax/minimax-m2.5:free
       api_key: {{ .LITELLM_OPENROUTER_API_KEY }}
 
-# -*= Self Hosted models =*-
-# -------------------
-
-  - model_name: llama3.2
+  - model_name: minimax-m2.7
     litellm_params:
-      model: ollama/llama3.2
-      api_base: "http://10.20.0.7:11434"
+      model: openrouter/minimax/minimax-m2.7
+      api_key: {{ .LITELLM_OPENROUTER_API_KEY }}
 
-  - model_name: "mxbai-embed-large"
+  - model_name: glm-5
     litellm_params:
-      model: "ollama/mxbai-embed-large:latest"
-      api_base: "http://10.20.0.7:11434"
+      model: openrouter/z-ai/glm-5.1-20260406
+      api_key: {{ .LITELLM_OPENROUTER_API_KEY }}
 
-  - model_name: "deepseek-r1:1.5b"
+  - model_name: kimi-latest
     litellm_params:
-      model: "ollama_chat/deepseek-r1:1.5b"
-      api_base: "http://10.20.0.7:11434"
+      model: openrouter/moonshotai/kimi-latest
+      api_key: {{ .LITELLM_OPENROUTER_API_KEY }}
 
-  - model_name: "codellama-7b"
+  - model_name: gemini-flash
     litellm_params:
-      model: "ollama_chat/codellama:7b"
-      api_base: "http://10.20.0.7:11434"
+      model: openrouter/google/gemini-3.1-flash-lite-preview
+      api_key: {{ .LITELLM_OPENROUTER_API_KEY }}
 
+  - model_name: claude-haiku-4-5
+    litellm_params:
+      model: anthropic/claude-haiku-4-5-20251001
+      api_key: {{ .LITELLM_ANTHROPIC_API_KEY }}
 
-embeddings:
-  ollama:
-    model_name: "mxbai-embed-large"
-    version: "latest"  # Ensure the version is specified if needed
-    api_url: "http://10.20.0.7:11434"
+  - model_name: qwen3-coder
+    litellm_params:
+      model: openrouter/qwen/qwen3-coder-next
+      api_key: {{ .LITELLM_OPENROUTER_API_KEY }}
+
+# -*= Routing aliases =*-
+# Clients call these — LiteLLM picks from the pool
+
+  - model_name: tier1
+    litellm_params:
+      model: openrouter/minimax/minimax-m2.5:free
+      api_key: {{ .LITELLM_OPENROUTER_API_KEY }}
+
+  - model_name: tier1
+    litellm_params:
+      model: openrouter/z-ai/glm-5.1-20260406
+      api_key: {{ .LITELLM_OPENROUTER_API_KEY }}
+
+  - model_name: tier1
+    litellm_params:
+      model: openrouter/moonshotai/kimi-latest
+      api_key: {{ .LITELLM_OPENROUTER_API_KEY }}
+
+  - model_name: tier1
+    litellm_params:
+      model: openrouter/google/gemini-3.1-flash-lite-preview
+      api_key: {{ .LITELLM_OPENROUTER_API_KEY }}
+
+  - model_name: tier2
+    litellm_params:
+      model: anthropic/claude-sonnet-4-6
+      api_key: {{ .LITELLM_ANTHROPIC_API_KEY }}
+
+  - model_name: tier3
+    litellm_params:
+      model: anthropic/claude-opus-4-7
+      api_key: {{ .LITELLM_ANTHROPIC_API_KEY }}
+
+  - model_name: tier3
+    litellm_params:
+      model: openrouter/openai/gpt-5.5-20260423
+      api_key: {{ .LITELLM_OPENROUTER_API_KEY }}
 
 router_settings:
-  routing_strategy: simple-shuffle
+  routing_strategy: cost-based-completion
   num_retries: 3
+  fallbacks:
+    - tier3: ["tier2"]
+    - tier2: ["tier1"]
+    - tier1: ["minimax-m2.7", "claude-haiku-4-5"]
 
 general_settings:
   master_key: {{ .LITELLM_MASTER_KEY }}
   database_url: "postgresql://{{ .LITELLM_POSTGRES_USER }}:{{ .LITELLM_POSTGRES_PASSWORD }}@postgres17-rw.database.svc.cluster.local/litellm"
-  # enforce_user_param: true
 
 litellm_settings:
   num_retries: 3
@@ -88,10 +115,9 @@ litellm_settings:
   telemetry: false
   retry: true
   add_function_to_prompt: true
-
   set_verbose: false
   cache: true
-  cache_params:        # set cache params for redis
+  cache_params:
     type: redis
     namespace: "litellm_caching"
     host: dragonfly.database.svc.cluster.local.
