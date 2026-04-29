@@ -113,10 +113,10 @@ go2rtc:
       - "rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_DOORBELL_HOST}/Preview_01_sub"
     doorbell_substream:
       - "ffmpeg:http://{FRIGATE_DOORBELL_HOST}/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user={FRIGATE_RTSP_USERNAME}&password={FRIGATE_RTSP_PASSWORD}"
-    backyard_main:
-      - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_BACKYARD_CAMERA_HOST}:554/Preview_01_main
-    backyard_substream:
-      - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_BACKYARD_CAMERA_HOST}:554/Preview_01_sub
+    # backyard_main:
+    #   - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_BACKYARD_CAMERA_HOST}:554/Preview_01_main
+    # backyard_substream:
+    #   - rtsp://{FRIGATE_RTSP_USERNAME}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_BACKYARD_CAMERA_HOST}:554/Preview_01_sub
 
 cameras:
   zara_room:
