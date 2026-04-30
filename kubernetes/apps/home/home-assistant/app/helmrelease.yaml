@@ -214,6 +214,8 @@ spec:
           home-assistant:
             app:
               - path: /config
+            code:
+              - path: /config
       deploy-key:
         type: secret
         name: code-server-secrets
