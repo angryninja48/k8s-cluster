@@ -214,15 +214,6 @@ spec:
           home-assistant:
             app:
               - path: /config
-            git-sync:
-              - path: /config
-      ssh-config:
-        type: emptyDir
-        medium: Memory
-        advancedMounts:
-          home-assistant:
-            git-sync:
-              - path: /root/.ssh
       deploy-key:
         type: secret
         name: code-server-secrets
@@ -232,10 +223,6 @@ spec:
             code:
               - path: /home/coder/.ssh/id_rsa
                 subPath: GIT_DEPLOY_KEY
-            git-sync:
-              - path: /root/.ssh/id_rsa
-                subPath: GIT_DEPLOY_KEY
-                readOnly: true
     metrics:
       enabled: true
       serviceMonitor:
