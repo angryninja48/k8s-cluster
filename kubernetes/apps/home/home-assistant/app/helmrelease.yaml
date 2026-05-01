@@ -181,7 +181,7 @@ spec:
 
     route:
       app:
-        enabled: true
+        enabled: false
         annotations:
           external-dns.alpha.kubernetes.io/target: external.${SECRET_DOMAIN}
           external-dns.home.arpa/enabled: "true"
