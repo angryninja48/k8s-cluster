@@ -49,6 +49,16 @@ spec:
       bdev_async_discard = true
       osd_class_update_on_start = false
     cephClusterSpec:
+      cephExporter:
+        statsPeriod: 30s
+      healthCheck:
+        livenessProbe:
+          mon:
+            disabled: false
+            probe:
+              initialDelaySeconds: 30
+              periodSeconds: 60
+              timeoutSeconds: 10
       crashCollector:
         disable: false
       dashboard:
