@@ -81,6 +81,10 @@ spec:
                   failureThreshold: 90
 
     defaultPodOptions:
+      tolerations:
+        - key: dedicated
+          value: frigate
+          effect: NoSchedule
       nodeSelector:
         google.feature.node.kubernetes.io/coral: "true"
         intel.feature.node.kubernetes.io/gpu: "true"

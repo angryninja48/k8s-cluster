@@ -102,6 +102,16 @@ spec:
                     - key: node-role.kubernetes.io/control-plane
                       operator: Exists
         mon: *placement
+        osd:
+          tolerations:
+            - key: dedicated
+              value: frigate
+              effect: NoSchedule
+        all:
+          tolerations:
+            - key: dedicated
+              value: frigate
+              effect: NoSchedule
         csi:
           podAntiAffinity:
             preferredDuringSchedulingIgnoredDuringExecution:
