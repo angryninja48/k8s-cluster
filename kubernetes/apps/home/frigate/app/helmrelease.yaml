@@ -86,7 +86,7 @@ spec:
           value: frigate
           effect: NoSchedule
       nodeSelector:
-        google.feature.node.kubernetes.io/coral: "true"
+        kubernetes.io/hostname: talos02
         intel.feature.node.kubernetes.io/gpu: "true"
     service:
       app:
@@ -140,12 +140,6 @@ spec:
         sizeLimit: 4Gi
         globalMounts:
           - path: /dev/shm
-      usb:
-        type: hostPath
-        hostPath: /dev/bus/usb
-        hostPathType: Directory
-        globalMounts:
-          - path: /dev/bus/usb
       media:
         existingClaim: frigate-nfs
         globalMounts:
