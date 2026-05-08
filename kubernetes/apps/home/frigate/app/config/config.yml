@@ -37,9 +37,6 @@ snapshots:
 # Global record configuration
 record:
   enabled: True
-  retain:
-    days: 7
-    mode: all
   alerts:
     retain:
       days: 14
@@ -134,10 +131,6 @@ cameras:
       width: 640
       height: 360
       fps: 5
-    record:
-      retain:
-        days: 7
-        mode: all
 
   max_room:
     ffmpeg:
