@@ -30,3 +30,8 @@ spec:
     name: intel-device-plugin-gpu
     sharedDevNum: 3
     nodeFeatureRule: true
+    tolerations:
+      - key: dedicated
+        operator: Equal
+        value: frigate
+        effect: NoSchedule
