@@ -53,7 +53,7 @@ meters:
     host: {{ .EVCC_SIGEN_IP }}
     port: 502 # Port, optional
     capacity: 24
-
+    minsoc: 0 
 # charger definitions
 # name can be freely chosen and is used as reference when assigning chargers to loadpoints
 # for documentation see https://docs.evcc.io/docs/devices/chargers
