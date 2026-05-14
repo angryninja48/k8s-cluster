@@ -37,6 +37,10 @@ snapshots:
 # Global record configuration
 record:
   enabled: True
+  continuous:
+    days: 7
+  motion:
+    days: 7
   alerts:
     retain:
       days: 14
@@ -116,6 +120,7 @@ go2rtc:
 cameras:
   zara_room:
     ffmpeg:
+      hwaccel_args: []
       output_args:
         record: preset-record-generic-audio-aac
       inputs:
