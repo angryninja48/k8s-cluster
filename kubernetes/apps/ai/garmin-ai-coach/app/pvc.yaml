@@ -1,0 +1,14 @@
+---
+# Output PVC — stores AI-generated run artifacts, not backed up via volsync
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: garmin-ai-coach-output
+  namespace: ai
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: ceph-block
