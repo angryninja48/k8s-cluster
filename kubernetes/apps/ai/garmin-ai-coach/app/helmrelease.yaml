@@ -20,11 +20,9 @@ spec:
       strategy: rollback
       retries: 3
   values:
-    global:
+    defaultPodOptions:
       imagePullSecrets:
         - name: ghcr-pull-secret
-
-    defaultPodOptions:
       securityContext:
         runAsNonRoot: true
         runAsUser: 10001
