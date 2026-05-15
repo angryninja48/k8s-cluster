@@ -9,7 +9,6 @@ resources:
   - ./ocirepository.yaml
   - ./pvc.yaml
   - ./pullsecret.yaml
-  - ../../../../templates/volsync
 generatorOptions:
   disableNameSuffixHash: true
   annotations:

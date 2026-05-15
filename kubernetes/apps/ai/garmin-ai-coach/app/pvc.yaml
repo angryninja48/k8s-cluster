@@ -1,4 +1,18 @@
 ---
+# Config PVC — stores my_training_config.yaml; no volsync (no backup exists yet)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: garmin-ai-coach
+  namespace: ai
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: ceph-block
+---
 # Output PVC — stores AI-generated run artifacts, not backed up via volsync
 apiVersion: v1
 kind: PersistentVolumeClaim
