@@ -1,5 +1,5 @@
 ---
-# Config PVC — stores my_training_config.yaml; no volsync (no backup exists yet)
+# Config PVC — stores my_training_config.yaml; RWX so backend+celery-worker mount from different nodes
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -7,11 +7,11 @@ metadata:
   namespace: ai
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 1Gi
-  storageClassName: ceph-block
+  storageClassName: ceph-filesystem
 ---
 # Output PVC — stores AI-generated run artifacts, not backed up via volsync
 apiVersion: v1
