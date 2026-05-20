@@ -23,7 +23,7 @@ spec:
     - name: actions-runner-controller
       namespace: arc-systems
   values:
-    githubConfigUrl: "https://github.com/angryninja48/home-assistant-config"
+    githubConfigUrl: "https://github.com/jbaker48/home-assistant-config"
     githubConfigSecret: arc-github-secret
     minRunners: 0
     maxRunners: 1
