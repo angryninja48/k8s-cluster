@@ -51,7 +51,7 @@ spec:
                   echo "Git sync complete"
                 else
                   echo "Cloning repository..."
-                  git clone -b ha-v2-config git@github.com:angryninja48/home-assistant-config.git /config
+                  git clone -b ha-v2-config git@github.com:jbaker48/home-assistant-config.git /config
                   echo "Clone complete"
                 fi
             securityContext:
